@@ -43,7 +43,7 @@ export const HomePage: React.FC<HomePageProps> = ({
   };
 
   return (
-    <div className="space-y-5 animate-fade-in">
+    <div className="space-y-5 animate-fade-in pb-4">
       {/* Overview & Heading */}
       <section className="space-y-3">
         <div>
@@ -220,16 +220,6 @@ export const HomePage: React.FC<HomePageProps> = ({
           </div>
         </section>
       )}
-
-      {/* Board Exam Item Analysis Note */}
-      <section className="border-t border-slate-200 dark:border-slate-800 pt-4 text-xs text-slate-600 dark:text-slate-400 leading-relaxed space-y-1">
-        <span className="font-semibold text-slate-800 dark:text-slate-200 uppercase tracking-wider block text-[11px]">
-          Examination Structure Note
-        </span>
-        <p>
-          Under Republic Act No. 7836 and PRC Board for Professional Teachers standards, the LET comprises General Education (20% for Elementary / 20% for Secondary), Professional Education (40% for Elementary / 40% for Secondary), and Major/Specialization. A general weighted average of at least 75.00% with no rating below 50.00% in any subject is required to pass.
-        </p>
-      </section>
     </div>
   );
 };
