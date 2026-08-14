@@ -113,18 +113,18 @@ export const Pagination: React.FC<PaginationProps> = ({
           disabled={isFirstPage}
           aria-label="Go to previous page"
           aria-disabled={isFirstPage}
-          className={`inline-flex items-center justify-center gap-1 h-9 px-3 rounded-lg text-xs font-semibold border transition-colors tap-target ${
+          className={`inline-flex items-center justify-center gap-1 h-8 px-2.5 rounded-md text-xs font-medium border transition-colors tap-target ${
             isFirstPage
               ? 'opacity-40 cursor-not-allowed bg-slate-50 dark:bg-slate-900/50 text-slate-400 dark:text-slate-600 border-slate-200 dark:border-slate-800'
               : 'bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700'
           }`}
         >
-          <ChevronLeft className="w-4 h-4" />
+          <ChevronLeft className="w-3.5 h-3.5" />
           <span className="hidden xs:inline">Prev</span>
         </button>
 
         {/* Mobile Compact Indicator (shown on mobile, hidden on sm+) */}
-        <div className="flex sm:hidden items-center px-2.5 h-9 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg text-xs font-bold text-slate-800 dark:text-slate-200">
+        <div className="flex sm:hidden items-center px-2.5 h-8 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-md text-xs font-semibold text-slate-800 dark:text-slate-200 font-mono">
           <span>
             {currentPage} / {totalPages}
           </span>
@@ -137,7 +137,7 @@ export const Pagination: React.FC<PaginationProps> = ({
               return (
                 <span
                   key={`ellipsis-${idx}`}
-                  className="w-8 h-9 flex items-center justify-center text-xs text-slate-400 dark:text-slate-500 font-bold select-none"
+                  className="w-7 h-8 flex items-center justify-center text-xs text-slate-400 dark:text-slate-500 font-bold select-none"
                   aria-hidden="true"
                 >
                   •••
@@ -154,9 +154,9 @@ export const Pagination: React.FC<PaginationProps> = ({
                 onClick={() => onPageChange(page)}
                 aria-current={isCurrent ? 'page' : undefined}
                 aria-label={`Page ${page}`}
-                className={`w-9 h-9 rounded-lg text-xs font-bold transition-all tap-target flex items-center justify-center ${
+                className={`w-8 h-8 rounded-md text-xs font-semibold transition-all tap-target flex items-center justify-center ${
                   isCurrent
-                    ? 'bg-indigo-600 text-white shadow-xs'
+                    ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 font-bold'
                     : 'bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700'
                 }`}
               >
@@ -173,14 +173,14 @@ export const Pagination: React.FC<PaginationProps> = ({
           disabled={isLastPage}
           aria-label="Go to next page"
           aria-disabled={isLastPage}
-          className={`inline-flex items-center justify-center gap-1 h-9 px-3 rounded-lg text-xs font-semibold border transition-colors tap-target ${
+          className={`inline-flex items-center justify-center gap-1 h-8 px-2.5 rounded-md text-xs font-medium border transition-colors tap-target ${
             isLastPage
               ? 'opacity-40 cursor-not-allowed bg-slate-50 dark:bg-slate-900/50 text-slate-400 dark:text-slate-600 border-slate-200 dark:border-slate-800'
               : 'bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700'
           }`}
         >
           <span className="hidden xs:inline">Next</span>
-          <ChevronRight className="w-4 h-4" />
+          <ChevronRight className="w-3.5 h-3.5" />
         </button>
       </div>
     </nav>

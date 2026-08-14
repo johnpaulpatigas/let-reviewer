@@ -31,7 +31,7 @@ export const AppShell: React.FC<AppShellProps> = ({
   hideNav = false,
 }) => {
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex flex-col selection:bg-indigo-100 selection:text-indigo-900 transition-colors">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex flex-col selection:bg-slate-200 selection:text-slate-900 dark:selection:bg-slate-800 dark:selection:text-slate-100 transition-colors">
       <Header
         currentTab={currentTab}
         inSession={inSession}

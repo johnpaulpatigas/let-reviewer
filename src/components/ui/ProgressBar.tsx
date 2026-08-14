@@ -5,7 +5,7 @@ interface ProgressBarProps {
   max?: number; // Total count (default 100)
   label?: string;
   showPercentage?: boolean;
-  colorVariant?: 'indigo' | 'emerald' | 'amber' | 'rose';
+  colorVariant?: 'primary' | 'indigo' | 'emerald' | 'amber' | 'rose' | 'sky';
   className?: string;
 }
 
@@ -14,28 +14,30 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
   max = 100,
   label,
   showPercentage = false,
-  colorVariant = 'indigo',
+  colorVariant = 'primary',
   className = '',
 }) => {
   const percentage = Math.min(Math.max(Math.round((value / max) * 100), 0), 100);
 
   const colors = {
-    indigo: 'bg-indigo-600 dark:bg-indigo-500',
-    emerald: 'bg-emerald-500',
-    amber: 'bg-amber-500',
-    rose: 'bg-rose-500',
+    primary: 'bg-slate-800 dark:bg-slate-200',
+    indigo: 'bg-slate-800 dark:bg-slate-200',
+    emerald: 'bg-emerald-600 dark:bg-emerald-500',
+    amber: 'bg-amber-600 dark:bg-amber-500',
+    rose: 'bg-rose-600 dark:bg-rose-500',
+    sky: 'bg-sky-600 dark:bg-sky-500',
   };
 
   return (
     <div className={`w-full ${className}`}>
       {(label || showPercentage) && (
-        <div className="flex justify-between items-center text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1.5">
-          {label && <span>{label}</span>}
-          {showPercentage && <span>{percentage}%</span>}
+        <div className="flex justify-between items-center text-xs text-slate-600 dark:text-slate-400 mb-1">
+          {label && <span className="font-medium">{label}</span>}
+          {showPercentage && <span className="font-mono font-semibold">{percentage}%</span>}
         </div>
       )}
       <div
-        className="w-full bg-slate-200 dark:bg-slate-800 rounded-full h-2.5 overflow-hidden"
+        className="w-full bg-slate-200 dark:bg-slate-800 rounded-full h-2 overflow-hidden"
         role="progressbar"
         aria-valuenow={value}
         aria-valuemin={0}
