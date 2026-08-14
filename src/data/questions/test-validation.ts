@@ -2,6 +2,7 @@ import { ALL_QUESTIONS } from './index';
 import { validateQuestionBank } from './validation';
 import { ALL_STUDY_MATERIALS, getQuestionsForStudyMaterial } from '../study-materials';
 import { SUBJECTS } from '../subjects';
+import { ICON_MAP } from '../../components/ui/iconMap';
 
 // 1. Validate Question Bank
 const qResult = validateQuestionBank(ALL_QUESTIONS);
@@ -44,4 +45,21 @@ console.log('==============================================');
 
 if (materialIssues > 0) {
   throw new Error(`Study material validation failed with ${materialIssues} issue(s)!`);
+}
+
+// 3. Validate Subject Icon Mappings
+console.log('=== SUBJECT ICON MAPPINGS REPORT ===');
+let iconIssues = 0;
+SUBJECTS.forEach((subject) => {
+  if (!ICON_MAP[subject.iconName]) {
+    console.error(`[ERROR] Subject "${subject.id}" has unmapped iconName: "${subject.iconName}"`);
+    iconIssues++;
+  } else {
+    console.log(`- [${subject.id}] "${subject.name}" -> Icon: ${subject.iconName} (Valid)`);
+  }
+});
+console.log('==============================================');
+
+if (iconIssues > 0) {
+  throw new Error(`Subject icon validation failed with ${iconIssues} issue(s)!`);
 }
