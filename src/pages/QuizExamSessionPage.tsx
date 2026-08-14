@@ -234,6 +234,7 @@ export const QuizExamSessionPage: React.FC<QuizExamSessionPageProps> = ({
       />
 
       <QuestionCard
+        key={currentQuestion.id}
         question={currentQuestion}
         questionNumber={currentIndex + 1}
         totalQuestions={questions.length}

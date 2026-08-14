@@ -34,7 +34,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
   const isRevealed = isAnswerSubmitted && mode !== 'exam';
 
   return (
-    <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-4 sm:p-5 flex flex-col space-y-3.5">
+    <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-4 sm:p-5 flex flex-col space-y-3.5 animate-fade-in">
       <div className="flex items-center justify-between gap-2 border-b border-slate-100 dark:border-slate-800 pb-2.5">
         <div className="flex flex-wrap items-center gap-1.5 min-w-0">
           <CategoryBadge category={question.category} size="sm" />
@@ -53,14 +53,14 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
               type="button"
               onClick={() => onToggleBookmark(question.id)}
               aria-label={isBookmarked ? 'Remove bookmark' : 'Bookmark question'}
-              className={`w-8 h-8 rounded-lg flex items-center justify-center transition-colors tap-target ${
+              className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-150 active:scale-90 tap-target ${
                 isBookmarked
                   ? 'bg-amber-100 dark:bg-amber-950 text-amber-600 dark:text-amber-400'
                   : 'bg-slate-100 dark:bg-slate-800 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200'
               }`}
             >
               <Bookmark
-                className={`w-4 h-4 ${isBookmarked ? 'fill-current' : ''}`}
+                className={`w-4 h-4 transition-transform duration-150 ${isBookmarked ? 'fill-current scale-105' : ''}`}
               />
             </button>
           )}
@@ -89,11 +89,11 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
           if (isRevealed) {
             if (isCorrectAnswer) {
               choiceStyle =
-                'bg-emerald-50 dark:bg-emerald-950/40 border-emerald-500 text-emerald-950 dark:text-emerald-100 font-semibold';
+                'bg-emerald-50 dark:bg-emerald-950/40 border-emerald-500 text-emerald-950 dark:text-emerald-100 font-semibold shadow-xs';
               letterStyle =
                 'bg-emerald-600 text-white border-emerald-600';
               statusLabel = (
-                <div className="flex items-center gap-1 text-xs font-bold text-emerald-700 dark:text-emerald-300 shrink-0">
+                <div className="flex items-center gap-1 text-xs font-bold text-emerald-700 dark:text-emerald-300 shrink-0 animate-reveal">
                   <Check className="w-4 h-4 stroke-[3]" />
                   <span className="hidden xs:inline">Correct</span>
                 </div>
@@ -104,7 +104,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
               letterStyle =
                 'bg-rose-600 text-white border-rose-600';
               statusLabel = (
-                <div className="flex items-center gap-1 text-xs font-bold text-rose-700 dark:text-rose-300 shrink-0">
+                <div className="flex items-center gap-1 text-xs font-bold text-rose-700 dark:text-rose-300 shrink-0 animate-reveal">
                   <X className="w-4 h-4 stroke-[3]" />
                   <span className="hidden xs:inline">Your choice</span>
                 </div>
@@ -130,11 +130,11 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
               aria-checked={isSelected}
               disabled={isRevealed}
               onClick={() => onSelectChoice(index)}
-              className={`w-full text-left p-3 sm:p-3.5 rounded-lg border transition-all flex items-center justify-between gap-3 tap-target cursor-pointer disabled:cursor-default ${choiceStyle}`}
+              className={`w-full text-left p-3 sm:p-3.5 rounded-lg border transition-all duration-150 active:scale-[0.99] will-change-transform flex items-center justify-between gap-3 tap-target cursor-pointer disabled:cursor-default ${choiceStyle}`}
             >
               <div className="flex items-center gap-2.5 flex-1 min-w-0">
                 <span
-                  className={`w-7 h-7 rounded-md border flex items-center justify-center font-bold text-xs shrink-0 transition-colors ${letterStyle}`}
+                  className={`w-7 h-7 rounded-md border flex items-center justify-center font-bold text-xs shrink-0 transition-all duration-150 ${letterStyle}`}
                 >
                   {CHOICE_LETTERS[index]}
                 </span>
@@ -150,7 +150,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
       </div>
 
       {isRevealed && (
-        <div className="mt-2.5 p-3.5 rounded-lg bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 space-y-2">
+        <div className="mt-2.5 p-3.5 rounded-lg bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 space-y-2 animate-fade-in">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-1.5 text-slate-800 dark:text-slate-200 font-bold text-xs">
               <BookOpen className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" />

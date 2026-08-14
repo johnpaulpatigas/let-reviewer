@@ -152,6 +152,7 @@ export const PracticeReviewPage: React.FC<PracticeReviewPageProps> = ({
       />
 
       <QuestionCard
+        key={currentQuestion.id}
         question={currentQuestion}
         questionNumber={currentIndex + 1}
         totalQuestions={questions.length}
