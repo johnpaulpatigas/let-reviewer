@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { QuestionCard } from '../components/quiz/QuestionCard';
 import { Button } from '../components/ui/Button';
 import { ProgressBar } from '../components/ui/ProgressBar';
@@ -141,16 +141,14 @@ export const PracticeReviewPage: React.FC<PracticeReviewPageProps> = ({
   };
 
   return (
-    <div className="space-y-4 animate-fadeIn">
-      {/* Session Progress Bar */}
+    <div className="space-y-3.5">
       <ProgressBar
         value={currentIndex + 1}
         max={questions.length}
-        label={`Question ${currentIndex + 1} of ${questions.length}`}
+        label={`Item ${currentIndex + 1} of ${questions.length}`}
         showPercentage
       />
 
-      {/* Main Question Card */}
       <QuestionCard
         question={currentQuestion}
         questionNumber={currentIndex + 1}
@@ -163,8 +161,7 @@ export const PracticeReviewPage: React.FC<PracticeReviewPageProps> = ({
         mode={config.mode}
       />
 
-      {/* Action Buttons Bar */}
-      <div className="flex items-center justify-between gap-3 pt-2">
+      <div className="flex items-center justify-between gap-2.5 pt-1">
         <Button
           variant="outline"
           size="md"
@@ -175,7 +172,7 @@ export const PracticeReviewPage: React.FC<PracticeReviewPageProps> = ({
           Previous
         </Button>
 
-        <div className="flex-1 flex justify-end gap-2">
+        <div className="flex-1 flex justify-end">
           {!isCurrentSubmitted ? (
             <Button
               variant="primary"
@@ -201,7 +198,7 @@ export const PracticeReviewPage: React.FC<PracticeReviewPageProps> = ({
                 )
               }
             >
-              {isLastQuestion ? 'View Results' : 'Next Question'}
+              {isLastQuestion ? 'Complete & View Results' : 'Next Item'}
             </Button>
           )}
         </div>

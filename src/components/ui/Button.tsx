@@ -20,27 +20,27 @@ export const Button: React.FC<ButtonProps> = ({
   ...props
 }) => {
   const baseClasses =
-    'inline-flex items-center justify-center font-semibold rounded-xl transition-all duration-150 active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none disabled:active:scale-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 tap-target select-none cursor-pointer';
+    'inline-flex items-center justify-center font-semibold rounded-lg transition-colors disabled:opacity-50 disabled:pointer-events-none focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-1 tap-target select-none cursor-pointer';
 
   const sizeClasses = {
-    sm: 'h-10 px-3.5 text-xs sm:text-sm gap-1.5',
-    md: 'h-12 px-5 text-sm sm:text-base gap-2',
-    lg: 'h-14 px-6 text-base sm:text-lg gap-2.5',
+    sm: 'h-9 px-3 text-xs gap-1.5',
+    md: 'h-10 px-4 text-xs sm:text-sm gap-2',
+    lg: 'h-11 px-5 text-sm sm:text-base gap-2',
   };
 
   const variantClasses = {
     primary:
-      'bg-indigo-600 hover:bg-indigo-700 text-white shadow-sm shadow-indigo-600/20 active:bg-indigo-800',
+      'bg-indigo-600 hover:bg-indigo-700 text-white active:bg-indigo-800',
     secondary:
       'bg-slate-100 hover:bg-slate-200 text-slate-900 active:bg-slate-300 dark:bg-slate-800 dark:hover:bg-slate-700 dark:text-white',
     outline:
-      'bg-transparent border-2 border-slate-300 hover:border-slate-400 text-slate-700 hover:bg-slate-50 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800',
+      'bg-transparent border border-slate-300 hover:border-slate-400 text-slate-700 hover:bg-slate-50 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800',
     ghost:
       'bg-transparent hover:bg-slate-100 text-slate-700 active:bg-slate-200 dark:hover:bg-slate-800 dark:text-slate-300',
     danger:
-      'bg-rose-600 hover:bg-rose-700 text-white shadow-sm shadow-rose-600/20 active:bg-rose-800',
+      'bg-rose-600 hover:bg-rose-700 text-white active:bg-rose-800',
     success:
-      'bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm shadow-emerald-600/20 active:bg-emerald-800',
+      'bg-emerald-600 hover:bg-emerald-700 text-white active:bg-emerald-800',
   };
 
   return (

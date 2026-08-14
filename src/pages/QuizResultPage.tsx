@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import {
   Award,
   CheckCircle2,
@@ -10,6 +10,7 @@ import {
   ChevronUp,
   Bookmark,
   AlertCircle,
+  BookOpen,
 } from 'lucide-react';
 import { Button } from '../components/ui/Button';
 import { ProgressBar } from '../components/ui/ProgressBar';
@@ -48,7 +49,6 @@ export const QuizResultPage: React.FC<QuizResultPageProps> = ({
     questions,
   } = result;
 
-  // Format time (e.g., "3m 45s")
   const formatTimeSpent = (secs: number) => {
     const mins = Math.floor(secs / 60);
     const remainder = secs % 60;
@@ -56,13 +56,11 @@ export const QuizResultPage: React.FC<QuizResultPageProps> = ({
     return `${mins}m ${remainder}s`;
   };
 
-  // Get list of questions the user got wrong or didn't answer
   const missedQuestions = questions.filter((q) => {
     const ans = answers[q.id];
     return !ans || !ans.isCorrect;
   });
 
-  // Filtered list for detailed review
   const displayedQuestions = questions.filter((q) => {
     const ans = answers[q.id];
     if (filterMode === 'incorrect') {
@@ -79,93 +77,83 @@ export const QuizResultPage: React.FC<QuizResultPageProps> = ({
   };
 
   return (
-    <div className="space-y-5 animate-fadeIn">
-      {/* Result Hero Banner */}
-      <div
-        className={`rounded-3xl p-5 sm:p-6 text-white text-center shadow-lg transition-all ${
-          isPassed
-            ? 'bg-gradient-to-br from-emerald-600 to-teal-800 shadow-emerald-950/20'
-            : 'bg-gradient-to-br from-rose-600 to-slate-900 shadow-rose-950/20'
-        }`}
-      >
-        <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-white/15 backdrop-blur-md mb-3">
+    <div className="space-y-4">
+      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-5 text-center">
+        <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-slate-100 dark:bg-slate-800 mb-2.5">
           {isPassed ? (
-            <Award className="w-8 h-8 text-amber-300" />
+            <Award className="w-6 h-6 text-emerald-600" />
           ) : (
-            <AlertCircle className="w-8 h-8 text-white" />
+            <AlertCircle className="w-6 h-6 text-amber-600" />
           )}
         </div>
 
-        <div className="text-3xl sm:text-4xl font-black tracking-tight">
+        <div className="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">
           {scorePercentage}%
         </div>
-        <h2 className="text-lg sm:text-xl font-bold mt-1">
-          {isPassed ? 'Congratulations! Passed (LET Rating)' : 'Keep Practicing! Below 75% Benchmark'}
+        <h2 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white mt-1">
+          {isPassed ? 'Passed (Meets 75% LET Rating)' : 'Below 75% LET Passing Benchmark'}
         </h2>
-        <p className="text-xs sm:text-sm text-white/80 max-w-sm mx-auto mt-1">
+        <p className="text-xs text-slate-500 max-w-md mx-auto mt-0.5">
           {isPassed
-            ? 'You achieved the PRC Licensure Examination for Teachers required passing rating of 75%!'
-            : 'The PRC standard passing rating is 75%. Review the explanations below to target weak areas.'}
+            ? 'Score meets or exceeds the PRC Licensure Examination for Teachers passing threshold.'
+            : 'The PRC standard rating is 75%. Review the explanations below to target weak competencies.'}
         </p>
 
-        {/* 3 Metric Pills */}
-        <div className="grid grid-cols-3 gap-2 mt-5 pt-4 border-t border-white/20 text-xs">
-          <div className="bg-white/10 rounded-xl p-2">
-            <span className="block text-white/70 text-[11px]">Score</span>
-            <span className="font-bold text-sm text-white">
+        <div className="grid grid-cols-3 gap-2 mt-4 pt-3.5 border-t border-slate-100 dark:border-slate-800 text-xs">
+          <div className="p-2 bg-slate-50 dark:bg-slate-800/60 rounded-lg">
+            <span className="block text-slate-500 text-[11px]">Score</span>
+            <span className="font-bold text-slate-900 dark:text-white text-sm">
               {correctCount}/{totalQuestions}
             </span>
           </div>
-          <div className="bg-white/10 rounded-xl p-2">
-            <span className="block text-white/70 text-[11px]">Duration</span>
-            <span className="font-bold text-sm text-white">
+          <div className="p-2 bg-slate-50 dark:bg-slate-800/60 rounded-lg">
+            <span className="block text-slate-500 text-[11px]">Duration</span>
+            <span className="font-bold text-slate-900 dark:text-white text-sm">
               {formatTimeSpent(timeSpentSeconds)}
             </span>
           </div>
-          <div className="bg-white/10 rounded-xl p-2">
-            <span className="block text-white/70 text-[11px]">Accuracy</span>
-            <span className="font-bold text-sm text-white">
-              {scorePercentage}%
+          <div className="p-2 bg-slate-50 dark:bg-slate-800/60 rounded-lg">
+            <span className="block text-slate-500 text-[11px]">Status</span>
+            <span className={`font-bold text-sm ${isPassed ? 'text-emerald-600' : 'text-amber-600'}`}>
+              {isPassed ? 'Passed' : 'Needs Practice'}
             </span>
           </div>
         </div>
       </div>
 
-      {/* Answer Summary Card */}
       <div className="grid grid-cols-3 gap-2.5">
-        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-3 text-center">
-          <div className="flex items-center justify-center gap-1 text-emerald-600 text-xs font-bold mb-1">
-            <CheckCircle2 className="w-4 h-4" />
+        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-3 text-center">
+          <div className="flex items-center justify-center gap-1 text-emerald-600 text-xs font-semibold mb-0.5">
+            <CheckCircle2 className="w-3.5 h-3.5" />
             <span>Correct</span>
           </div>
-          <span className="text-xl font-black text-slate-900 dark:text-white">
+          <span className="text-lg font-bold text-slate-900 dark:text-white">
             {correctCount}
           </span>
         </div>
 
-        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-3 text-center">
-          <div className="flex items-center justify-center gap-1 text-rose-600 text-xs font-bold mb-1">
-            <XCircle className="w-4 h-4" />
+        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-3 text-center">
+          <div className="flex items-center justify-center gap-1 text-rose-600 text-xs font-semibold mb-0.5">
+            <XCircle className="w-3.5 h-3.5" />
             <span>Incorrect</span>
           </div>
-          <span className="text-xl font-black text-slate-900 dark:text-white">
+          <span className="text-lg font-bold text-slate-900 dark:text-white">
             {incorrectCount}
           </span>
         </div>
 
-        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-3 text-center">
-          <div className="flex items-center justify-center gap-1 text-slate-500 text-xs font-bold mb-1">
-            <Clock className="w-4 h-4" />
+        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-3 text-center">
+          <div className="flex items-center justify-center gap-1 text-slate-500 text-xs font-semibold mb-0.5">
+            <Clock className="w-3.5 h-3.5" />
             <span>Skipped</span>
           </div>
-          <span className="text-xl font-black text-slate-900 dark:text-white">
+          <span className="text-lg font-bold text-slate-900 dark:text-white">
             {unansweredCount}
           </span>
         </div>
       </div>
 
-      {/* Action Buttons */}
-      <div className="flex flex-col sm:flex-row gap-2.5">
+      <div className="flex flex-col sm:flex-row gap-2">
         {missedQuestions.length > 0 && (
           <Button
             variant="danger"
@@ -174,7 +162,7 @@ export const QuizResultPage: React.FC<QuizResultPageProps> = ({
             leftIcon={<RotateCcw className="w-4 h-4" />}
             onClick={() => onRetryIncorrect(missedQuestions)}
           >
-            Drill Missed Questions ({missedQuestions.length})
+            Drill Missed Items ({missedQuestions.length})
           </Button>
         )}
         <Button
@@ -197,10 +185,9 @@ export const QuizResultPage: React.FC<QuizResultPageProps> = ({
         </Button>
       </div>
 
-      {/* Subject Domain Breakdown */}
       {subjectBreakdown.length > 0 && (
-        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-5 shadow-sm space-y-3">
-          <h3 className="font-bold text-slate-900 dark:text-white text-sm uppercase tracking-wider">
+        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-4 sm:p-5 space-y-3">
+          <h3 className="font-bold text-slate-900 dark:text-white text-xs uppercase tracking-wider">
             Subject Performance Breakdown
           </h3>
           <div className="space-y-3">
@@ -229,24 +216,22 @@ export const QuizResultPage: React.FC<QuizResultPageProps> = ({
         </div>
       )}
 
-      {/* Detailed Item Review Section */}
-      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-5 shadow-sm space-y-4">
+      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-4 sm:p-5 space-y-3">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2 border-b border-slate-100 dark:border-slate-800">
           <div>
-            <h3 className="font-bold text-slate-900 dark:text-white text-base">
+            <h3 className="font-bold text-slate-900 dark:text-white text-sm sm:text-base">
               Item-by-Item Review & Rationale
             </h3>
             <p className="text-xs text-slate-500">
-              Examine each question and the official explanation.
+              Review correct answers and rationales.
             </p>
           </div>
 
-          {/* Filter Chips */}
-          <div className="flex gap-1.5 p-1 bg-slate-100 dark:bg-slate-800 rounded-xl self-start sm:self-auto">
+          <div className="flex gap-1.5 p-1 bg-slate-100 dark:bg-slate-800 rounded-lg self-start sm:self-auto">
             <button
               type="button"
               onClick={() => setFilterMode('all')}
-              className={`px-2.5 py-1 text-xs font-semibold rounded-lg transition-all ${
+              className={`px-2.5 py-1 text-xs font-semibold rounded-md transition-all ${
                 filterMode === 'all'
                   ? 'bg-white dark:bg-slate-700 text-indigo-600 dark:text-indigo-300 shadow-sm'
                   : 'text-slate-500 hover:text-slate-800'
@@ -257,7 +242,7 @@ export const QuizResultPage: React.FC<QuizResultPageProps> = ({
             <button
               type="button"
               onClick={() => setFilterMode('incorrect')}
-              className={`px-2.5 py-1 text-xs font-semibold rounded-lg transition-all ${
+              className={`px-2.5 py-1 text-xs font-semibold rounded-md transition-all ${
                 filterMode === 'incorrect'
                   ? 'bg-white dark:bg-slate-700 text-rose-600 dark:text-rose-300 shadow-sm'
                   : 'text-slate-500 hover:text-slate-800'
@@ -268,7 +253,7 @@ export const QuizResultPage: React.FC<QuizResultPageProps> = ({
             <button
               type="button"
               onClick={() => setFilterMode('flagged')}
-              className={`px-2.5 py-1 text-xs font-semibold rounded-lg transition-all ${
+              className={`px-2.5 py-1 text-xs font-semibold rounded-md transition-all ${
                 filterMode === 'flagged'
                   ? 'bg-white dark:bg-slate-700 text-amber-600 dark:text-amber-300 shadow-sm'
                   : 'text-slate-500 hover:text-slate-800'
@@ -279,8 +264,7 @@ export const QuizResultPage: React.FC<QuizResultPageProps> = ({
           </div>
         </div>
 
-        {/* Questions List */}
-        <div className="space-y-3">
+        <div className="space-y-2.5">
           {displayedQuestions.map((q, index) => {
             const ans = answers[q.id];
             const isCorrect = ans?.isCorrect ?? false;
@@ -291,7 +275,7 @@ export const QuizResultPage: React.FC<QuizResultPageProps> = ({
             return (
               <div
                 key={q.id}
-                className={`rounded-2xl border transition-all ${
+                className={`rounded-lg border transition-all ${
                   isAnswered
                     ? isCorrect
                       ? 'border-emerald-200 dark:border-emerald-950/60 bg-emerald-50/20 dark:bg-emerald-950/10'
@@ -299,14 +283,13 @@ export const QuizResultPage: React.FC<QuizResultPageProps> = ({
                     : 'border-slate-200 dark:border-slate-800 bg-slate-50/30 dark:bg-slate-800/20'
                 }`}
               >
-                {/* Header Summary Row */}
                 <div
                   onClick={() => toggleExpand(q.id)}
-                  className="p-3.5 sm:p-4 flex items-start justify-between gap-3 cursor-pointer select-none"
+                  className="p-3.5 flex items-start justify-between gap-3 cursor-pointer select-none"
                 >
-                  <div className="flex items-start gap-3 flex-1 min-w-0">
+                  <div className="flex items-start gap-2.5 flex-1 min-w-0">
                     <span
-                      className={`w-7 h-7 rounded-xl flex items-center justify-center shrink-0 font-bold text-xs ${
+                      className={`w-6 h-6 rounded-md flex items-center justify-center shrink-0 font-bold text-xs ${
                         isAnswered
                           ? isCorrect
                             ? 'bg-emerald-600 text-white'
@@ -330,21 +313,21 @@ export const QuizResultPage: React.FC<QuizResultPageProps> = ({
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-2 shrink-0">
+                  <div className="flex items-center gap-1.5 shrink-0">
                     <button
                       type="button"
                       onClick={(e) => {
                         e.stopPropagation();
                         onToggleBookmark(q.id);
                       }}
-                      className={`p-1.5 rounded-lg transition-colors ${
+                      className={`p-1.5 rounded transition-colors ${
                         isBookmarked
                           ? 'text-amber-500 bg-amber-50 dark:bg-amber-950'
                           : 'text-slate-400 hover:text-slate-600'
                       }`}
                     >
                       <Bookmark
-                        className={`w-4 h-4 ${isBookmarked ? 'fill-amber-500' : ''}`}
+                        className={`w-4 h-4 ${isBookmarked ? 'fill-current' : ''}`}
                       />
                     </button>
 
@@ -358,9 +341,8 @@ export const QuizResultPage: React.FC<QuizResultPageProps> = ({
                   </div>
                 </div>
 
-                {/* Expanded Details: Choices & Explanation */}
                 {isExpanded && (
-                  <div className="px-4 pb-4 pt-1 border-t border-slate-100 dark:border-slate-800 space-y-3">
+                  <div className="px-3.5 pb-3.5 pt-1 border-t border-slate-100 dark:border-slate-800 space-y-2.5">
                     <div className="space-y-1.5">
                       {q.choices.map((choice, cIdx) => {
                         const isSelected = ans?.selectedAnswer === cIdx;
@@ -379,7 +361,7 @@ export const QuizResultPage: React.FC<QuizResultPageProps> = ({
                         return (
                           <div
                             key={cIdx}
-                            className={`p-2.5 rounded-xl border text-xs flex items-center justify-between gap-2 ${style}`}
+                            className={`p-2.5 rounded-md border text-xs flex items-center justify-between gap-2 ${style}`}
                           >
                             <div className="flex items-center gap-2">
                               <span className="font-bold">
@@ -402,10 +384,11 @@ export const QuizResultPage: React.FC<QuizResultPageProps> = ({
                       })}
                     </div>
 
-                    <div className="p-3 rounded-xl bg-indigo-50 dark:bg-indigo-950/50 border border-indigo-200 dark:border-indigo-900/60 text-xs text-slate-700 dark:text-slate-300 leading-relaxed">
-                      <strong className="text-indigo-900 dark:text-indigo-200 block mb-1">
-                        Pedagogical Rationale:
-                      </strong>
+                    <div className="p-3 rounded-md bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 text-xs text-slate-700 dark:text-slate-300 leading-relaxed">
+                      <div className="flex items-center gap-1 text-slate-900 dark:text-slate-100 font-bold mb-1">
+                        <BookOpen className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" />
+                        <span>Pedagogical Rationale:</span>
+                      </div>
                       {q.explanation}
                     </div>
                   </div>
