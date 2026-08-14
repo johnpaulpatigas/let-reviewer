@@ -77,7 +77,7 @@ export const QuizConfigPage: React.FC<QuizConfigPageProps> = ({ onStartExam }) =
   };
 
   return (
-    <div className="space-y-6 animate-fade-in pb-6">
+    <div className="space-y-6 animate-fade-in">
       {/* Header */}
       <div>
         <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900 dark:text-white">

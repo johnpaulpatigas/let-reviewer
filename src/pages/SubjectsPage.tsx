@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { SUBJECTS } from '../data/subjects';
 import { getQuestionsBySubject } from '../data/questions';
 import { getStudyMaterialsBySubject } from '../data/study-materials';
@@ -91,6 +91,11 @@ export const SubjectsPage: React.FC<SubjectsPageProps> = ({
     setPage(1);
   };
 
+  // Reset scroll when switching between directory and subject hub view
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  }, [activeSubjectDetails]);
+
   const handlePageSelect = (page: number) => {
     setPage(page);
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -98,12 +103,10 @@ export const SubjectsPage: React.FC<SubjectsPageProps> = ({
 
   const handleSelectSubject = (subject: Subject) => {
     setActiveSubjectDetails(subject);
-    window.scrollTo({ top: 0, behavior: 'instant' });
   };
 
   const handleBackToDirectory = () => {
     setActiveSubjectDetails(null);
-    window.scrollTo({ top: 0, behavior: 'instant' });
   };
 
   const activeGuides = useMemo(() => {

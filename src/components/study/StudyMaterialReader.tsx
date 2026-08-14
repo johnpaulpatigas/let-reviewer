@@ -38,7 +38,7 @@ export const StudyMaterialReader: React.FC<StudyMaterialReaderProps> = ({
   }, [material.id]);
 
   return (
-    <article className="space-y-5 pb-8 animate-fadeIn">
+    <article className="space-y-5 animate-fade-in">
       {/* Top Reading Action & Meta Bar */}
       <div className="flex items-center justify-between gap-3 border-b border-slate-200 dark:border-slate-800 pb-3">
         <div className="flex flex-wrap items-center gap-2 min-w-0">

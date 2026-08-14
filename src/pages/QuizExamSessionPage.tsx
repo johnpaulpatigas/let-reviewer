@@ -282,7 +282,7 @@ export const QuizExamSessionPage: React.FC<QuizExamSessionPageProps> = ({
   });
 
   return (
-    <div className="space-y-4 animate-fade-in pb-8">
+    <div className="space-y-4 animate-fade-in">
       {/* Examination Title & Session Bar */}
       <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg p-3 sm:p-3.5 flex items-center justify-between gap-2.5">
         <div className="flex items-center gap-2 min-w-0">

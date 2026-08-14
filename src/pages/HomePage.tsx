@@ -41,7 +41,7 @@ export const HomePage: React.FC<HomePageProps> = ({
   };
 
   return (
-    <div className="space-y-5 animate-fade-in pb-4">
+    <div className="space-y-5 animate-fade-in">
       {/* Overview & Heading */}
       <section className="space-y-3">
         <div>
