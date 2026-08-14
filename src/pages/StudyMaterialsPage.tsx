@@ -3,6 +3,7 @@ import { ALL_STUDY_MATERIALS, getQuestionsForStudyMaterial } from '../data/study
 import { ALL_QUESTIONS } from '../data/questions';
 import { SUBJECTS } from '../data/subjects';
 import { CategoryBadge } from '../components/ui/Badge';
+import { Pagination } from '../components/ui/Pagination';
 import {
   Search,
   BookOpen,
@@ -19,17 +20,33 @@ interface StudyMaterialsPageProps {
   bookmarkedMaterialIds?: string[];
   completedMaterialIds?: string[];
   onToggleMaterialBookmark: (materialId: string) => void;
+  currentPage?: number;
+  onPageChange?: (page: number) => void;
 }
+
+const GUIDES_PER_PAGE = 8;
 
 export const StudyMaterialsPage: React.FC<StudyMaterialsPageProps> = ({
   onOpenMaterial,
   bookmarkedMaterialIds = [],
   completedMaterialIds = [],
   onToggleMaterialBookmark,
+  currentPage: controlledPage,
+  onPageChange: controlledOnPageChange,
 }) => {
   const [selectedCategory, setSelectedCategory] = useState<'all' | SubjectCategory | 'bookmarked'>('all');
   const [selectedSubjectId, setSelectedSubjectId] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState('');
+  const [internalPage, setInternalPage] = useState(1);
+
+  const currentPage = controlledPage !== undefined ? controlledPage : internalPage;
+  const setPage = (page: number) => {
+    if (controlledOnPageChange) {
+      controlledOnPageChange(page);
+    } else {
+      setInternalPage(page);
+    }
+  };
 
   // Dynamically compute the question count for each study material directly from the question bank
   const questionCountMap = useMemo(() => {
@@ -54,7 +71,7 @@ export const StudyMaterialsPage: React.FC<StudyMaterialsPageProps> = ({
         return false;
       }
 
-      // Search query
+      // Search query across title, description, topic, subjectName, and key terms
       const q = searchQuery.toLowerCase().trim();
       if (!q) return true;
 
@@ -67,6 +84,38 @@ export const StudyMaterialsPage: React.FC<StudyMaterialsPageProps> = ({
       );
     });
   }, [selectedCategory, selectedSubjectId, searchQuery, bookmarkedMaterialIds]);
+
+  // Total pages derived directly from filtered collection
+  const totalPages = Math.max(1, Math.ceil(filteredMaterials.length / GUIDES_PER_PAGE));
+  // Safe clamped current page to prevent being stranded on non-existent pages after filtering
+  const safeCurrentPage = Math.min(Math.max(1, currentPage), totalPages);
+
+  // Paginated subset of materials for current page
+  const paginatedMaterials = useMemo(() => {
+    const startIndex = (safeCurrentPage - 1) * GUIDES_PER_PAGE;
+    return filteredMaterials.slice(startIndex, startIndex + GUIDES_PER_PAGE);
+  }, [filteredMaterials, safeCurrentPage]);
+
+  const handleCategorySelect = (category: 'all' | SubjectCategory | 'bookmarked') => {
+    setSelectedCategory(category);
+    setSelectedSubjectId('all');
+    setPage(1);
+  };
+
+  const handleSubjectSelect = (subjectId: string) => {
+    setSelectedSubjectId(subjectId);
+    setPage(1);
+  };
+
+  const handleSearchChange = (val: string) => {
+    setSearchQuery(val);
+    setPage(1);
+  };
+
+  const handlePageSelect = (page: number) => {
+    setPage(page);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   const completedCount = completedMaterialIds.length;
   const totalCount = ALL_STUDY_MATERIALS.length;
@@ -117,13 +166,13 @@ export const StudyMaterialsPage: React.FC<StudyMaterialsPageProps> = ({
           type="search"
           placeholder="Search study guides, Piaget, Bloom, Laws..."
           value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
+          onChange={(e) => handleSearchChange(e.target.value)}
           className="w-full h-10 pl-9 pr-9 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg text-xs sm:text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:border-indigo-500 transition-colors"
         />
         {searchQuery && (
           <button
             type="button"
-            onClick={() => setSearchQuery('')}
+            onClick={() => handleSearchChange('')}
             className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-1"
           >
             <X className="w-3.5 h-3.5" />
@@ -135,10 +184,7 @@ export const StudyMaterialsPage: React.FC<StudyMaterialsPageProps> = ({
       <div className="flex gap-1.5 p-1 bg-slate-100 dark:bg-slate-900 rounded-lg overflow-x-auto">
         <button
           type="button"
-          onClick={() => {
-            setSelectedCategory('all');
-            setSelectedSubjectId('all');
-          }}
+          onClick={() => handleCategorySelect('all')}
           className={`flex-1 min-w-[70px] py-1.5 px-2.5 text-xs font-semibold rounded transition-colors tap-target ${
             selectedCategory === 'all'
               ? 'bg-white dark:bg-slate-800 text-indigo-600 dark:text-indigo-400 shadow-sm font-bold'
@@ -149,10 +195,7 @@ export const StudyMaterialsPage: React.FC<StudyMaterialsPageProps> = ({
         </button>
         <button
           type="button"
-          onClick={() => {
-            setSelectedCategory('gen_ed');
-            setSelectedSubjectId('all');
-          }}
+          onClick={() => handleCategorySelect('gen_ed')}
           className={`flex-1 min-w-[70px] py-1.5 px-2.5 text-xs font-semibold rounded transition-colors tap-target ${
             selectedCategory === 'gen_ed'
               ? 'bg-white dark:bg-slate-800 text-sky-600 dark:text-sky-400 shadow-sm font-bold'
@@ -163,10 +206,7 @@ export const StudyMaterialsPage: React.FC<StudyMaterialsPageProps> = ({
         </button>
         <button
           type="button"
-          onClick={() => {
-            setSelectedCategory('prof_ed');
-            setSelectedSubjectId('all');
-          }}
+          onClick={() => handleCategorySelect('prof_ed')}
           className={`flex-1 min-w-[70px] py-1.5 px-2.5 text-xs font-semibold rounded transition-colors tap-target ${
             selectedCategory === 'prof_ed'
               ? 'bg-white dark:bg-slate-800 text-indigo-600 dark:text-indigo-400 shadow-sm font-bold'
@@ -177,10 +217,7 @@ export const StudyMaterialsPage: React.FC<StudyMaterialsPageProps> = ({
         </button>
         <button
           type="button"
-          onClick={() => {
-            setSelectedCategory('bookmarked');
-            setSelectedSubjectId('all');
-          }}
+          onClick={() => handleCategorySelect('bookmarked')}
           className={`flex-1 min-w-[70px] py-1.5 px-2.5 text-xs font-semibold rounded transition-colors tap-target ${
             selectedCategory === 'bookmarked'
               ? 'bg-white dark:bg-slate-800 text-amber-600 dark:text-amber-400 shadow-sm font-bold'
@@ -196,7 +233,7 @@ export const StudyMaterialsPage: React.FC<StudyMaterialsPageProps> = ({
         <div className="flex gap-1.5 overflow-x-auto pb-1 scrollbar-none text-xs">
           <button
             type="button"
-            onClick={() => setSelectedSubjectId('all')}
+            onClick={() => handleSubjectSelect('all')}
             className={`px-2.5 py-1 rounded-md border text-[11px] font-medium whitespace-nowrap transition-colors ${
               selectedSubjectId === 'all'
                 ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 border-transparent font-bold'
@@ -211,7 +248,7 @@ export const StudyMaterialsPage: React.FC<StudyMaterialsPageProps> = ({
             <button
               key={sub.id}
               type="button"
-              onClick={() => setSelectedSubjectId(sub.id)}
+              onClick={() => handleSubjectSelect(sub.id)}
               className={`px-2.5 py-1 rounded-md border text-[11px] font-medium whitespace-nowrap transition-colors ${
                 selectedSubjectId === sub.id
                   ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 border-transparent font-bold'
@@ -226,7 +263,7 @@ export const StudyMaterialsPage: React.FC<StudyMaterialsPageProps> = ({
 
       {/* Materials List */}
       <div className="space-y-2.5">
-        {filteredMaterials.map((material) => {
+        {paginatedMaterials.map((material) => {
           const isCompleted = completedMaterialIds.includes(material.id);
           const isBookmarked = bookmarkedMaterialIds.includes(material.id);
           const qCount = questionCountMap[material.id] ?? 0;
@@ -300,6 +337,19 @@ export const StudyMaterialsPage: React.FC<StudyMaterialsPageProps> = ({
         })}
       </div>
 
+      {/* Pagination Controls */}
+      {filteredMaterials.length > 0 && totalPages > 1 && (
+        <Pagination
+          currentPage={safeCurrentPage}
+          totalPages={totalPages}
+          onPageChange={handlePageSelect}
+          totalItems={filteredMaterials.length}
+          itemsPerPage={GUIDES_PER_PAGE}
+          itemLabel="guides"
+        />
+      )}
+
+      {/* Empty Search / Filter State */}
       {filteredMaterials.length === 0 && (
         <div className="text-center py-10 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-5 space-y-2">
           <BookOpen className="w-8 h-8 text-slate-400 mx-auto" />
