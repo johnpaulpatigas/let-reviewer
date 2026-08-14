@@ -20,7 +20,7 @@ export const Button: React.FC<ButtonProps> = ({
   ...props
 }) => {
   const baseClasses =
-    'inline-flex items-center justify-center font-semibold rounded-lg transition-colors disabled:opacity-50 disabled:pointer-events-none focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-1 tap-target select-none cursor-pointer';
+    'inline-flex items-center justify-center font-semibold rounded-lg transition-all duration-150 active:scale-[0.985] will-change-transform disabled:opacity-50 disabled:pointer-events-none disabled:active:scale-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-1 tap-target select-none cursor-pointer';
 
   const sizeClasses = {
     sm: 'h-9 px-3 text-xs gap-1.5',
@@ -30,7 +30,7 @@ export const Button: React.FC<ButtonProps> = ({
 
   const variantClasses = {
     primary:
-      'bg-indigo-600 hover:bg-indigo-700 text-white active:bg-indigo-800',
+      'bg-indigo-600 hover:bg-indigo-700 text-white active:bg-indigo-800 shadow-xs hover:shadow-sm',
     secondary:
       'bg-slate-100 hover:bg-slate-200 text-slate-900 active:bg-slate-300 dark:bg-slate-800 dark:hover:bg-slate-700 dark:text-white',
     outline:
@@ -38,9 +38,9 @@ export const Button: React.FC<ButtonProps> = ({
     ghost:
       'bg-transparent hover:bg-slate-100 text-slate-700 active:bg-slate-200 dark:hover:bg-slate-800 dark:text-slate-300',
     danger:
-      'bg-rose-600 hover:bg-rose-700 text-white active:bg-rose-800',
+      'bg-rose-600 hover:bg-rose-700 text-white active:bg-rose-800 shadow-xs',
     success:
-      'bg-emerald-600 hover:bg-emerald-700 text-white active:bg-emerald-800',
+      'bg-emerald-600 hover:bg-emerald-700 text-white active:bg-emerald-800 shadow-xs',
   };
 
   return (
@@ -51,9 +51,9 @@ export const Button: React.FC<ButtonProps> = ({
       disabled={disabled}
       {...props}
     >
-      {leftIcon && <span className="inline-flex shrink-0">{leftIcon}</span>}
+      {leftIcon && <span className="inline-flex shrink-0 transition-transform">{leftIcon}</span>}
       <span>{children}</span>
-      {rightIcon && <span className="inline-flex shrink-0">{rightIcon}</span>}
+      {rightIcon && <span className="inline-flex shrink-0 transition-transform">{rightIcon}</span>}
     </button>
   );
 };

@@ -122,7 +122,7 @@ export const StudyMaterialsPage: React.FC<StudyMaterialsPageProps> = ({
   const progressPercent = Math.round((completedCount / totalCount) * 100);
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 animate-fade-in">
       {/* Header */}
       <div>
         <h2 className="text-lg sm:text-xl font-bold text-slate-900 dark:text-white">
@@ -272,7 +272,7 @@ export const StudyMaterialsPage: React.FC<StudyMaterialsPageProps> = ({
             <div
               key={material.id}
               onClick={() => onOpenMaterial(material)}
-              className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 rounded-xl p-4 transition-colors cursor-pointer group flex flex-col justify-between space-y-3"
+              className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 rounded-xl p-4 transition-all duration-150 active:scale-[0.99] hover:shadow-xs will-change-transform cursor-pointer group flex flex-col justify-between space-y-3"
             >
               <div>
                 <div className="flex items-start justify-between gap-2 mb-1.5">
@@ -297,7 +297,7 @@ export const StudyMaterialsPage: React.FC<StudyMaterialsPageProps> = ({
                         e.stopPropagation();
                         onToggleMaterialBookmark(material.id);
                       }}
-                      className={`p-1.5 rounded transition-colors ${
+                      className={`p-1.5 rounded transition-transform duration-150 active:scale-90 ${
                         isBookmarked
                           ? 'text-amber-500 bg-amber-50 dark:bg-amber-950'
                           : 'text-slate-400 hover:text-slate-600'

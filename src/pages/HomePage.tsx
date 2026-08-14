@@ -54,7 +54,7 @@ export const HomePage: React.FC<HomePageProps> = ({
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 animate-fade-in">
       {/* Hero Welcome Card */}
       <div className="bg-slate-900 text-white rounded-xl p-5 sm:p-6 border border-slate-800 shadow-sm">
         <div className="max-w-xl">
@@ -68,12 +68,12 @@ export const HomePage: React.FC<HomePageProps> = ({
             Practice board-exam competencies with comprehensive rationales, topic drills, and timed mock simulations.
           </p>
 
-          {/* Primary Action Buttons with High Visual Contrast */}
+          {/* Primary Action Buttons with High Visual Contrast & Tactile Feedback */}
           <div className="mt-4 flex flex-col sm:flex-row gap-2.5">
             <button
               type="button"
               onClick={handleStartQuickMix}
-              className="h-11 px-4 rounded-lg bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-700 text-white font-bold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-sm shadow-indigo-950/50 transition-colors tap-target cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900"
+              className="h-11 px-4 rounded-lg bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-700 active:scale-[0.985] text-white font-bold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-sm shadow-indigo-950/50 transition-all duration-150 will-change-transform tap-target cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900"
             >
               <Zap className="w-4 h-4 text-amber-300 fill-amber-300 shrink-0" />
               <span>Quick Practice (10 Items)</span>
@@ -82,7 +82,7 @@ export const HomePage: React.FC<HomePageProps> = ({
             <button
               type="button"
               onClick={() => onNavigateTab('materials')}
-              className="h-11 px-4 rounded-lg bg-slate-800 hover:bg-slate-700 active:bg-slate-800 text-white font-bold text-xs sm:text-sm flex items-center justify-center gap-2 border border-slate-600 hover:border-indigo-400 shadow-sm shadow-slate-950/30 transition-colors tap-target cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900"
+              className="h-11 px-4 rounded-lg bg-slate-800 hover:bg-slate-700 active:bg-slate-800 active:scale-[0.985] text-white font-bold text-xs sm:text-sm flex items-center justify-center gap-2 border border-slate-600 hover:border-indigo-400 shadow-sm shadow-slate-950/30 transition-all duration-150 will-change-transform tap-target cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900"
             >
               <BookOpen className="w-4 h-4 text-indigo-400 shrink-0" />
               <span>Study Guides & Notes</span>
@@ -91,7 +91,7 @@ export const HomePage: React.FC<HomePageProps> = ({
             <button
               type="button"
               onClick={() => onNavigateTab('practice')}
-              className="h-11 px-4 rounded-lg bg-slate-800 hover:bg-slate-700 active:bg-slate-800 text-white font-bold text-xs sm:text-sm flex items-center justify-center gap-2 border border-slate-600 hover:border-sky-400 shadow-sm shadow-slate-950/30 transition-colors tap-target cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900"
+              className="h-11 px-4 rounded-lg bg-slate-800 hover:bg-slate-700 active:bg-slate-800 active:scale-[0.985] text-white font-bold text-xs sm:text-sm flex items-center justify-center gap-2 border border-slate-600 hover:border-sky-400 shadow-sm shadow-slate-950/30 transition-all duration-150 will-change-transform tap-target cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900"
             >
               <BrainCircuit className="w-4 h-4 text-sky-400 shrink-0" />
               <span>Practice & Mock Exam</span>
@@ -102,7 +102,7 @@ export const HomePage: React.FC<HomePageProps> = ({
 
       {/* Accuracy & Progress Metrics */}
       <div className="grid grid-cols-3 gap-2.5">
-        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-3 sm:p-3.5">
+        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-3 sm:p-3.5 transition-all duration-150 hover:shadow-xs">
           <div className="flex items-center justify-between">
             <span className="text-[11px] font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider">
               Accuracy
@@ -119,7 +119,7 @@ export const HomePage: React.FC<HomePageProps> = ({
           </div>
         </div>
 
-        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-3 sm:p-3.5">
+        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-3 sm:p-3.5 transition-all duration-150 hover:shadow-xs">
           <div className="flex items-center justify-between">
             <span className="text-[11px] font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider">
               Streak
@@ -136,7 +136,7 @@ export const HomePage: React.FC<HomePageProps> = ({
           </div>
         </div>
 
-        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-3 sm:p-3.5">
+        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-3 sm:p-3.5 transition-all duration-150 hover:shadow-xs">
           <div className="flex items-center justify-between">
             <span className="text-[11px] font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider">
               Bank
@@ -163,10 +163,10 @@ export const HomePage: React.FC<HomePageProps> = ({
           <button
             type="button"
             onClick={() => onNavigateTab('subjects')}
-            className="text-xs font-semibold text-indigo-600 dark:text-indigo-400 flex items-center gap-1 hover:underline tap-target"
+            className="text-xs font-semibold text-indigo-600 dark:text-indigo-400 flex items-center gap-1 hover:underline tap-target group"
           >
             <span>All {SUBJECTS.length} subjects</span>
-            <ArrowRight className="w-3.5 h-3.5" />
+            <ArrowRight className="w-3.5 h-3.5 transition-transform duration-150 group-hover:translate-x-0.5" />
           </button>
         </div>
 
@@ -174,10 +174,10 @@ export const HomePage: React.FC<HomePageProps> = ({
           <button
             type="button"
             onClick={() => handleStartCategoryPractice('gen_ed')}
-            className="text-left bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 rounded-xl p-4 transition-colors flex items-center justify-between tap-target group"
+            className="text-left bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 rounded-xl p-4 transition-all duration-150 active:scale-[0.99] hover:shadow-xs will-change-transform flex items-center justify-between tap-target group"
           >
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-sky-50 dark:bg-sky-950/60 text-sky-700 dark:text-sky-300 border border-sky-200 dark:border-sky-800 flex items-center justify-center font-bold text-sm">
+              <div className="w-10 h-10 rounded-lg bg-sky-50 dark:bg-sky-950/60 text-sky-700 dark:text-sky-300 border border-sky-200 dark:border-sky-800 flex items-center justify-center font-bold text-sm transition-transform duration-150 group-hover:scale-105">
                 GE
               </div>
               <div>
@@ -195,10 +195,10 @@ export const HomePage: React.FC<HomePageProps> = ({
           <button
             type="button"
             onClick={() => handleStartCategoryPractice('prof_ed')}
-            className="text-left bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 rounded-xl p-4 transition-colors flex items-center justify-between tap-target group"
+            className="text-left bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 rounded-xl p-4 transition-all duration-150 active:scale-[0.99] hover:shadow-xs will-change-transform flex items-center justify-between tap-target group"
           >
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800 flex items-center justify-center font-bold text-sm">
+              <div className="w-10 h-10 rounded-lg bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800 flex items-center justify-center font-bold text-sm transition-transform duration-150 group-hover:scale-105">
                 PE
               </div>
               <div>

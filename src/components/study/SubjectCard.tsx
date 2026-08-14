@@ -22,13 +22,13 @@ export const SubjectCard: React.FC<SubjectCardProps> = ({
   return (
     <div
       onClick={() => onSelect(subject)}
-      className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-4 flex flex-col justify-between hover:border-slate-300 dark:hover:border-slate-700 transition-colors cursor-pointer group select-none"
+      className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-4 flex flex-col justify-between hover:border-slate-300 dark:hover:border-slate-700 transition-all duration-150 active:scale-[0.99] hover:shadow-xs will-change-transform cursor-pointer group select-none"
     >
       <div>
         <div className="flex items-start justify-between gap-3 mb-2">
           <div className="flex items-center gap-2.5">
             <div
-              className={`w-9 h-9 rounded-lg flex items-center justify-center ${subject.colorScheme.bg} ${subject.colorScheme.text} border ${subject.colorScheme.border}`}
+              className={`w-9 h-9 rounded-lg flex items-center justify-center ${subject.colorScheme.bg} ${subject.colorScheme.text} border ${subject.colorScheme.border} transition-transform duration-150 group-hover:scale-105`}
             >
               <IconHelper name={subject.iconName} className="w-4 h-4" />
             </div>
