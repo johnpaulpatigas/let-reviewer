@@ -1,11 +1,18 @@
-import type { Question, SubjectCategory, QuizConfig } from '../../types';
-import { GENERAL_EDUCATION_QUESTIONS } from './generalEducation';
-import { PROFESSIONAL_EDUCATION_QUESTIONS } from './professionalEducation';
+import type { Question, SubjectCategory, Difficulty, QuizConfig } from '../../types';
+import { ALL_GEN_ED_QUESTIONS } from './general-education';
+import { ALL_PROF_ED_QUESTIONS } from './professional-education';
+import { validateQuestionBank } from './validation';
 
 export const ALL_QUESTIONS: Question[] = [
-  ...GENERAL_EDUCATION_QUESTIONS,
-  ...PROFESSIONAL_EDUCATION_QUESTIONS,
+  ...ALL_GEN_ED_QUESTIONS,
+  ...ALL_PROF_ED_QUESTIONS,
 ];
+
+// Perform runtime check to ensure data integrity during development
+const validation = validateQuestionBank(ALL_QUESTIONS);
+if (!validation.isValid && import.meta.env.DEV) {
+  console.warn('[Question Bank Validation Issues]:', validation);
+}
 
 /**
  * Get all questions for a specific subject
@@ -19,6 +26,13 @@ export function getQuestionsBySubject(subjectId: string): Question[] {
  */
 export function getQuestionsByCategory(category: SubjectCategory): Question[] {
   return ALL_QUESTIONS.filter((q) => q.category === category);
+}
+
+/**
+ * Get questions by difficulty rating
+ */
+export function getQuestionsByDifficulty(difficulty: Difficulty): Question[] {
+  return ALL_QUESTIONS.filter((q) => q.difficulty === difficulty);
 }
 
 /**
@@ -62,6 +76,11 @@ export function buildQuizQuestions(
     pool = pool.filter((q) => q.topic === config.topic);
   }
 
+  // Filter by difficulty if provided
+  if (config.difficulty && config.difficulty !== 'all') {
+    pool = pool.filter((q) => q.difficulty === config.difficulty);
+  }
+
   // Filter by bookmarks or missed questions
   if (config.includeOnlyBookmarked) {
     pool = pool.filter((q) => bookmarkedIds.includes(q.id));
@@ -75,3 +94,7 @@ export function buildQuizQuestions(
   // Return requested count, or all available if pool is smaller
   return randomized.slice(0, Math.min(config.questionCount, randomized.length));
 }
+
+export * from './general-education';
+export * from './professional-education';
+export * from './validation';

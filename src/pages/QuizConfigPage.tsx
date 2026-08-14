@@ -9,7 +9,7 @@ import {
   Award,
   BookOpen,
 } from 'lucide-react';
-import type { QuizConfig, SubjectCategory } from '../types';
+import type { QuizConfig, SubjectCategory, Difficulty } from '../types';
 
 interface QuizConfigPageProps {
   onStartExam: (config: QuizConfig) => void;
@@ -18,6 +18,7 @@ interface QuizConfigPageProps {
 export const QuizConfigPage: React.FC<QuizConfigPageProps> = ({ onStartExam }) => {
   const [selectedCategory, setSelectedCategory] = useState<SubjectCategory | 'all'>('all');
   const [selectedSubjectIds, setSelectedSubjectIds] = useState<string[]>([]);
+  const [selectedDifficulty, setSelectedDifficulty] = useState<Difficulty | 'all'>('all');
   const [questionCount, setQuestionCount] = useState<number>(10);
   const [timeLimitMinutes, setTimeLimitMinutes] = useState<number>(15);
 
@@ -33,24 +34,24 @@ export const QuizConfigPage: React.FC<QuizConfigPageProps> = ({ onStartExam }) =
         mode: 'exam',
         category: 'all',
         subjectIds: [],
-        questionCount: 15,
-        timeLimitMinutes: 20,
+        questionCount: 20,
+        timeLimitMinutes: 25,
       });
     } else if (preset === 'gen_ed') {
       onStartExam({
         mode: 'exam',
         category: 'gen_ed',
         subjectIds: [],
-        questionCount: 10,
-        timeLimitMinutes: 15,
+        questionCount: 15,
+        timeLimitMinutes: 20,
       });
     } else {
       onStartExam({
         mode: 'exam',
         category: 'prof_ed',
         subjectIds: [],
-        questionCount: 10,
-        timeLimitMinutes: 15,
+        questionCount: 15,
+        timeLimitMinutes: 20,
       });
     }
   };
@@ -60,6 +61,7 @@ export const QuizConfigPage: React.FC<QuizConfigPageProps> = ({ onStartExam }) =
       mode: 'exam',
       category: selectedCategory,
       subjectIds: selectedSubjectIds,
+      difficulty: selectedDifficulty,
       questionCount,
       timeLimitMinutes: timeLimitMinutes === 0 ? undefined : timeLimitMinutes,
     });
@@ -205,6 +207,34 @@ export const QuizConfigPage: React.FC<QuizConfigPageProps> = ({ onStartExam }) =
           </div>
         </div>
 
+        {/* Difficulty Selector */}
+        <div>
+          <label className="text-xs font-bold text-slate-500 uppercase tracking-wider block mb-2">
+            Question Difficulty
+          </label>
+          <div className="flex gap-2">
+            {[
+              { id: 'all', label: 'Mixed / All' },
+              { id: 'easy', label: 'Easy' },
+              { id: 'medium', label: 'Medium' },
+              { id: 'hard', label: 'Hard' },
+            ].map((diff) => (
+              <button
+                key={diff.id}
+                type="button"
+                onClick={() => setSelectedDifficulty(diff.id as Difficulty | 'all')}
+                className={`flex-1 py-2 px-2 text-xs sm:text-sm font-semibold rounded-xl border transition-all tap-target ${
+                  selectedDifficulty === diff.id
+                    ? 'bg-indigo-50 border-indigo-600 text-indigo-700 dark:bg-indigo-950/70 dark:border-indigo-500 dark:text-indigo-300 font-bold'
+                    : 'border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400'
+                }`}
+              >
+                {diff.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
         {/* Specific Subjects Selection (optional) */}
         <div>
           <div className="flex items-center justify-between mb-2">
@@ -251,7 +281,7 @@ export const QuizConfigPage: React.FC<QuizConfigPageProps> = ({ onStartExam }) =
             Number of Questions
           </label>
           <div className="flex gap-2">
-            {[5, 10, 15, 20, ALL_QUESTIONS.length].map((count) => (
+            {[10, 20, 30, 50, ALL_QUESTIONS.length].map((count) => (
               <button
                 key={count}
                 type="button"

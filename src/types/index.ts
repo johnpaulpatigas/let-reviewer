@@ -45,6 +45,7 @@ export interface QuizConfig {
   subjectIds: string[];
   category?: SubjectCategory | 'all';
   topic?: string;
+  difficulty?: Difficulty | 'all';
   questionCount: number;
   timeLimitMinutes?: number; // null or undefined for untimed
   includeOnlyBookmarked?: boolean;
