@@ -9,7 +9,7 @@ export const ASSESSMENT_STUDY_MATERIALS: StudyMaterial[] = [
     subjectName: 'Assessment of Learning',
     category: 'prof_ed',
     topic: 'Types of Assessment',
-    relatedTopics: ['Alternative & Authentic Assessment'],
+    relatedTopics: ['Alternative & Authentic Assessment', 'Item Analysis & Statistics', 'Standardized vs Teacher-Made Tests'],
     description: 'Comprehensive guide distinguishing assessment FOR, OF, and AS learning with clinical classroom indicators.',
     readTimeMinutes: 6,
     overview:
@@ -47,224 +47,238 @@ export const ASSESSMENT_STUDY_MATERIALS: StudyMaterial[] = [
         },
       },
       {
-        heading: '3. Authentic & Performance-Based Assessment',
+        heading: '3. Norm-Referenced vs. Criterion-Referenced Assessment',
         paragraphs: [
-          'Traditional paper-and-pencil assessments evaluate declarative knowledge (knowing what). In contrast, authentic and performance-based assessments require learners to demonstrate procedural competencies (knowing how) within meaningful, real-world contexts.',
-          'Performance assessments utilize scoring rubrics (Analytic or Holistic) to ensure objective, reliable evaluation of student artifacts.',
+          'Norm-Referenced Assessment: Compares an individual student’s performance to that of a peer norm group (e.g., percentile ranks, grading on a curve, NCEE, College Entrance Tests).',
+          'Criterion-Referenced Assessment: Evaluates student performance against predetermined, fixed learning standards or mastery criteria regardless of peer scores (e.g., DepEd grading system, LET passing mark of 75%).',
         ],
-        example: {
-          scenario:
-            'A biology teacher asks students to design a water filtration device using local recycled materials and present an ecological viability report, evaluated via a 4-criterion analytic rubric.',
-          analysis:
-            'This is authentic performance assessment. It requires higher-order synthesis and real-world application beyond simple recall of filtration facts.',
-        },
       },
     ],
     keyTerms: [
       {
-        term: 'Formative Assessment',
-        definition: 'Ongoing assessment conducted during the instructional process to provide real-time feedback and adapt pedagogy.',
+        term: 'Assessment FOR Learning',
+        definition: 'Formative assessment procedures designed to diagnose student learning needs and inform teaching adjustments in real time.',
       },
       {
-        term: 'Summative Assessment',
-        definition: 'Culminating assessment administered at the conclusion of an instructional period to certify learning and assign grades.',
-      },
-      {
-        term: 'Assessment AS Learning',
-        definition: 'The process where students monitor their own metacognitive learning and engage in self-regulation and reflection.',
+        term: 'Criterion-Referenced Assessment',
+        definition: 'An evaluation comparing student performance against predefined objective standards or competency benchmarks rather than peer rankings.',
       },
     ],
     letTips: [
-      'If the scenario mentions "adjusting lesson plans based on student confusion during the discussion," the answer is ALWAYS Formative Assessment.',
-      'If the scenario asks about "determining the root cause of persistent reading failure," look for Diagnostic Assessment.',
-      'Do not confuse formative assessment with grading; formative assessments should prioritize feedback over score recording.',
-    ],
-    commonMistakes: [
-      'Assuming that all quizzes are summative. A short quiz used to gauge if students understood yesterday’s lesson before proceeding is formative.',
-      'Thinking Assessment AS Learning is the same as Assessment FOR Learning. "AS learning" requires active student self-monitoring and metacognition.',
+      'If the primary intent is to assign grades and certify final competency mastery -> Summative / Assessment OF Learning.',
+      'If the teacher checks understanding mid-lesson to re-explain a confusing concept -> Formative / Assessment FOR Learning.',
     ],
     summaryPoints: [
-      'Diagnostic precedes instruction to identify learning gaps.',
-      'Formative accompanies instruction to shape ongoing learning.',
-      'Summative follows instruction to evaluate final competence.',
-      'Assessment AS learning develops metacognition and self-regulation.',
+      'Diagnostic identifies learning deficits before instruction begins.',
+      'Formative informs teaching adaptations and student feedback during instruction.',
+      'Summative evaluates total learning outcomes for grading at the end of instruction.',
     ],
   },
   {
     id: 'mat-prof-assess-002',
-    slug: 'item-analysis-difficulty-and-discrimination-index',
+    slug: 'item-analysis-difficulty-discrimination-distractor',
     title: 'Item Analysis: Difficulty Index, Discrimination Index, and Distractor Analysis',
     subjectId: 'prof-assessment',
     subjectName: 'Assessment of Learning',
     category: 'prof_ed',
     topic: 'Item Analysis & Statistics',
-    description: 'Mathematical formulas, decision rules, and pedagogical interpretations for test item quality in the LET.',
-    readTimeMinutes: 7,
+    relatedTopics: ['Types of Assessment', 'Standardized vs Teacher-Made Tests'],
+    description: 'Formulas and decision rules for Item Difficulty (p), Discrimination Index (d), Effective Distractors, Skewness, and Central Tendency.',
+    readTimeMinutes: 8,
     overview:
-      'Item analysis is a statistical procedure used to evaluate the quality of test questions. In the LET, item analysis questions test your ability to calculate and interpret the Difficulty Index (P) and Discrimination Index (D).',
+      'Item analysis is a statistical procedure used to evaluate the quality of individual test items. The LET regularly tests formulas and interpretation rules for item difficulty, discrimination, distractor quality, and distribution skewness.',
     sections: [
       {
-        heading: '1. The Difficulty Index (p-value)',
+        heading: '1. Item Difficulty Index (p-value)',
         paragraphs: [
-          'The Difficulty Index (P) represents the proportion of examinees who answered an item correctly. It is computed using the formula:',
-          'P = (Ru + Rl) / N',
-          'Where Ru is the number of correct responses from the Upper Group (top 27%), Rl is the number of correct responses from the Lower Group (bottom 27%), and N is the total number of students in both groups combined.',
-          'Notice the inverse relationship: A higher difficulty index value means the item is EASIER, while a lower value means the item is HARDER.',
+          'Formula: p = (Number of students who answered correctly) / (Total number of students who attempted the item) = (Ru + Rl) / N',
+          'Interpretation Range:',
+          '- 0.00 to 0.20: Very Difficult (Revise or discard)',
+          '- 0.21 to 0.80: Good / Moderate Difficulty (Ideal for classroom exams; optimal around 0.50)',
+          '- 0.81 to 1.00: Very Easy (Revise or discard)',
         ],
-        comparisonTable: {
-          headers: ['Difficulty Index (P) Range', 'Item Interpretation', 'Recommended Pedagogical Action'],
-          rows: [
-            ['0.00 – 0.20', 'Very Difficult', 'Revise or discard (unless intended for high-level selection)'],
-            ['0.21 – 0.40', 'Difficult', 'Retain or refine phrasing'],
-            ['0.41 – 0.60', 'Moderate / Average (Ideal)', 'Retain (provides optimum discriminating power)'],
-            ['0.61 – 0.80', 'Easy', 'Retain or refine distractors'],
-            ['0.81 – 1.00', 'Very Easy', 'Revise or discard (does not differentiate students)'],
-          ],
-        },
-        keyConcept:
-          'Ideal test items for classroom achievement have a moderate difficulty index (around 0.50), which maximizes the item’s potential to discriminate between high and low achievers.',
       },
       {
-        heading: '2. The Discrimination Index (D-value)',
+        heading: '2. Item Discrimination Index (d-value)',
         paragraphs: [
-          'The Discrimination Index (D) measures the ability of an item to differentiate between high-performing examinees (upper 27%) and low-performing examinees (lower 27%).',
-          'D = (Ru - Rl) / n',
-          'Where Ru = number of correct answers in Upper group, Rl = number of correct answers in Lower group, and n = number of students in ONE group (upper or lower).',
+          'Formula: d = (Ru - Rl) / n, where Ru is correct answers from Upper 27% group, Rl is correct answers from Lower 27% group, and n is number of students in ONE group.',
+          'Decision Table for Item Discrimination:',
         ],
         comparisonTable: {
-          headers: ['Discrimination Index (D)', 'Item Quality', 'Decision / Action'],
+          headers: ['Discrimination Value (d)', 'Item Quality', 'Action / Decision'],
           rows: [
-            ['+0.40 and above', 'Very Good Item', 'Retain without modification'],
-            ['+0.30 to +0.39', 'Reasonably Good Item', 'Retain, minor review if needed'],
-            ['+0.20 to +0.29', 'Marginal / Questionable Item', 'Subject to revision and review'],
+            ['+0.40 and above', 'Very Good Item', 'Retain without changes'],
+            ['+0.30 to +0.39', 'Reasonably Good Item', 'Retain; minor refinement optional'],
+            ['+0.20 to +0.29', 'Marginal / Weak Item', 'Revise the stem or distractors'],
             ['0.00 to +0.19', 'Poor Item', 'Discard or completely rewrite'],
-            ['Negative (e.g. -0.20)', 'Defective / Flawed Item', 'Discard immediately (misleads upper group)'],
+            ['Negative (e.g. -0.25)', 'Flawed Item (Lower group outperformed Upper group)', 'Reject / Discard immediately (indicates miskeyed answer or ambiguity)'],
           ],
-        },
-        example: {
-          scenario:
-            'In an item analysis of 60 students (30 in Upper group, 30 in Lower group), 6 in the Upper group and 18 in the Lower group got Question #12 correct.',
-          analysis:
-            'D = (6 - 18) / 30 = -12 / 30 = -0.40. Because D is negative, the item is defective: lower group students scored higher than upper group students, likely due to confusing phrasing or miskeyed answer key. Action: Discard or check answer key.',
         },
       },
       {
-        heading: '3. Distractor Efficiency Analysis',
+        heading: '3. Distractor Analysis and Distribution Skewness',
         paragraphs: [
-          'A distractor (incorrect alternative) is considered effective if it attracts more students from the lower group than from the upper group.',
-          'An ineffective distractor is one that attracts ZERO students (implausible distractor) or attracts more students from the upper group than from the lower group (misleading distractor).',
+          'Good Distractor (Plausible / Effective): Attracts more students from the lower group than the upper group.',
+          'Ineffective Distractor: Not chosen by any student (implausible distractor; revise).',
+          'Positively Skewed Distribution (Skewed to the right): Mean > Median > Mode. Most scores are low; exam was difficult.',
+          'Negatively Skewed Distribution (Skewed to the left): Mode > Median > Mean. Most scores are high; exam was easy.',
         ],
       },
     ],
     keyTerms: [
       {
-        term: 'Difficulty Index (P)',
-        definition: 'The proportion of test takers who answered an item correctly. Higher value = easier item.',
+        term: 'Difficulty Index (p)',
+        definition: 'The proportion of test takers who answered an item correctly, ranging from 0.00 to 1.00.',
       },
       {
-        term: 'Discrimination Index (D)',
-        definition: 'A metric indicating how effectively an item distinguishes between upper and lower group test takers.',
-      },
-      {
-        term: 'Plausible Distractor',
-        definition: 'An incorrect option in a multiple-choice item that successfully attracts lower-performing students.',
+        term: 'Negative Discrimination Index',
+        definition: 'An item flaw where more lower-performing students answered correctly than upper-performing students.',
       },
     ],
     letTips: [
-      'Remember: If D is NEGATIVE, the lower group outperformed the upper group. The item is ALWAYS defective and must be discarded or re-keyed.',
-      'An ideal classroom test item has a difficulty index of around 0.50 and a positive discrimination index of +0.30 or higher.',
-    ],
-    commonMistakes: [
-      'Assuming a difficulty index of 0.85 means the test was very hard. A 0.85 difficulty index means 85% of students got it right, so it was VERY EASY.',
-      'Dividing by total students N when computing Discrimination Index D. Formula uses n (size of ONE group), whereas Difficulty Index P uses N (total of both groups).',
+      'Higher difficulty index (p) means the item is EASIER (e.g., p=0.85 is very easy).',
+      'Negative discrimination index = Discard immediately.',
+      'Positively skewed = Tail to the right, low scores, difficult test. Negatively skewed = Tail to the left, high scores, easy test.',
     ],
     summaryPoints: [
-      'Difficulty Index (P): Ru + Rl divided by total N. Values range 0.0 to 1.0.',
-      'Discrimination Index (D): Ru - Rl divided by n. Values range -1.0 to +1.0.',
-      'Negative discrimination index = defective item (discard).',
-      'Good distractors attract more lower-group students than upper-group students.',
+      'Ideal item difficulty falls between 0.21 and 0.80.',
+      'Discrimination index must be positive (>= +0.30) to differentiate ability levels.',
+      'Skewness direction points to the long tail and the mean location.',
     ],
   },
   {
     id: 'mat-prof-assess-003',
-    slug: 'table-of-specifications-and-validity-reliability',
+    slug: 'table-of-specifications-validity-reliability',
     title: 'Table of Specifications (TOS), Validity, and Reliability',
     subjectId: 'prof-assessment',
     subjectName: 'Assessment of Learning',
     category: 'prof_ed',
     topic: 'Standardized vs Teacher-Made Tests',
     relatedTopics: ['Types of Assessment', 'Alternative & Authentic Assessment'],
-    description: 'How to construct a Table of Specifications (TOS) and assess Content, Criterion, and Construct validity and reliability coefficients.',
-    readTimeMinutes: 6,
+    description: 'Designing a Table of Specifications (TOS), types of Validity (Content, Criterion, Construct), and methods for establishing Reliability.',
+    readTimeMinutes: 7,
     overview:
-      'A test cannot be valid if it is not reliable, but a reliable test is not necessarily valid. Understanding how to build a Table of Specifications ensures content validity in classroom assessment.',
+      'A test must be valid and reliable to produce accurate educational inferences. The Table of Specifications (TOS) is the primary tool for establishing content validity in teacher-made tests.',
     sections: [
       {
-        heading: '1. Table of Specifications (TOS)',
+        heading: '1. Table of Specifications (TOS) and Test Construction',
         paragraphs: [
-          'A Table of Specifications (TOS) is a blueprint for test construction. It links learning objectives, instructional time (hours or days spent), Bloom’s cognitive levels (Remembering to Creating), and the number/placement of test items.',
-          'The primary purpose of preparing a TOS is to ensure Content Validity—guaranteeing that the test proportionally covers all intended learning competencies without over-representing or omitting instructional units.',
+          'Table of Specifications (TOS): A test blueprint that aligns test items with curricular objectives, instructional time allotment, and Bloom\'s cognitive process levels.',
+          'Purpose: Ensures content validity by preventing over-emphasis on rote recall and ensuring balanced representation of all instructional competencies.',
         ],
-        bulletPoints: [
-          'Determines item distribution based on instructional weight.',
-          'Aligns test items with target cognitive domains (Bloom’s Taxonomy).',
-          'Prevents teacher bias toward testing only lower-order recall questions.',
-        ],
-        keyConcept:
-          'A Table of Specifications is the single most effective tool a classroom teacher has to establish content validity.',
       },
       {
-        heading: '2. Types of Validity in Educational Measurement',
+        heading: '2. Types of Test Validity',
         paragraphs: [
-          'Validity refers to the degree to which an assessment instrument measures what it purports to measure. Key types include:',
+          'Validity: The extent to which a test measures what it intends to measure.',
+          '- Content Validity: Adequacy with which the test items sample the instructional domain (Established via TOS and expert panel review).',
+          '- Criterion-Related Validity: Concurrent validity (comparing with an existing valid test) and Predictive validity (predicting future performance, e.g., college entrance exam predicting GPA).',
+          '- Construct Validity: The degree to which a test measures a non-observable psychological construct (e.g., critical thinking, anxiety, empathy).',
+        ],
+      },
+      {
+        heading: '3. Types of Reliability and Measurement Error',
+        paragraphs: [
+          'Reliability: The consistency, stability, and reproducibility of test scores over time.',
+          '- Test-Retest: Administering the same test twice to the same group across an interval (Measures stability).',
+          '- Equivalent / Parallel Forms: Administering two different versions measuring the same content (Measures equivalence).',
+          '- Split-Half / Cronbach’s Alpha / Kuder-Richardson (KR-20): Measures internal consistency within a single test administration.',
         ],
         comparisonTable: {
-          headers: ['Type of Validity', 'Definition', 'Method of Verification'],
+          headers: ['Concept', 'Core Question', 'Primary Threat'],
           rows: [
-            ['Content Validity', 'How well the test items sample the complete domain of instructional objectives', 'Expert review, Table of Specifications alignment'],
-            ['Concurrent Validity', 'How test scores correlate with an established criterion measured at the same time', 'Correlating new test scores with existing standardized exam scores'],
-            ['Predictive Validity', 'How accurately test scores predict future performance or success', 'Correlating college entrance exam (e.g. NMAT, LET) with subsequent GPA or professional performance'],
-            ['Construct Validity', 'How well the test measures an abstract psychological construct (e.g. critical thinking, self-efficacy)', 'Factor analysis, convergent and discriminant evidence'],
-            ['Face Validity', 'Superficial appearance of whether the test looks relevant to examinees', 'Visual inspection by non-experts (weakest form)'],
+            ['Validity', 'Does the test measure what it claims to measure?', 'Construct underrepresentation, test bias'],
+            ['Reliability', 'Are the test scores consistent across administrations?', 'Vague item stems, ambiguous scoring, short test length'],
+          ],
+        },
+      },
+    ],
+    keyTerms: [
+      {
+        term: 'Content Validity',
+        definition: 'The extent to which test items comprehensively represent the intended learning outcomes and instructional content.',
+      },
+      {
+        term: 'Test Blueprint (TOS)',
+        definition: 'A two-way grid outlining the content topics, cognitive levels, and number of items in an assessment.',
+      },
+    ],
+    letTips: [
+      'A test can be reliable without being valid, but a test CANNOT be valid unless it is reliable.',
+      'A Table of Specifications primarily establishes Content Validity.',
+    ],
+    summaryPoints: [
+      'TOS guarantees balanced item distribution across cognitive levels.',
+      'Validity is truthfulness/accuracy; Reliability is consistency.',
+      'Split-half and Cronbach’s Alpha evaluate internal consistency.',
+    ],
+  },
+  {
+    id: 'mat-prof-assess-004',
+    slug: 'authentic-assessment-portfolios-and-rubrics',
+    title: 'Authentic Assessment, Portfolios, Rubrics, and DepEd Grading System',
+    subjectId: 'prof-assessment',
+    subjectName: 'Assessment of Learning',
+    category: 'prof_ed',
+    topic: 'Alternative & Authentic Assessment',
+    relatedTopics: ['Types of Assessment', 'Standardized vs Teacher-Made Tests'],
+    description: 'Portfolio assessment types (Showcase, Working, Evaluative), Analytic vs. Holistic rubrics, and DepEd Order No. 8, s. 2015 grading guidelines.',
+    readTimeMinutes: 7,
+    overview:
+      'Authentic assessment evaluates student learning through real-world tasks, performance exhibitions, structured portfolios, and objective rubric scoring, reflecting DepEd standard grading policies.',
+    sections: [
+      {
+        heading: '1. Types of Student Portfolios',
+        paragraphs: [
+          'Portfolio Assessment: A systematic, purposeful collection of student work demonstrating effort, progress, and achievement over time.',
+          '- Working Portfolio (Growth / Developmental): Contains drafts, works-in-progress, and ongoing reflections documenting progress over time.',
+          '- Showcase Portfolio (Display / Best-Work): Contains student\'s highest-quality selected pieces for exhibitions or parent-teacher reviews.',
+          '- Evaluative / Assessment Portfolio: Standardized collection of designated artifacts graded against established performance criteria.',
+        ],
+      },
+      {
+        heading: '2. Scoring Rubrics: Analytic vs. Holistic',
+        paragraphs: [
+          'Analytic Rubric: Evaluates student performance along multiple distinct criteria independently (e.g. Content: 4/5, Organization: 3/5, Mechanics: 5/5). Provides detailed formative diagnostic feedback but takes longer to score.',
+          'Holistic Rubric: Assigns a single overall score based on the total global impression of the student\'s work. Quicker to score but provides less specific diagnostic guidance.',
+        ],
+        comparisonTable: {
+          headers: ['Rubric Type', 'Scoring Mechanism', 'Advantage', 'Disadvantage'],
+          rows: [
+            ['Analytic Rubric', 'Separate score for each distinct dimension', 'Clear diagnostic feedback highlighting specific strengths and weaknesses', 'More time-consuming to create and evaluate'],
+            ['Holistic Rubric', 'Single aggregate score for overall quality', 'Fast, efficient scoring for high-stakes summative evaluations', 'Lacks detailed prescriptive feedback on individual flaws'],
           ],
         },
       },
       {
-        heading: '3. Reliability and Its Relationship with Validity',
+        heading: '3. DepEd Classroom Assessment Policy (DepEd Order No. 8, s. 2015)',
         paragraphs: [
-          'Reliability refers to the consistency, stability, and repeatability of test scores across administrations.',
-          'A test can be reliable without being valid (e.g. a broken scale consistently weighing 5 kg too heavy), but a test CANNOT be valid without being reliable.',
-          'Common reliability estimates include: Test-Retest (stability over time), Parallel Forms (equivalence of two test versions), Split-Half with Spearman-Brown prophecy formula (internal consistency), and Kuder-Richardson / Cronbach’s Alpha (internal homogeneity of items).',
+          'Components of Summative Assessment in DepEd Basic Education:',
+          '1. Written Work (WW): Ensures students can express skills and concepts in written form (quizzes, unit tests, essays).',
+          '2. Performance Tasks (PT): Allows learners to demonstrate what they know through authentic products and performances.',
+          '3. Quarterly Assessment (QA): Synthesizes learning across the whole quarter (periodic test).',
+          'Weighting: Languages, AP, and ESP emphasize WW (30%) and PT (50%); Science and Math balance WW (40%) and PT (40%); MAPEH and EPP/TLE heavily prioritize PT (60%).',
         ],
       },
     ],
     keyTerms: [
       {
-        term: 'Table of Specifications (TOS)',
-        definition: 'A test blueprint aligning instructional objectives, cognitive levels, and item distributions to ensure content validity.',
+        term: 'Analytic Rubric',
+        definition: 'A scoring guide evaluating student work across distinct, separate criteria individually.',
       },
       {
-        term: 'Content Validity',
-        definition: 'The extent to which test items representatively sample the subject matter and learning objectives taught.',
-      },
-      {
-        term: 'Reliability',
-        definition: 'The consistency and stability of measurement scores across repeated testing or equivalent forms.',
+        term: 'Showcase Portfolio',
+        definition: 'A curated collection containing a student\'s best, most exemplary completed works.',
       },
     ],
     letTips: [
-      'Remember the target analogy: High reliability = tightly clustered darts; High validity = darts hitting the bullseye.',
-      'When asked which validity is directly enhanced by a Table of Specifications, the answer is ALWAYS Content Validity.',
-    ],
-    commonMistakes: [
-      'Confusing Concurrent validity with Predictive validity. Concurrent is measured simultaneously; Predictive is measured after a time delay.',
-      'Believing that a high reliability score automatically guarantees a good test. It guarantees consistency, not that the test measures the right skill.',
+      'In MAPEH and TLE, Performance Tasks carry the highest percentage weight (60%) under DO 8 s. 2015.',
+      'Use Analytic rubrics when diagnostic feedback on specific skills is needed.',
     ],
     summaryPoints: [
-      'TOS guarantees content validity by matching test items to curriculum objectives.',
-      'Validity = Accuracy (measures what it claims to measure).',
-      'Reliability = Consistency (scores remain stable across administrations).',
-      'Validity requires reliability; reliability does not require validity.',
+      'Portfolios document growth (working) or celebrate mastery (showcase).',
+      'Analytic rubrics break down scores by trait; Holistic rubrics score the overall work.',
+      'DepEd assessment balances Written Work, Performance Tasks, and Quarterly Assessments.',
     ],
   },
 ];
