@@ -4,18 +4,34 @@
   :root {
     --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
     --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    --scrollbar-thumb: #cbd5e1;
+    --scrollbar-track: transparent;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --scrollbar-thumb: #334155;
+      --scrollbar-track: transparent;
+    }
   }
 
   html {
     font-family: var(--font-sans);
     -webkit-tap-highlight-color: transparent;
     scroll-behavior: smooth;
+    /* Prevent horizontal layout shifts and jumps when scrollbar toggles */
+    scrollbar-gutter: stable;
+    scrollbar-width: thin;
+    scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
   }
 
   body {
     overscroll-behavior-y: none;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    min-height: 100vh;
+    min-height: 100dvh;
+    overflow-x: hidden;
   }
 }
 
@@ -34,18 +50,20 @@
   padding-top: env(safe-area-inset-top, 16px);
 }
 
-/* Custom subtle scrollbar for mobile drawers and desktop lists */
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
-  border-radius: 9999px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
+/* WebKit scrollbar styling for legacy and webkit browsers */
+@supports not (scrollbar-color: auto) {
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-thumb);
+    border-radius: 9999px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+  }
 }
