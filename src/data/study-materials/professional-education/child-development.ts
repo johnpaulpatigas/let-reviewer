@@ -3,161 +3,245 @@ import type { StudyMaterial } from '../../../types';
 export const CHILD_DEV_STUDY_MATERIALS: StudyMaterial[] = [
   {
     id: 'mat-prof-child-001',
-    slug: 'piaget-cognitive-development-stages',
-    title: "Jean Piaget's Stages of Cognitive Development and Schema Theory",
+    slug: 'piaget-stages-of-cognitive-development',
+    title: 'Jean Piaget\'s Stages of Cognitive Development and Schema Theory',
     subjectId: 'prof-child-dev',
     subjectName: 'Child & Adolescent Development',
     category: 'prof_ed',
     topic: 'Cognitive Development (Piaget/Vygotsky)',
-    description: 'Detailed breakdown of Sensorimotor, Preoperational, Concrete Operational, and Formal Operational stages with schema mechanics.',
-    readTimeMinutes: 7,
+    relatedTopics: ['Psychosocial Theory (Erikson)', 'Moral Development (Kohlberg)', 'Behavioral & Social Learning'],
+    description: 'Detailed analysis of Sensorimotor, Preoperational, Concrete, and Formal operational stages, schema adaptation, and developmental milestones.',
+    readTimeMinutes: 8,
     overview:
-      "Jean Piaget's constructivist theory posits that children actively construct mental models of their world through assimilation, accommodation, and equilibration as they pass through four distinct cognitive stages.",
+      'Jean Piaget proposed that children actively construct knowledge as they explore and interact with their physical world. Cognitive growth progresses through four qualitative stages driven by equilibration, assimilation, and accommodation.',
     sections: [
       {
-        heading: '1. Basic Cognitive Mechanisms: Schema, Assimilation, Accommodation',
+        heading: '1. Piagetian Stages of Cognitive Development',
         paragraphs: [
-          'Piaget proposed that cognitive development is driven by a biological drive to achieve equilibrium between mental schemes and environmental experiences:',
-          'Schema: A mental structure or framework that organizes and interprets information.',
-          'Assimilation: Fitting new information into existing schemas without changing the schema (e.g. calling a zebra a "striped horse").',
-          'Accommodation: Modifying an existing schema or creating a new schema in response to new information that does not fit (e.g. creating a separate "zebra" category).',
-          'Equilibration: The cognitive state of balance between assimilation and accommodation. Disequilibrium occurs when a new experience contradicts existing schemas, driving cognitive growth.',
-        ],
-        keyConcept:
-          'Cognitive growth requires moments of cognitive disequilibrium where existing mental models are challenged and accommodated.',
-      },
-      {
-        heading: '2. The Four Stages of Cognitive Development',
-        paragraphs: [
-          'Piaget identified four invariant stages through which children construct knowledge:',
+          'Piaget identified four sequential, invariant developmental stages corresponding to distinct age brackets and cognitive milestones:',
         ],
         comparisonTable: {
-          headers: ['Stage', 'Age Range', 'Hallmark Characteristics', 'Key Milestones & Cognitive Limitations'],
+          headers: ['Stage', 'Approx. Age', 'Major Milestones', 'Cognitive Limitations'],
           rows: [
-            ['Sensorimotor', '0 – 2 years', 'Learning through sensory exploration and motor activity', 'Object Permanence (recognizing objects exist when hidden); Stranger anxiety; Goal-directed actions'],
-            ['Preoperational', '2 – 7 years', 'Symbolic thinking, language explosion, intuitive reasoning', 'Egocentrism (inability to see another perspective); Centration (focusing on one aspect); Irreversibility; Animism (attributing life to inanimate objects); Lack of conservation'],
-            ['Concrete Operational', '7 – 11 years', 'Logical thought applied to tangible, physical objects', 'Conservation achieved (number, mass, volume); Decentration; Reversibility; Seriation (ordering); Classification; Inability to solve purely hypothetical abstract problems'],
-            ['Formal Operational', '12 years & above', 'Abstract, hypothetical, and deductive reasoning', 'Hypothetico-deductive reasoning; Metacognition; Idealistic thinking; Systematic problem solving and variable isolation'],
+            ['1. Sensorimotor', 'Birth – 2 years', 'Object Permanence (knowing objects exist when hidden), goal-directed actions, trial-and-error exploration', 'Absence of symbolic thought and internal mental representation in early months'],
+            ['2. Preoperational', '2 – 7 years', 'Symbolic thinking, rapid language acquisition, pretend play', 'Egocentrism (Three Mountains), Centration (focusing on one attribute), Irreversibility, Animism, Lack of conservation'],
+            ['3. Concrete Operational', '7 – 11 years', 'Conservation (mass, volume, number), Reversibility, Decentration, Seriation (sorting by height/weight), Classification', 'Requires tangible, concrete objects; struggles with purely hypothetical or abstract propositions'],
+            ['4. Formal Operational', '12 years – Adulthood', 'Hypothetico-deductive reasoning, abstract conceptualization, propositional logic, systematic problem solving', 'Adolescent egocentrism (imaginary audience, personal fable)'],
           ],
         },
       },
       {
-        heading: '3. Pedagogical Applications of Piagetian Theory',
+        heading: '2. Schema Adaptation: Assimilation, Accommodation, and Equilibration',
         paragraphs: [
-          'Provide hands-on manipulatives for concrete operational learners before introducing symbolic notations (e.g. fraction tiles before fraction algorithms).',
-          'Avoid assuming that preoperational children are being selfish when showing egocentrism—they are developmentally unable to visualize another person’s vantage point (Three Mountain Task).',
-          'Challenge adolescents in the formal operational stage with moral dilemmas, experimental hypotheses, and open-ended scientific investigations.',
+          'Schema: A basic mental building block of knowledge or framework used to organize and interpret information.',
+          'Assimilation: Fitting new experiences or objects into an existing schema without changing the schema (e.g. calling a 4-legged cat a "dog").',
+          'Accommodation: Modifying an existing schema or creating a completely new schema because new information contradicts current schemas.',
+          'Equilibration: The cognitive balance between assimilation and accommodation; disequilibrium drives cognitive learning forward.',
         ],
       },
     ],
     keyTerms: [
       {
         term: 'Object Permanence',
-        definition: 'The realization that objects continue to exist even when they cannot be seen, heard, or touched (achieved around 8-9 months).',
-      },
-      {
-        term: 'Centration',
-        definition: 'The tendency of preoperational children to focus on only one salient aspect of a situation while neglecting other relevant features.',
+        definition: 'The realization attained in sensorimotor stage that objects continue to exist even when concealed from sight.',
       },
       {
         term: 'Conservation',
-        definition: 'The understanding that physical properties of matter (mass, volume, quantity) remain identical despite changes in appearance or container shape.',
+        definition: 'Understanding that physical properties (mass, volume, quantity) remain unchanged despite alterations in visual container shape.',
       },
     ],
     letTips: [
-      'If a test item describes a child believing a tall thin glass has more juice than a short wide glass with the identical volume, the child is in the PREOPERATIONAL stage demonstrating CENTRATION and lack of conservation.',
-      'If a student can isolate variables methodically (e.g. testing the pendulum problem), they have attained FORMAL OPERATIONAL thinking.',
-    ],
-    commonMistakes: [
-      'Confusing assimilation with accommodation. Assimilation fits new data into an old category; accommodation changes the category itself.',
-      'Assuming concrete operational students can easily handle abstract algebraic proofs without concrete representations.',
+      'Preoperational children fail conservation tasks due to Centration (focusing on single dimension) and Irreversibility.',
+      'Concrete operational students need physical manipulatives (e.g., base-ten blocks) to grasp arithmetic concepts.',
     ],
     summaryPoints: [
-      'Sensorimotor (0-2): Object permanence is the major milestone.',
-      'Preoperational (2-7): Egocentrism, animism, centration, irreversibility.',
-      'Concrete Operational (7-11): Conservation, reversibility, logical thought with concrete objects.',
-      'Formal Operational (12+): Abstract thought, hypothetical-deductive reasoning.',
+      'Cognitive development progresses from Sensorimotor to Formal Operations.',
+      'Assimilation fits new data into old schemas; Accommodation modifies schemas.',
+      'Object permanence develops in sensorimotor; Conservation in concrete operational.',
     ],
   },
   {
     id: 'mat-prof-child-002',
-    slug: 'vygotsky-scaffolding-and-erikson-psychosocial-stages',
-    title: "Vygotsky's Socio-Cultural Theory and Erikson's Psychosocial Stages",
+    slug: 'vygotsky-sociocultural-theory-and-erikson-stages',
+    title: 'Lev Vygotsky\'s Socio-Cultural Theory and Erik Erikson\'s Psychosocial Stages',
     subjectId: 'prof-child-dev',
     subjectName: 'Child & Adolescent Development',
     category: 'prof_ed',
     topic: 'Psychosocial Theory (Erikson)',
     relatedTopics: ['Cognitive Development (Piaget/Vygotsky)', 'Moral Development (Kohlberg)'],
-    description: 'Zone of Proximal Development (ZPD), MKO, scaffolding techniques, and Erikson’s 8 psychosocial crises for teacher preparation.',
-    readTimeMinutes: 7,
+    description: 'Zone of Proximal Development (ZPD), Scaffolding (Bruner), and Erikson\'s 8 Psychosocial Crises across the human lifespan.',
+    readTimeMinutes: 8,
     overview:
-      'Lev Vygotsky highlighted the social origin of cognition through the Zone of Proximal Development, while Erik Erikson mapped lifelong human personality across 8 developmental psychosocial crises.',
+      'Vygotsky emphasized that social interaction and cultural tools drive cognitive growth. Erik Erikson formulated eight psychosocial crises that every human must resolve from infancy through late adulthood.',
     sections: [
       {
-        heading: '1. Lev Vygotsky: Socio-Cultural Theory of Learning',
+        heading: '1. Lev Vygotsky’s Socio-Cultural Framework',
         paragraphs: [
-          'Unlike Piaget who viewed the child as an independent "little scientist", Vygotsky argued that cognitive development is social and cultural. Cognitive functions originate in social interactions (interpsychological) before becoming internalized (intrapsychological).',
-          'Zone of Proximal Development (ZPD): The distance between the actual development level (what the learner can do independently) and the potential development level (what the learner can do with guidance from a More Knowledgeable Other).',
-          'Scaffolding: Temporary instructional assistance provided by a teacher or peer that is gradually withdrawn as the learner achieves mastery (concept elaborated by Jerome Bruner).',
-          'Language as a Tool for Thought: Children use private speech (talking to themselves aloud) to regulate behavior and guide cognitive tasks, which eventually internalizes as inner speech around age 7.',
+          'Zone of Proximal Development (ZPD): The fertile learning zone between what a student can do independently and what they can achieve with guidance from a More Knowledgeable Other (MKO).',
+          'Scaffolding (Jerome Bruner): Temporary structured assistance provided by teachers or capable peers that is gradually removed as the student gains mastery.',
+          'Private Speech: Talking aloud to oneself during early childhood that serves as a self-regulatory cognitive tool before becoming internalized inner thought.',
         ],
-        keyConcept:
-          'Effective instruction targets the Zone of Proximal Development (ZPD). Teaching content that a child can already do independently causes boredom; teaching far beyond the ZPD causes frustration.',
       },
       {
-        heading: '2. Erik Erikson: Eight Stages of Psychosocial Development',
+        heading: '2. Erikson\'s 8 Psychosocial Stages of Development',
         paragraphs: [
-          'Erikson proposed that individuals pass through 8 universal psychosocial crises where social relationships shape psychological identity:',
+          'Erikson\'s lifespan theory posits that personality develops through eight sequential psychosocial crises:',
         ],
         comparisonTable: {
-          headers: ['Stage & Age', 'Psychosocial Crisis', 'Significant Relationship', 'Positive Outcome (Virtue) vs. Maladaptive Result'],
+          headers: ['Stage & Age', 'Psychosocial Crisis', 'Basic Virtue / Strength', 'Key Social Relationship'],
           rows: [
-            ['Infancy (0 – 18 mos)', 'Trust vs. Mistrust', 'Maternal caregiver', 'Hope / Consistent care builds security vs. neglect builds suspicion'],
-            ['Early Childhood (2 – 3 yrs)', 'Autonomy vs. Shame & Doubt', 'Parents', 'Will / Allowing self-control builds confidence vs. over-control builds self-doubt'],
-            ['Preschool (3 – 5 yrs)', 'Initiative vs. Guilt', 'Family / Kindergarten', 'Purpose / Encouraging curiosity and projects vs. punishing curiosity creates guilt'],
-            ['School Age (6 – 11 yrs)', 'Industry vs. Inferiority', 'School, teachers, peers', 'Competence / Praising effort and skill mastery vs. harsh comparison creates inadequacy'],
-            ['Adolescence (12 – 18 yrs)', 'Identity vs. Role Confusion', 'Peer group, role models', 'Fidelity / Exploring self-definition and career values vs. fragmented sense of self'],
-            ['Young Adulthood (19 – 40 yrs)', 'Intimacy vs. Isolation', 'Partners, close friends', 'Love / Deep interpersonal commitment vs. fear of vulnerability causing loneliness'],
-            ['Middle Adulthood (40 – 65 yrs)', 'Generativity vs. Stagnation', 'Workplace, community', 'Care / Guiding the next generation vs. self-centered indulgence'],
-            ['Late Adulthood (65+ yrs)', 'Integrity vs. Despair', 'Mankind / Society', 'Wisdom / Reflection with pride and fulfillment vs. regret and bitterness'],
+            ['Infancy (0–18 mos)', 'Trust vs. Mistrust', 'Hope', 'Mother / Primary Caregiver'],
+            ['Early Childhood (2–3 yrs)', 'Autonomy vs. Shame & Doubt', 'Will', 'Parents'],
+            ['Preschool (3–5 yrs)', 'Initiative vs. Guilt', 'Purpose', 'Family / Playmates'],
+            ['School Age (6–11 yrs)', 'Industry vs. Inferiority', 'Competence', 'School / Neighborhood / Teachers'],
+            ['Adolescence (12–18 yrs)', 'Identity vs. Role Confusion', 'Fidelity', 'Peer Groups / Role Models'],
+            ['Young Adulthood (19–40 yrs)', 'Intimacy vs. Isolation', 'Love', 'Spouse / Friends / Colleagues'],
+            ['Middle Adulthood (40–65 yrs)', 'Generativity vs. Stagnation', 'Care', 'Work / Community / Family'],
+            ['Maturity (65+ yrs)', 'Integrity vs. Despair', 'Wisdom', 'Mankind / Self-Reflection'],
+          ],
+        },
+      },
+    ],
+    keyTerms: [
+      {
+        term: 'ZPD (Zone of Proximal Development)',
+        definition: 'The gap between a learner\'s actual independent developmental level and their potential level achieved with skilled assistance.',
+      },
+      {
+        term: 'Identity vs. Role Confusion',
+        definition: 'The adolescent psychosocial crisis of discovering who one is and choosing personal, social, and vocational values.',
+      },
+    ],
+    letTips: [
+      'Elementary school students (ages 6–12) navigate "Industry vs. Inferiority" — praise their effort and competency.',
+      'High school students navigate "Identity vs. Role Confusion" — encourage healthy career exploration and autonomy.',
+    ],
+    summaryPoints: [
+      'Vygotsky: Learning is socially mediated through ZPD and scaffolding.',
+      'Erikson: Eight lifespan crises shape human emotional and social development.',
+    ],
+  },
+  {
+    id: 'mat-prof-child-003',
+    slug: 'kohlberg-stages-of-moral-development',
+    title: 'Lawrence Kohlberg’s Stages of Moral Development and the Heinz Dilemma',
+    subjectId: 'prof-child-dev',
+    subjectName: 'Child & Adolescent Development',
+    category: 'prof_ed',
+    topic: 'Moral Development (Kohlberg)',
+    relatedTopics: ['Cognitive Development (Piaget/Vygotsky)', 'Psychosocial Theory (Erikson)'],
+    description: 'Pre-conventional, Conventional, and Post-conventional levels of moral reasoning, moral dilemmas, and Carol Gilligan’s Care Ethics critique.',
+    readTimeMinutes: 7,
+    overview:
+      'Lawrence Kohlberg evaluated how children and adults reason through complex ethical dilemmas. Moral development proceeds through three levels and six distinct stages based on reasoning, not outward behavior.',
+    sections: [
+      {
+        heading: '1. Three Levels and Six Stages of Moral Reasoning',
+        paragraphs: [
+          'Kohlberg presented subjects with moral dilemmas (e.g. Heinz stealing a drug for his dying wife) to classify their underlying moral justification:',
+        ],
+        comparisonTable: {
+          headers: ['Level & Stage', 'Orientation / Stage Name', 'Basis of Moral Decision', 'Sample Reasoning in Heinz Dilemma'],
+          rows: [
+            ['Level 1: Pre-Conventional (Stage 1)', 'Obedience & Punishment', 'Consequences and physical punishment avoidance', '"Do not steal because the police will lock you up."'],
+            ['Level 1: Pre-Conventional (Stage 2)', 'Individualism & Instrumental Exchange', 'Self-interest, personal reward, mutual barter', '"Steal the drug if Heinz wants his wife to cook for him later."'],
+            ['Level 2: Conventional (Stage 3)', 'Good Boy / Nice Girl (Interpersonal)', 'Peer approval, social conformity, and good intentions', '"Steal the drug because people will think Heinz is a loving husband."'],
+            ['Level 2: Conventional (Stage 4)', 'Law and Order / Social System', 'Duty, respect for authority, upholding laws and social order', '"Do not steal because the law prohibits theft; without laws, chaos reigns."'],
+            ['Level 3: Post-Conventional (Stage 5)', 'Social Contract & Individual Rights', 'Democratic consensus, basic human rights, flexibility of laws', '"Steal because the right to human life transcends economic property rights."'],
+            ['Level 3: Post-Conventional (Stage 6)', 'Universal Ethical Principles', 'Self-chosen abstract principles of justice, equality, and human dignity', '"Human life possesses absolute intrinsic worth; one must act on universal justice regardless of statutory law."'],
           ],
         },
       },
       {
-        heading: '3. Classroom Application of Industry vs. Inferiority',
+        heading: '2. Carol Gilligan’s Care Ethics Critique',
         paragraphs: [
-          'In elementary school (grades 1–6), students are in the Industry vs. Inferiority stage. Teachers must provide opportunities for every child to experience success, avoid public rankings that humiliate struggling students, and emphasize effort and personal growth.',
+          'Carol Gilligan argued that Kohlberg\'s all-male sample produced a justice-oriented bias. She proposed an alternative "Ethics of Care" where women often prioritize interpersonal relationships, compassion, and minimizing harm over abstract rights.',
         ],
       },
     ],
     keyTerms: [
       {
-        term: 'Zone of Proximal Development (ZPD)',
-        definition: 'The gap between what a learner can accomplish independently and what they can achieve with guidance from a More Knowledgeable Other.',
+        term: 'Pre-Conventional Morality',
+        definition: 'Moral reasoning driven purely by external physical rewards and punishments.',
       },
       {
-        term: 'Scaffolding',
-        definition: 'Temporary support mechanisms tailored to the student’s needs that are systematically reduced as competence develops.',
-      },
-      {
-        term: 'Industry vs. Inferiority',
-        definition: 'Erikson’s fourth crisis (ages 6–11) where children strive to master academic and social skills; failure or negative comparison leads to feelings of inadequacy.',
+        term: 'Universal Ethical Principles',
+        definition: 'Stage 6 moral reasoning guided by self-chosen abstract principles of human dignity, justice, and equality.',
       },
     ],
     letTips: [
-      'If a high school student is struggling with career direction and joining different subcultures to figure out who they are, the crisis is IDENTITY VS. ROLE CONFUSION.',
-      'Elementary students needing praise for their projects and science fair models are navigating INDUSTRY VS. INFERIORITY.',
-      'Whenever an item mentions paired learning where an advanced peer assists a struggling classmate, connect it to Vygotsky’s MKO and ZPD.',
-    ],
-    commonMistakes: [
-      'Assuming scaffolding means giving the answer to the student. Scaffolding means providing strategic prompts, clues, graphic organizers, and step-by-step models.',
-      'Confusing Initiative (preschool exploration) with Industry (school-age skill mastery and perseverance).',
+      'Stage 1 = Avoiding punishment; Stage 4 = Obeying the law to maintain social order; Stage 6 = Upholding human life above all.',
+      'Remember that moral stages are determined by the *reasons* given for the choice, not the choice itself.',
     ],
     summaryPoints: [
-      'Vygotsky: Learning occurs through socio-cultural mediation in the ZPD.',
-      'More Knowledgeable Other (MKO) and Scaffolding bridge the gap from actual to potential development.',
-      'Erikson School Age (6-11): Industry vs. Inferiority (develops competence).',
-      'Erikson Adolescence (12-18): Identity vs. Role Confusion (develops fidelity).',
+      'Kohlberg\'s 3 levels: Pre-conventional (external), Conventional (social norms), Post-conventional (universal ethics).',
+      'Gilligan introduced Care Ethics as a complementary relational perspective to Kohlberg\'s justice framework.',
+    ],
+  },
+  {
+    id: 'mat-prof-child-004',
+    slug: 'behavioral-social-learning-and-ecological-systems',
+    title: 'Behaviorism, Albert Bandura’s Social Learning, and Bronfenbrenner’s Bioecological Model',
+    subjectId: 'prof-child-dev',
+    subjectName: 'Child & Adolescent Development',
+    category: 'prof_ed',
+    topic: 'Behavioral & Social Learning',
+    relatedTopics: ['Cognitive Development (Piaget/Vygotsky)', 'Psychosocial Theory (Erikson)'],
+    description: 'Classical conditioning (Pavlov), operant conditioning (Skinner), observational modeling (Bandura), and Bronfenbrenner\'s ecological systems theory.',
+    readTimeMinutes: 8,
+    overview:
+      'Learning is shaped by environmental stimuli, social observation, and nested ecological systems. This guide reviews classical conditioning, operant reinforcement, vicarious modeling, and bioecological contexts.',
+    sections: [
+      {
+        heading: '1. Behavioral Conditioning: Pavlov and Skinner',
+        paragraphs: [
+          'Classical Conditioning (Ivan Pavlov): Learning through stimulus association (Unconditioned Stimulus -> Unconditioned Response; Conditioned Stimulus -> Conditioned Response; Extinction and Spontaneous Recovery).',
+          'Operant Conditioning (B.F. Skinner): Behavior is shaped by its environmental consequences:',
+          '- Positive Reinforcement: Adding a desirable stimulus to INCREASE behavior (e.g., praise, gold stars).',
+          '- Negative Reinforcement: REMOVING an unpleasant stimulus to INCREASE behavior (e.g., canceling a boring chore for good lab work).',
+          '- Positive Punishment: Adding an aversive stimulus to DECREASE behavior (e.g., reprimand).',
+          '- Negative Punishment: Removing a valued privilege to DECREASE behavior (e.g., losing recess time).',
+        ],
+      },
+      {
+        heading: '2. Albert Bandura\'s Social Learning Theory',
+        paragraphs: [
+          'Observational Learning (Modeling): Learning occurs by observing the behaviors and consequences of others (Bobo doll experiment).',
+          'Four Sub-Processes of Modeling: 1) Attention (noticing model) -> 2) Retention (remembering in memory) -> 3) Motor Reproduction (physical execution) -> 4) Motivation (reinforcement or incentive).',
+          'Self-Efficacy: A person’s belief in their own capability to successfully accomplish a specific task.',
+        ],
+      },
+      {
+        heading: '3. Urie Bronfenbrenner’s Bioecological Systems Theory',
+        paragraphs: [
+          'Development is influenced by five nested environmental layers:',
+          '- Microsystem: Direct, face-to-face environments (Family, classroom, peers, teachers).',
+          '- Mesosystem: Interactions between two or more microsystems (e.g. Parent-Teacher conferences).',
+          '- Exosystem: External settings affecting the child indirectly (e.g. parent\'s workplace stress, DepEd division policies).',
+          '- Macrosystem: Overarching cultural values, socioeconomic strata, religious beliefs, and national laws.',
+          '- Chronosystem: Temporal changes and historical milestones over the lifespan (e.g. pandemic, war).',
+        ],
+      },
+    ],
+    keyTerms: [
+      {
+        term: 'Negative Reinforcement',
+        definition: 'Increasing the frequency of a behavior by removing an aversive or unpleasant stimulus.',
+      },
+      {
+        term: 'Self-Efficacy',
+        definition: 'One’s perceived confidence and belief in their ability to execute tasks and attain goals.',
+      },
+    ],
+    letTips: [
+      'Reinforcement (both positive and negative) ALWAYS increases/strengthens behavior.',
+      'Punishment ALWAYS decreases/weakens behavior.',
+      'Mesosystem is the relationship BETWEEN two microsystems (e.g., home and school collaboration).',
+    ],
+    summaryPoints: [
+      'Pavlov conditioned automatic reflexes; Skinner shaped operant voluntary actions.',
+      'Bandura proved that observational modeling and self-efficacy drive behavioral learning.',
+      'Bronfenbrenner mapped child development across five nested ecological systems.',
     ],
   },
 ];
