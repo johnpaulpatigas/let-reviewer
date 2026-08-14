@@ -1,5 +1,5 @@
 import React from 'react';
-import { Home, BookOpen, Layers, BrainCircuit, BookMarked, BarChart3 } from 'lucide-react';
+import { Home, BookOpen, Layers, BrainCircuit, BarChart3 } from 'lucide-react';
 import type { NavigationTab } from '../../types';
 
 interface BottomNavProps {
@@ -11,15 +11,18 @@ interface BottomNavProps {
 export const BottomNav: React.FC<BottomNavProps> = ({
   currentTab,
   onTabChange,
-  bankCount = 0,
 }) => {
-  const tabs: { id: NavigationTab; label: string; icon: React.ComponentType<{ className?: string }>; badge?: number }[] = [
+  const tabs: {
+    id: NavigationTab;
+    label: string;
+    icon: React.ComponentType<{ className?: string }>;
+    badge?: number;
+  }[] = [
     { id: 'home', label: 'Home', icon: Home },
     { id: 'materials', label: 'Guides', icon: BookOpen },
+    { id: 'practice', label: 'Practice', icon: BrainCircuit },
     { id: 'subjects', label: 'Subjects', icon: Layers },
-    { id: 'quiz', label: 'Exams', icon: BrainCircuit },
-    { id: 'bank', label: 'Bank', icon: BookMarked, badge: bankCount },
-    { id: 'progress', label: 'Stats', icon: BarChart3 },
+    { id: 'progress', label: 'Progress', icon: BarChart3 },
   ];
 
   return (

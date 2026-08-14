@@ -222,7 +222,7 @@ export default function App() {
           />
         )
       ) : (
-        /* Primary Navigation Tabs */
+        /* Primary Navigation Destinations */
         <>
           {currentTab === 'home' && (
             <HomePage
@@ -239,31 +239,21 @@ export default function App() {
           {currentTab === 'materials' && (
             <StudyMaterialsPage
               onOpenMaterial={handleOpenMaterial}
-              onStartQuiz={handleStartQuiz}
-              onStartPracticeMaterial={handleStartTopicPractice}
               bookmarkedMaterialIds={stats.bookmarkedMaterialIds}
               completedMaterialIds={stats.completedMaterialIds}
               onToggleMaterialBookmark={toggleMaterialBookmark}
             />
           )}
 
-          {currentTab === 'subjects' && (
-            <SubjectsPage
-              onStartQuiz={handleStartQuiz}
-              subjectMastery={stats.subjectMastery}
-            />
-          )}
-
-          {currentTab === 'quiz' && (
+          {(currentTab === 'practice' || (currentTab as string) === 'quiz') && (
             <QuizConfigPage onStartExam={handleStartQuiz} />
           )}
 
-          {currentTab === 'bank' && (
-            <StudyBankPage
-              bookmarkedIds={stats.bookmarkedQuestionIds}
-              missedIds={stats.missedQuestionIds}
-              onToggleBookmark={toggleBookmark}
+          {currentTab === 'subjects' && (
+            <SubjectsPage
               onStartQuiz={handleStartQuiz}
+              onOpenMaterial={handleOpenMaterial}
+              subjectMastery={stats.subjectMastery}
             />
           )}
 
@@ -271,7 +261,28 @@ export default function App() {
             <ProgressPage
               stats={stats}
               onClearStats={clearStats}
+              onOpenStudyBank={() => setCurrentTab('bank')}
             />
+          )}
+
+          {currentTab === 'bank' && (
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <button
+                  type="button"
+                  onClick={() => setCurrentTab('progress')}
+                  className="text-xs font-semibold text-indigo-600 dark:text-indigo-400 hover:underline inline-flex items-center gap-1"
+                >
+                  ← Back to Progress & Stats
+                </button>
+              </div>
+              <StudyBankPage
+                bookmarkedIds={stats.bookmarkedQuestionIds}
+                missedIds={stats.missedQuestionIds}
+                onToggleBookmark={toggleBookmark}
+                onStartQuiz={handleStartQuiz}
+              />
+            </div>
           )}
         </>
       )}

@@ -145,5 +145,5 @@ export interface UserStudyStats {
   bookmarkedMaterialIds?: string[];
 }
 
-export type NavigationTab = 'home' | 'materials' | 'subjects' | 'quiz' | 'bank' | 'progress';
+export type NavigationTab = 'home' | 'materials' | 'practice' | 'subjects' | 'progress' | 'bank';
 
