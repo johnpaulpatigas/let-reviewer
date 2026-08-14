@@ -1,59 +1,73 @@
-import { useState, useMemo } from 'react';
+import React, { useState, useMemo } from 'react';
 import { ALL_QUESTIONS } from '../data/questions';
-import { Button } from '../components/ui/Button';
 import { CategoryBadge, DifficultyBadge } from '../components/ui/Badge';
+import { Button } from '../components/ui/Button';
 import {
   Bookmark,
   AlertTriangle,
   Play,
-  Search,
+  Trash2,
   ChevronDown,
-  CheckCircle2,
+  Search,
   X,
   BookOpen,
 } from 'lucide-react';
-import type { QuizConfig } from '../types';
+import type { Question, QuizConfig } from '../types';
 
 interface StudyBankPageProps {
   bookmarkedIds: string[];
   missedIds: string[];
   onToggleBookmark: (questionId: string) => void;
+  onClearMissed: () => void;
   onStartQuiz: (config: QuizConfig) => void;
+  onStudyTopic?: (topic: string, subjectId: string) => void;
 }
 
 export const StudyBankPage: React.FC<StudyBankPageProps> = ({
   bookmarkedIds,
   missedIds,
   onToggleBookmark,
+  onClearMissed,
   onStartQuiz,
+  onStudyTopic,
 }) => {
   const [activeTab, setActiveTab] = useState<'bookmarks' | 'missed'>('bookmarks');
   const [searchQuery, setSearchQuery] = useState('');
   const [expandedId, setExpandedId] = useState<string | null>(null);
 
+  const questionsMap = useMemo(() => {
+    const map = new Map<string, Question>();
+    ALL_QUESTIONS.forEach((q) => map.set(q.id, q));
+    return map;
+  }, []);
+
   const bookmarkedQuestions = useMemo(() => {
-    return ALL_QUESTIONS.filter((q) => bookmarkedIds.includes(q.id));
-  }, [bookmarkedIds]);
+    return bookmarkedIds
+      .map((id) => questionsMap.get(id))
+      .filter((q): q is Question => q !== undefined);
+  }, [bookmarkedIds, questionsMap]);
 
   const missedQuestions = useMemo(() => {
-    return ALL_QUESTIONS.filter((q) => missedIds.includes(q.id));
-  }, [missedIds]);
+    return missedIds
+      .map((id) => questionsMap.get(id))
+      .filter((q): q is Question => q !== undefined);
+  }, [missedIds, questionsMap]);
 
   const activeQuestions = activeTab === 'bookmarks' ? bookmarkedQuestions : missedQuestions;
 
   const filteredQuestions = useMemo(() => {
-    const q = searchQuery.toLowerCase().trim();
-    if (!q) return activeQuestions;
+    if (!searchQuery.trim()) return activeQuestions;
+    const q = searchQuery.toLowerCase();
     return activeQuestions.filter(
       (item) =>
         item.question.toLowerCase().includes(q) ||
-        item.subjectName.toLowerCase().includes(q) ||
         item.topic.toLowerCase().includes(q) ||
-        item.explanation.toLowerCase().includes(q)
+        item.subjectName.toLowerCase().includes(q)
     );
   }, [activeQuestions, searchQuery]);
 
   const handleStartDrill = () => {
+    if (activeQuestions.length === 0) return;
     onStartQuiz({
       mode: 'practice',
       subjectIds: [],
@@ -70,21 +84,21 @@ export const StudyBankPage: React.FC<StudyBankPageProps> = ({
   return (
     <div className="space-y-4 animate-fade-in">
       <div>
-        <h2 className="text-lg sm:text-xl font-bold text-slate-900 dark:text-white">
-          Targeted Study Bank
-        </h2>
-        <p className="text-xs text-slate-500 mt-0.5">
+        <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
+          Targeted Remediation Bank
+        </h1>
+        <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-1 leading-relaxed">
           Review saved bookmarks and drill items missed in past sessions.
         </p>
       </div>
 
-      <div className="flex gap-1.5 p-1 bg-slate-100 dark:bg-slate-900 rounded-lg">
+      <div className="flex gap-1 p-1 bg-slate-100 dark:bg-slate-900 rounded-md">
         <button
           type="button"
           onClick={() => setActiveTab('bookmarks')}
-          className={`flex-1 py-1.5 px-3 text-xs font-semibold rounded transition-colors flex items-center justify-center gap-1.5 tap-target ${
+          className={`flex-1 py-1.5 px-3 text-xs font-medium rounded transition-colors flex items-center justify-center gap-1.5 tap-target cursor-pointer ${
             activeTab === 'bookmarks'
-              ? 'bg-white dark:bg-slate-800 text-indigo-600 dark:text-indigo-400 shadow-sm font-bold'
+              ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 font-bold'
               : 'text-slate-600 dark:text-slate-400 hover:text-slate-900'
           }`}
         >
@@ -95,9 +109,9 @@ export const StudyBankPage: React.FC<StudyBankPageProps> = ({
         <button
           type="button"
           onClick={() => setActiveTab('missed')}
-          className={`flex-1 py-1.5 px-3 text-xs font-semibold rounded transition-colors flex items-center justify-center gap-1.5 tap-target ${
+          className={`flex-1 py-1.5 px-3 text-xs font-medium rounded transition-colors flex items-center justify-center gap-1.5 tap-target cursor-pointer ${
             activeTab === 'missed'
-              ? 'bg-white dark:bg-slate-800 text-rose-600 dark:text-rose-400 shadow-sm font-bold'
+              ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 font-bold'
               : 'text-slate-600 dark:text-slate-400 hover:text-slate-900'
           }`}
         >
@@ -114,13 +128,13 @@ export const StudyBankPage: React.FC<StudyBankPageProps> = ({
             placeholder={`Search ${activeTab === 'bookmarks' ? 'bookmarked' : 'missed'} questions...`}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full h-10 pl-9 pr-9 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg text-xs sm:text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:border-indigo-500 transition-colors"
+            className="w-full h-9 pl-9 pr-9 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-md text-xs sm:text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:border-slate-500 transition-colors"
           />
           {searchQuery && (
             <button
               type="button"
               onClick={() => setSearchQuery('')}
-              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-1"
+              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-1 cursor-pointer"
             >
               <X className="w-3.5 h-3.5" />
             </button>
@@ -129,7 +143,7 @@ export const StudyBankPage: React.FC<StudyBankPageProps> = ({
 
         {activeQuestions.length > 0 && (
           <Button
-            variant={activeTab === 'bookmarks' ? 'primary' : 'danger'}
+            variant="primary"
             size="md"
             fullWidth
             leftIcon={<Play className="w-4 h-4 fill-current" />}
@@ -140,98 +154,123 @@ export const StudyBankPage: React.FC<StudyBankPageProps> = ({
         )}
       </div>
 
-      <div className="space-y-2.5 pt-0.5">
-        {filteredQuestions.map((q) => {
+      {activeTab === 'missed' && missedIds.length > 0 && (
+        <div className="flex justify-end">
+          <button
+            type="button"
+            onClick={onClearMissed}
+            className="text-xs text-rose-600 dark:text-rose-400 hover:underline flex items-center gap-1 cursor-pointer"
+          >
+            <Trash2 className="w-3 h-3" />
+            <span>Clear Missed Items Log</span>
+          </button>
+        </div>
+      )}
+
+      {/* Questions List */}
+      <div className="space-y-2.5">
+        {filteredQuestions.map((q, idx) => {
           const isExpanded = expandedId === q.id;
-          const isBookmarked = bookmarkedIds.includes(q.id);
 
           return (
             <div
               key={q.id}
-              className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg overflow-hidden transition-colors"
+              className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg p-3.5 space-y-2.5"
             >
               <div
                 onClick={() => toggleExpand(q.id)}
-                className="p-3.5 flex items-start justify-between gap-3 cursor-pointer select-none"
+                className="flex items-start justify-between gap-2.5 cursor-pointer select-none"
               >
-                <div className="flex-1 min-w-0">
-                  <div className="flex flex-wrap items-center gap-1.5 mb-1">
+                <div className="space-y-1 flex-1 min-w-0">
+                  <div className="flex flex-wrap items-center gap-1.5">
+                    <span className="text-xs font-mono font-bold text-slate-700 dark:text-slate-300">
+                      #{idx + 1}
+                    </span>
                     <CategoryBadge category={q.category} size="sm" />
                     <DifficultyBadge difficulty={q.difficulty} size="sm" />
-                    <span className="text-xs font-semibold text-slate-600 dark:text-slate-400 truncate">
+                    <span className="text-[11px] font-semibold text-slate-500 truncate">
                       {q.subjectName}
                     </span>
                   </div>
-                  <h4 className="text-xs sm:text-sm font-medium text-slate-900 dark:text-white line-clamp-2">
+                  <p className="text-xs sm:text-sm font-medium text-slate-900 dark:text-white leading-relaxed">
                     {q.question}
-                  </h4>
+                  </p>
                 </div>
 
-                <div className="flex items-center gap-1.5 shrink-0">
+                <div className="flex items-center gap-1 shrink-0 pt-0.5">
                   <button
                     type="button"
                     onClick={(e) => {
                       e.stopPropagation();
                       onToggleBookmark(q.id);
                     }}
-                    title={isBookmarked ? 'Remove bookmark' : 'Bookmark item'}
                     className={`p-1.5 rounded transition-colors ${
-                      isBookmarked
-                        ? 'bg-amber-50 dark:bg-amber-950 text-amber-600'
-                        : 'bg-slate-100 dark:bg-slate-800 text-slate-400 hover:text-slate-600'
+                      bookmarkedIds.includes(q.id)
+                        ? 'text-amber-600 bg-amber-50 dark:bg-amber-950'
+                        : 'text-slate-400 hover:text-slate-600'
                     }`}
                   >
                     <Bookmark
-                      className={`w-4 h-4 ${isBookmarked ? 'fill-current' : ''}`}
+                      className={`w-3.5 h-3.5 ${
+                        bookmarkedIds.includes(q.id) ? 'fill-current' : ''
+                      }`}
                     />
                   </button>
 
-                  <span className="text-slate-400 p-1">
-                    <ChevronDown
-                      className={`w-4 h-4 transition-transform duration-200 ${
-                        isExpanded ? 'rotate-180 text-slate-600 dark:text-slate-200' : 'rotate-0'
-                      }`}
-                    />
-                  </span>
+                  <ChevronDown
+                    className={`w-4 h-4 text-slate-400 transition-transform duration-200 ${
+                      isExpanded ? 'rotate-180' : ''
+                    }`}
+                  />
                 </div>
               </div>
 
               {isExpanded && (
-                <div className="px-3.5 pb-3.5 pt-2 border-t border-slate-100 dark:border-slate-800 bg-slate-50/40 dark:bg-slate-800/20 space-y-2.5 text-xs animate-fade-in">
-                  <div className="space-y-1.5">
-                    <span className="font-semibold text-slate-600 dark:text-slate-400 block mb-1">
-                      Options:
+                <div className="pt-2.5 border-t border-slate-100 dark:border-slate-800 space-y-2 text-xs animate-fade-in">
+                  <div className="space-y-1">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 block">
+                      Choices & Key:
                     </span>
                     {q.choices.map((choice, cIdx) => (
                       <div
                         key={cIdx}
-                        className={`p-2.5 rounded border flex items-center justify-between ${
+                        className={`p-2 rounded border flex items-center justify-between gap-2 ${
                           cIdx === q.answer
-                            ? 'bg-emerald-50 dark:bg-emerald-950/40 border-emerald-400 text-emerald-950 dark:text-emerald-100 font-semibold'
-                            : 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300'
+                            ? 'bg-emerald-50 dark:bg-emerald-950/40 border-emerald-500 text-emerald-950 dark:text-emerald-100 font-semibold'
+                            : 'border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300'
                         }`}
                       >
-                        <div className="flex items-center gap-2">
-                          <span className="font-bold">
-                            {['A', 'B', 'C', 'D'][cIdx]}.
-                          </span>
-                          <span>{choice}</span>
-                        </div>
+                        <span className="flex-1">
+                          <strong className="font-mono">{String.fromCharCode(65 + cIdx)}.</strong> {choice}
+                        </span>
                         {cIdx === q.answer && (
-                          <span className="text-[10px] font-bold text-emerald-600 dark:text-emerald-400">
-                            Correct
+                          <span className="text-[10px] font-bold text-emerald-700 dark:text-emerald-300 uppercase shrink-0">
+                            Correct Answer
                           </span>
                         )}
                       </div>
                     ))}
                   </div>
 
-                  <div className="p-3 rounded bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 leading-relaxed">
-                    <div className="flex items-center gap-1 font-bold text-slate-900 dark:text-slate-100 mb-1">
-                      <BookOpen className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" />
-                      <span>Pedagogical Rationale:</span>
+                  <div className="p-3 rounded bg-slate-50 dark:bg-slate-850 border border-slate-200 dark:border-slate-750 space-y-1">
+                    <div className="flex items-center justify-between">
+                      <span className="font-bold text-slate-900 dark:text-white uppercase tracking-wider text-[10px]">
+                        Pedagogical Rationale:
+                      </span>
+                      {onStudyTopic && (
+                        <button
+                          type="button"
+                          onClick={() => onStudyTopic(q.topic, q.subjectId)}
+                          className="text-xs font-semibold text-slate-800 dark:text-slate-200 hover:underline inline-flex items-center gap-1 cursor-pointer"
+                        >
+                          <BookOpen className="w-3.5 h-3.5 text-slate-600 dark:text-slate-400" />
+                          <span>Study Guide →</span>
+                        </button>
+                      )}
                     </div>
-                    {q.explanation}
+                    <p className="text-slate-700 dark:text-slate-300 leading-relaxed text-xs">
+                      {q.explanation}
+                    </p>
                   </div>
                 </div>
               )}
@@ -241,23 +280,11 @@ export const StudyBankPage: React.FC<StudyBankPageProps> = ({
       </div>
 
       {filteredQuestions.length === 0 && (
-        <div className="text-center py-10 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-5 space-y-2">
-          <div className="w-10 h-10 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 flex items-center justify-center mx-auto">
-            {activeTab === 'bookmarks' ? (
-              <Bookmark className="w-5 h-5" />
-            ) : (
-              <CheckCircle2 className="w-5 h-5 text-emerald-500" />
-            )}
-          </div>
-          <h3 className="font-bold text-slate-800 dark:text-slate-200 text-sm">
+        <div className="text-center py-10 bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-800 p-5 space-y-1.5">
+          <p className="text-xs text-slate-500">
             {activeTab === 'bookmarks'
-              ? 'No bookmarked questions yet'
-              : 'No missed questions in bank'}
-          </h3>
-          <p className="text-xs text-slate-500 max-w-xs mx-auto">
-            {activeTab === 'bookmarks'
-              ? 'Tap the bookmark icon during practice or mock exam sessions to save questions here for review.'
-              : 'Great job! You have no missed items waiting for remediation.'}
+              ? 'No bookmarked questions found. You can bookmark any question during practice to save it for targeted review.'
+              : 'No missed questions recorded yet. Any incorrectly answered questions during practice will appear here.'}
           </p>
         </div>
       )}

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import {
   Award,
   CheckCircle2,
@@ -6,43 +6,42 @@ import {
   Clock,
   RotateCcw,
   Home,
+  Check,
+  X,
   ChevronDown,
-  Bookmark,
-  AlertCircle,
   BookOpen,
 } from 'lucide-react';
 import { Button } from '../components/ui/Button';
 import { ProgressBar } from '../components/ui/ProgressBar';
-import type { QuizResult, Question } from '../types';
+import { CategoryBadge, DifficultyBadge } from '../components/ui/Badge';
+import type { QuizResult, UserAnswer } from '../types';
 
 interface QuizResultPageProps {
   result: QuizResult;
-  bookmarkedIds: string[];
-  onToggleBookmark: (questionId: string) => void;
-  onRetryIncorrect: (missedQuestions: Question[]) => void;
   onRetakeQuiz: () => void;
-  onStudyTopic?: (topic: string, subjectId: string) => void;
+  onRetakeIncorrect: () => void;
   onGoHome: () => void;
+  onStudyTopic?: (topic: string, subjectId: string) => void;
 }
+
+const CHOICE_LETTERS = ['A', 'B', 'C', 'D'];
 
 export const QuizResultPage: React.FC<QuizResultPageProps> = ({
   result,
-  bookmarkedIds,
-  onToggleBookmark,
-  onRetryIncorrect,
   onRetakeQuiz,
-  onStudyTopic,
+  onRetakeIncorrect,
   onGoHome,
+  onStudyTopic,
 }) => {
-  const [filterMode, setFilterMode] = useState<'all' | 'incorrect' | 'flagged'>('all');
+  const [filterMode, setFilterMode] = useState<'all' | 'incorrect' | 'correct'>('all');
   const [expandedQuestionId, setExpandedQuestionId] = useState<string | null>(null);
 
   const {
-    scorePercentage,
+    totalQuestions,
     correctCount,
     incorrectCount,
     unansweredCount,
-    totalQuestions,
+    scorePercentage,
     isPassed,
     timeSpentSeconds,
     subjectBreakdown,
@@ -50,120 +49,106 @@ export const QuizResultPage: React.FC<QuizResultPageProps> = ({
     questions,
   } = result;
 
-  const formatTimeSpent = (secs: number) => {
+  const formatTime = (secs: number) => {
     const mins = Math.floor(secs / 60);
-    const remainder = secs % 60;
-    if (mins === 0) return `${remainder}s`;
-    return `${mins}m ${remainder}s`;
+    const remainderSecs = secs % 60;
+    if (mins === 0) return `${remainderSecs}s`;
+    return `${mins}m ${remainderSecs}s`;
   };
 
-  const missedQuestions = questions.filter((q) => {
-    const ans = answers[q.id];
-    return !ans || !ans.isCorrect;
-  });
-
-  const displayedQuestions = questions.filter((q) => {
-    const ans = answers[q.id];
+  const filteredQuestions = questions.filter((q) => {
+    const ans: UserAnswer | undefined = answers[q.id];
     if (filterMode === 'incorrect') {
       return !ans || !ans.isCorrect;
     }
-    if (filterMode === 'flagged') {
-      return bookmarkedIds.includes(q.id);
+    if (filterMode === 'correct') {
+      return ans && ans.isCorrect;
     }
     return true;
   });
 
-  const toggleExpand = (id: string) => {
+  const toggleQuestionExpand = (id: string) => {
     setExpandedQuestionId((prev) => (prev === id ? null : id));
   };
 
   return (
     <div className="space-y-4 animate-fade-in">
-      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-5 text-center">
-        <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-slate-100 dark:bg-slate-800 mb-2.5">
-          {isPassed ? (
-            <Award className="w-6 h-6 text-emerald-600" />
-          ) : (
-            <AlertCircle className="w-6 h-6 text-amber-600" />
-          )}
+      {/* Score Summary Card */}
+      <div
+        className={`rounded-lg p-5 sm:p-6 text-center border space-y-3 ${
+          isPassed
+            ? 'bg-emerald-50/70 dark:bg-emerald-950/20 border-emerald-200 dark:border-emerald-900/60'
+            : 'bg-rose-50/70 dark:bg-rose-950/20 border-rose-200 dark:border-rose-900/60'
+        }`}
+      >
+        <div className="inline-flex p-2.5 rounded-full bg-white dark:bg-slate-900 mb-1 border border-slate-200 dark:border-slate-800">
+          <Award
+            className={`w-7 h-7 ${
+              isPassed
+                ? 'text-emerald-600 dark:text-emerald-400'
+                : 'text-rose-600 dark:text-rose-400'
+            }`}
+          />
         </div>
 
-        <div className="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">
-          {scorePercentage}%
+        <div>
+          <span
+            className={`inline-block px-2.5 py-0.5 rounded text-xs font-bold uppercase tracking-wider mb-1.5 ${
+              isPassed
+                ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300'
+                : 'bg-rose-100 text-rose-800 dark:bg-rose-950 dark:text-rose-300'
+            }`}
+          >
+            {isPassed ? 'Passed Board Benchmark' : 'Did Not Meet Benchmark'}
+          </span>
+          <h1 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white font-mono">
+            {scorePercentage}%
+          </h1>
+          <p className="text-xs text-slate-600 dark:text-slate-400 mt-0.5">
+            PRC LET Passing Threshold: 75.00%
+          </p>
         </div>
-        <h2 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white mt-1">
-          {isPassed ? 'Passed (Meets 75% LET Rating)' : 'Below 75% LET Passing Benchmark'}
-        </h2>
-        <p className="text-xs text-slate-500 max-w-md mx-auto mt-0.5">
-          {isPassed
-            ? 'Score meets or exceeds the PRC Licensure Examination for Teachers passing threshold.'
-            : 'The PRC standard rating is 75%. Review the explanations below to target weak competencies.'}
-        </p>
 
-        <div className="grid grid-cols-3 gap-2 mt-4 pt-3.5 border-t border-slate-100 dark:border-slate-800 text-xs">
-          <div className="p-2 bg-slate-50 dark:bg-slate-800/60 rounded-lg">
-            <span className="block text-slate-500 text-[11px]">Score</span>
-            <span className="font-bold text-slate-900 dark:text-white text-sm">
-              {correctCount}/{totalQuestions}
+        {/* Detailed Stats Row */}
+        <div className="grid grid-cols-4 gap-2 pt-3 border-t border-slate-200/60 dark:border-slate-800 text-center">
+          <div>
+            <span className="text-[10px] text-slate-500 uppercase tracking-wider block font-semibold">Total</span>
+            <span className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white font-mono">
+              {totalQuestions}
             </span>
           </div>
-          <div className="p-2 bg-slate-50 dark:bg-slate-800/60 rounded-lg">
-            <span className="block text-slate-500 text-[11px]">Duration</span>
-            <span className="font-bold text-slate-900 dark:text-white text-sm">
-              {formatTimeSpent(timeSpentSeconds)}
+          <div>
+            <span className="text-[10px] text-emerald-700 dark:text-emerald-400 uppercase tracking-wider block font-semibold">Correct</span>
+            <span className="text-xs sm:text-sm font-bold text-emerald-700 dark:text-emerald-400 font-mono">
+              {correctCount}
             </span>
           </div>
-          <div className="p-2 bg-slate-50 dark:bg-slate-800/60 rounded-lg">
-            <span className="block text-slate-500 text-[11px]">Status</span>
-            <span className={`font-bold text-sm ${isPassed ? 'text-emerald-600' : 'text-amber-600'}`}>
-              {isPassed ? 'Passed' : 'Needs Practice'}
+          <div>
+            <span className="text-[10px] text-rose-700 dark:text-rose-400 uppercase tracking-wider block font-semibold">Incorrect</span>
+            <span className="text-xs sm:text-sm font-bold text-rose-700 dark:text-rose-400 font-mono">
+              {incorrectCount + unansweredCount}
+            </span>
+          </div>
+          <div>
+            <span className="text-[10px] text-slate-500 uppercase tracking-wider block font-semibold">Time</span>
+            <span className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white font-mono">
+              {formatTime(timeSpentSeconds)}
             </span>
           </div>
         </div>
       </div>
 
-      <div className="grid grid-cols-3 gap-2.5">
-        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-3 text-center">
-          <div className="flex items-center justify-center gap-1 text-emerald-600 text-xs font-semibold mb-0.5">
-            <CheckCircle2 className="w-3.5 h-3.5" />
-            <span>Correct</span>
-          </div>
-          <span className="text-lg font-bold text-slate-900 dark:text-white">
-            {correctCount}
-          </span>
-        </div>
-
-        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-3 text-center">
-          <div className="flex items-center justify-center gap-1 text-rose-600 text-xs font-semibold mb-0.5">
-            <XCircle className="w-3.5 h-3.5" />
-            <span>Incorrect</span>
-          </div>
-          <span className="text-lg font-bold text-slate-900 dark:text-white">
-            {incorrectCount}
-          </span>
-        </div>
-
-        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-3 text-center">
-          <div className="flex items-center justify-center gap-1 text-slate-500 text-xs font-semibold mb-0.5">
-            <Clock className="w-3.5 h-3.5" />
-            <span>Skipped</span>
-          </div>
-          <span className="text-lg font-bold text-slate-900 dark:text-white">
-            {unansweredCount}
-          </span>
-        </div>
-      </div>
-
-      <div className="flex flex-col sm:flex-row gap-2">
-        {missedQuestions.length > 0 && (
+      {/* Action Buttons */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+        {incorrectCount > 0 && (
           <Button
             variant="danger"
             size="md"
             fullWidth
             leftIcon={<RotateCcw className="w-4 h-4" />}
-            onClick={() => onRetryIncorrect(missedQuestions)}
+            onClick={onRetakeIncorrect}
           >
-            Drill Missed Items ({missedQuestions.length})
+            Retake Missed ({incorrectCount})
           </Button>
         )}
         <Button
@@ -173,7 +158,7 @@ export const QuizResultPage: React.FC<QuizResultPageProps> = ({
           leftIcon={<RotateCcw className="w-4 h-4" />}
           onClick={onRetakeQuiz}
         >
-          Retake Full Session
+          Retake Session
         </Button>
         <Button
           variant="secondary"
@@ -182,15 +167,16 @@ export const QuizResultPage: React.FC<QuizResultPageProps> = ({
           leftIcon={<Home className="w-4 h-4" />}
           onClick={onGoHome}
         >
-          Back to Dashboard
+          Return Home
         </Button>
       </div>
 
+      {/* Subject Performance Breakdown */}
       {subjectBreakdown.length > 0 && (
-        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-4 sm:p-5 space-y-3">
-          <h3 className="font-bold text-slate-900 dark:text-white text-xs uppercase tracking-wider">
+        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg p-4 space-y-3">
+          <h2 className="font-bold text-slate-900 dark:text-white text-xs uppercase tracking-wider">
             Subject Performance Breakdown
-          </h3>
+          </h2>
           <div className="space-y-3">
             {subjectBreakdown.map((sb) => (
               <div key={sb.subjectId} className="space-y-1">
@@ -199,8 +185,8 @@ export const QuizResultPage: React.FC<QuizResultPageProps> = ({
                   <span
                     className={
                       sb.percentage >= 75
-                        ? 'text-emerald-600 dark:text-emerald-400 font-bold'
-                        : 'text-rose-600 dark:text-rose-400 font-bold'
+                        ? 'text-emerald-700 dark:text-emerald-400 font-bold font-mono'
+                        : 'text-rose-700 dark:text-rose-400 font-bold font-mono'
                     }
                   >
                     {sb.correct}/{sb.total} ({sb.percentage}%)
@@ -217,25 +203,26 @@ export const QuizResultPage: React.FC<QuizResultPageProps> = ({
         </div>
       )}
 
-      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-4 sm:p-5 space-y-3">
+      {/* Item-by-Item Review & Rationale */}
+      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg p-4 space-y-3">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2 border-b border-slate-100 dark:border-slate-800">
           <div>
-            <h3 className="font-bold text-slate-900 dark:text-white text-sm sm:text-base">
-              Item-by-Item Review & Rationale
-            </h3>
+            <h2 className="font-bold text-slate-900 dark:text-white text-sm sm:text-base">
+              Item-by-Item Review & Rationales
+            </h2>
             <p className="text-xs text-slate-500">
-              Review correct answers and rationales.
+              Review correct answers, explanations, and corresponding study materials.
             </p>
           </div>
 
-          <div className="flex gap-1.5 p-1 bg-slate-100 dark:bg-slate-800 rounded-lg self-start sm:self-auto">
+          <div className="flex gap-1 p-1 bg-slate-100 dark:bg-slate-800 rounded-md self-start sm:self-auto">
             <button
               type="button"
               onClick={() => setFilterMode('all')}
-              className={`px-2.5 py-1 text-xs font-semibold rounded-md transition-all ${
+              className={`px-2.5 py-1 text-xs font-medium rounded transition-colors cursor-pointer ${
                 filterMode === 'all'
-                  ? 'bg-white dark:bg-slate-700 text-indigo-600 dark:text-indigo-300 shadow-sm'
-                  : 'text-slate-500 hover:text-slate-800'
+                  ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 font-bold'
+                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900'
               }`}
             >
               All ({questions.length})
@@ -243,140 +230,122 @@ export const QuizResultPage: React.FC<QuizResultPageProps> = ({
             <button
               type="button"
               onClick={() => setFilterMode('incorrect')}
-              className={`px-2.5 py-1 text-xs font-semibold rounded-md transition-all ${
+              className={`px-2.5 py-1 text-xs font-medium rounded transition-colors cursor-pointer ${
                 filterMode === 'incorrect'
-                  ? 'bg-white dark:bg-slate-700 text-rose-600 dark:text-rose-300 shadow-sm'
-                  : 'text-slate-500 hover:text-slate-800'
+                  ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 font-bold'
+                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900'
               }`}
             >
-              Incorrect ({missedQuestions.length})
+              Missed ({incorrectCount + unansweredCount})
             </button>
             <button
               type="button"
-              onClick={() => setFilterMode('flagged')}
-              className={`px-2.5 py-1 text-xs font-semibold rounded-md transition-all ${
-                filterMode === 'flagged'
-                  ? 'bg-white dark:bg-slate-700 text-amber-600 dark:text-amber-300 shadow-sm'
-                  : 'text-slate-500 hover:text-slate-800'
+              onClick={() => setFilterMode('correct')}
+              className={`px-2.5 py-1 text-xs font-medium rounded transition-colors cursor-pointer ${
+                filterMode === 'correct'
+                  ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 font-bold'
+                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900'
               }`}
             >
-              Bookmarked
+              Correct ({correctCount})
             </button>
           </div>
         </div>
 
-        <div className="space-y-2.5">
-          {displayedQuestions.map((q, index) => {
-            const ans = answers[q.id];
-            const isCorrect = ans?.isCorrect ?? false;
-            const isAnswered = ans !== undefined && ans.selectedAnswer !== undefined;
+        {/* Questions List */}
+        <div className="space-y-2.5 pt-1">
+          {filteredQuestions.map((q) => {
+            const originalIndex = questions.findIndex((item) => item.id === q.id);
+            const ans: UserAnswer | undefined = answers[q.id];
+            const isCorrect = ans && ans.isCorrect;
+            const isAnswered = ans !== undefined && ans.selectedAnswer !== null;
             const isExpanded = expandedQuestionId === q.id;
-            const isBookmarked = bookmarkedIds.includes(q.id);
 
             return (
               <div
                 key={q.id}
-                className={`rounded-lg border transition-all ${
-                  isAnswered
-                    ? isCorrect
-                      ? 'border-emerald-200 dark:border-emerald-950/60 bg-emerald-50/20 dark:bg-emerald-950/10'
-                      : 'border-rose-200 dark:border-rose-950/60 bg-rose-50/20 dark:bg-rose-950/10'
-                    : 'border-slate-200 dark:border-slate-800 bg-slate-50/30 dark:bg-slate-800/20'
-                }`}
+                className="border border-slate-200 dark:border-slate-800 rounded-md p-3.5 space-y-2.5 transition-colors bg-slate-50/40 dark:bg-slate-900"
               >
                 <div
-                  onClick={() => toggleExpand(q.id)}
-                  className="p-3.5 flex items-start justify-between gap-3 cursor-pointer select-none"
+                  onClick={() => toggleQuestionExpand(q.id)}
+                  className="flex items-start justify-between gap-2.5 cursor-pointer select-none"
                 >
-                  <div className="flex items-start gap-2.5 flex-1 min-w-0">
+                  <div className="flex items-start gap-2 min-w-0">
                     <span
-                      className={`w-6 h-6 rounded-md flex items-center justify-center shrink-0 font-bold text-xs ${
-                        isAnswered
-                          ? isCorrect
-                            ? 'bg-emerald-600 text-white'
-                            : 'bg-rose-600 text-white'
-                          : 'bg-slate-300 text-slate-700'
+                      className={`w-5 h-5 rounded flex items-center justify-center text-xs shrink-0 mt-0.5 ${
+                        isCorrect
+                          ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300'
+                          : 'bg-rose-100 text-rose-800 dark:bg-rose-950 dark:text-rose-300'
                       }`}
                     >
-                      {index + 1}
+                      {isCorrect ? (
+                        <Check className="w-3.5 h-3.5 stroke-[3]" />
+                      ) : (
+                        <X className="w-3.5 h-3.5 stroke-[3]" />
+                      )}
                     </span>
-                    <div className="min-w-0 flex-1">
+
+                    <div className="min-w-0">
                       <div className="flex flex-wrap items-center gap-1.5 mb-1">
-                        <span className="text-[11px] font-bold text-indigo-600 dark:text-indigo-400">
+                        <span className="text-xs font-mono font-bold text-slate-700 dark:text-slate-300">
+                          #{originalIndex + 1}
+                        </span>
+                        <CategoryBadge category={q.category} size="sm" />
+                        <DifficultyBadge difficulty={q.difficulty} size="sm" />
+                        <span className="text-[11px] font-semibold text-slate-600 dark:text-slate-400">
                           {q.subjectName}
                         </span>
-                        <span className="text-[10px] text-slate-400">•</span>
-                        <span className="text-[11px] text-slate-500">{q.topic}</span>
                       </div>
-                      <p className="text-xs sm:text-sm font-medium text-slate-800 dark:text-slate-200 line-clamp-2">
+                      <p className="text-xs sm:text-sm font-medium text-slate-900 dark:text-white leading-relaxed">
                         {q.question}
                       </p>
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-1.5 shrink-0">
-                    <button
-                      type="button"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        onToggleBookmark(q.id);
-                      }}
-                      className={`p-1.5 rounded transition-colors ${
-                        isBookmarked
-                          ? 'text-amber-500 bg-amber-50 dark:bg-amber-950'
-                          : 'text-slate-400 hover:text-slate-600'
+                  <div className="shrink-0 pt-0.5 text-slate-400">
+                    <ChevronDown
+                      className={`w-4 h-4 transition-transform duration-200 ${
+                        isExpanded ? 'rotate-180' : ''
                       }`}
-                    >
-                      <Bookmark
-                        className={`w-4 h-4 ${isBookmarked ? 'fill-current' : ''}`}
-                      />
-                    </button>
-
-                    <span className="text-slate-400 p-1">
-                      <ChevronDown
-                        className={`w-4 h-4 transition-transform duration-200 ${
-                          isExpanded ? 'rotate-180 text-slate-600 dark:text-slate-200' : 'rotate-0'
-                        }`}
-                      />
-                    </span>
+                    />
                   </div>
                 </div>
 
+                {/* Expanded Details */}
                 {isExpanded && (
-                  <div className="px-3.5 pb-3.5 pt-1 border-t border-slate-100 dark:border-slate-800 space-y-2.5 animate-fade-in">
+                  <div className="space-y-3 pt-2 border-t border-slate-200/80 dark:border-slate-800 animate-fade-in text-xs">
+                    {/* Choices Breakdown */}
                     <div className="space-y-1.5">
                       {q.choices.map((choice, cIdx) => {
-                        const isSelected = ans?.selectedAnswer === cIdx;
-                        const isAnswer = q.answer === cIdx;
+                        const isThisCorrect = q.answer === cIdx;
+                        const isThisUserSelection = ans && ans.selectedAnswer === cIdx;
 
-                        let style =
-                          'bg-white dark:bg-slate-800/40 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400';
-                        if (isAnswer) {
-                          style =
-                            'bg-emerald-50 dark:bg-emerald-950/60 border-emerald-500 text-emerald-950 dark:text-emerald-200 font-semibold';
-                        } else if (isSelected && !isAnswer) {
-                          style =
-                            'bg-rose-50 dark:bg-rose-950/60 border-rose-500 text-rose-950 dark:text-rose-200 font-semibold';
+                        let rowStyle = 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300';
+                        if (isThisCorrect) {
+                          rowStyle = 'bg-emerald-50 dark:bg-emerald-950/40 border-emerald-600 text-emerald-950 dark:text-emerald-100 font-semibold';
+                        } else if (isThisUserSelection && !isThisCorrect) {
+                          rowStyle = 'bg-rose-50 dark:bg-rose-950/40 border-rose-500 text-rose-950 dark:text-rose-100 font-medium';
                         }
 
                         return (
                           <div
                             key={cIdx}
-                            className={`p-2.5 rounded-md border text-xs flex items-center justify-between gap-2 ${style}`}
+                            className={`p-2.5 rounded border flex items-center justify-between gap-2 ${rowStyle}`}
                           >
-                            <div className="flex items-center gap-2">
-                              <span className="font-bold">
-                                {['A', 'B', 'C', 'D'][cIdx]}.
+                            <div className="flex items-center gap-2 flex-1">
+                              <span className="w-5 h-5 rounded border flex items-center justify-center font-bold text-[11px] shrink-0 font-mono">
+                                {CHOICE_LETTERS[cIdx]}
                               </span>
                               <span>{choice}</span>
                             </div>
-                            {isAnswer && (
-                              <span className="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 shrink-0">
+
+                            {isThisCorrect && (
+                              <span className="text-[10px] font-bold text-emerald-700 dark:text-emerald-300 uppercase shrink-0">
                                 Correct Answer
                               </span>
                             )}
-                            {isSelected && !isAnswer && (
-                              <span className="text-[10px] font-bold text-rose-600 dark:text-rose-400 shrink-0">
+                            {isThisUserSelection && !isThisCorrect && (
+                              <span className="text-[10px] font-bold text-rose-700 dark:text-rose-300 uppercase shrink-0">
                                 Your Choice
                               </span>
                             )}
@@ -385,35 +354,37 @@ export const QuizResultPage: React.FC<QuizResultPageProps> = ({
                       })}
                     </div>
 
-                    <div className="p-3 rounded-md bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 text-xs text-slate-700 dark:text-slate-300 leading-relaxed space-y-1.5">
+                    {!isAnswered && (
+                      <p className="text-xs text-amber-700 dark:text-amber-400 font-medium">
+                        Question was left unanswered.
+                      </p>
+                    )}
+
+                    {/* Explanation */}
+                    <div className="p-3 rounded bg-slate-100 dark:bg-slate-850 border border-slate-200 dark:border-slate-750 space-y-1">
                       <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-1 font-bold text-slate-900 dark:text-slate-100">
-                          <BookOpen className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" />
-                          <span>Pedagogical Rationale:</span>
-                        </div>
+                        <span className="font-bold text-slate-900 dark:text-white uppercase tracking-wider text-[10px]">
+                          Explanation & Rationale
+                        </span>
                         {onStudyTopic && (
                           <button
                             type="button"
                             onClick={() => onStudyTopic(q.topic, q.subjectId)}
-                            className="text-[11px] font-semibold text-indigo-600 dark:text-indigo-400 hover:underline inline-flex items-center gap-1 tap-target"
+                            className="text-xs font-semibold text-slate-800 dark:text-slate-200 hover:underline inline-flex items-center gap-1 cursor-pointer"
                           >
-                            <span>Read Study Guide →</span>
+                            <span>Study Guide →</span>
                           </button>
                         )}
                       </div>
-                      <p>{q.explanation}</p>
+                      <p className="text-slate-700 dark:text-slate-300 leading-relaxed text-xs">
+                        {q.explanation}
+                      </p>
                     </div>
                   </div>
                 )}
               </div>
             );
           })}
-
-          {displayedQuestions.length === 0 && (
-            <p className="text-center py-6 text-xs text-slate-500">
-              No questions found for this filter.
-            </p>
-          )}
         </div>
       </div>
     </div>
