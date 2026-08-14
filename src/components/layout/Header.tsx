@@ -6,6 +6,7 @@ interface HeaderProps {
   currentTab: NavigationTab;
   inSession?: boolean;
   sessionTitle?: string;
+  sessionSubtitle?: string;
   onBack?: () => void;
   streakDays?: number;
   totalAnswered?: number;
@@ -14,6 +15,7 @@ interface HeaderProps {
 export const Header: React.FC<HeaderProps> = ({
   inSession = false,
   sessionTitle,
+  sessionSubtitle,
   onBack,
   streakDays = 1,
   totalAnswered = 0,
@@ -27,18 +29,18 @@ export const Header: React.FC<HeaderProps> = ({
               <button
                 type="button"
                 onClick={onBack}
-                aria-label="Exit current session"
-                className="inline-flex items-center justify-center w-9 h-9 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 tap-target transition-colors"
+                aria-label="Go back"
+                className="inline-flex items-center justify-center w-9 h-9 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white tap-target transition-colors shrink-0 -ml-1.5"
               >
                 <ChevronLeft className="w-5 h-5" />
               </button>
             )}
-            <div className="flex-1 truncate">
+            <div className="flex-1 min-w-0">
               <h1 className="text-sm sm:text-base font-bold text-slate-900 dark:text-white truncate">
                 {sessionTitle || 'Review Session'}
               </h1>
-              <p className="text-xs text-slate-500 dark:text-slate-400">
-                LET Board Exam Prep
+              <p className="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 truncate">
+                {sessionSubtitle || 'LET Board Exam Prep'}
               </p>
             </div>
           </div>

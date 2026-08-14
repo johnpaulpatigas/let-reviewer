@@ -152,6 +152,15 @@ export default function App() {
     return 'General Review';
   };
 
+  // Derive session subtitle for header
+  const getSessionSubtitle = () => {
+    if (activeMaterial) return `${activeMaterial.category === 'gen_ed' ? 'GenEd' : 'ProfEd'} • ${activeMaterial.subjectName}`;
+    if (activeResult) return 'Scorecard & Analysis';
+    if (!activeSession) return 'LET Board Exam Prep';
+    if (activeSession.config.mode === 'exam') return 'Timed Simulation';
+    return 'Interactive Practice';
+  };
+
   const inSession = Boolean(activeSession || activeResult || activeMaterial);
   const hideNav = inSession;
 
@@ -164,6 +173,7 @@ export default function App() {
       }}
       inSession={inSession}
       sessionTitle={getSessionTitle()}
+      sessionSubtitle={getSessionSubtitle()}
       onBack={handleExitSession}
       streakDays={stats.streakDays}
       totalAnswered={stats.totalAnswered}

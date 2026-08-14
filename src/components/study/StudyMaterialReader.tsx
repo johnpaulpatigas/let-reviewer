@@ -3,7 +3,6 @@ import {
   Bookmark,
   CheckCircle2,
   Clock,
-  ArrowLeft,
   Play,
   Lightbulb,
   AlertTriangle,
@@ -21,7 +20,7 @@ interface StudyMaterialReaderProps {
   onToggleBookmark: (materialId: string) => void;
   onToggleCompleted: (materialId: string) => void;
   onStartPractice: (material: StudyMaterial) => void;
-  onBack: () => void;
+  onBack?: () => void;
 }
 
 export const StudyMaterialReader: React.FC<StudyMaterialReaderProps> = ({
@@ -32,7 +31,6 @@ export const StudyMaterialReader: React.FC<StudyMaterialReaderProps> = ({
   onToggleBookmark,
   onToggleCompleted,
   onStartPractice,
-  onBack,
 }) => {
   // Scroll to top on mount
   useEffect(() => {
@@ -41,18 +39,21 @@ export const StudyMaterialReader: React.FC<StudyMaterialReaderProps> = ({
 
   return (
     <article className="space-y-5 pb-8 animate-fadeIn">
-      {/* Top Header Bar */}
+      {/* Top Reading Action & Meta Bar */}
       <div className="flex items-center justify-between gap-3 border-b border-slate-200 dark:border-slate-800 pb-3">
-        <button
-          type="button"
-          onClick={onBack}
-          className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white tap-target"
-        >
-          <ArrowLeft className="w-4 h-4" />
-          <span>All Study Guides</span>
-        </button>
+        <div className="flex flex-wrap items-center gap-2 min-w-0">
+          <CategoryBadge category={material.category} size="sm" />
+          <span className="text-xs font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-wider truncate">
+            {material.subjectName}
+          </span>
+          <span className="text-slate-300 dark:text-slate-700">•</span>
+          <span className="inline-flex items-center gap-1 text-xs text-slate-500 shrink-0">
+            <Clock className="w-3 h-3" />
+            {material.readTimeMinutes} min read
+          </span>
+        </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 shrink-0">
           <button
             type="button"
             onClick={() => onToggleBookmark(material.id)}
@@ -81,20 +82,8 @@ export const StudyMaterialReader: React.FC<StudyMaterialReaderProps> = ({
         </div>
       </div>
 
-      {/* Guide Meta & Title */}
+      {/* Guide Title & Overview */}
       <header className="space-y-2">
-        <div className="flex flex-wrap items-center gap-2">
-          <CategoryBadge category={material.category} size="sm" />
-          <span className="text-xs font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-wider">
-            {material.subjectName}
-          </span>
-          <span className="text-slate-300 dark:text-slate-700">•</span>
-          <span className="inline-flex items-center gap-1 text-xs text-slate-500">
-            <Clock className="w-3 h-3" />
-            {material.readTimeMinutes} min read
-          </span>
-        </div>
-
         <h1 className="text-xl sm:text-2xl font-black tracking-tight text-slate-900 dark:text-white leading-tight">
           {material.title}
         </h1>

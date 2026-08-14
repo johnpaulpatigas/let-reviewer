@@ -9,6 +9,7 @@ interface AppShellProps {
   onTabChange: (tab: NavigationTab) => void;
   inSession?: boolean;
   sessionTitle?: string;
+  sessionSubtitle?: string;
   onBack?: () => void;
   streakDays?: number;
   totalAnswered?: number;
@@ -22,6 +23,7 @@ export const AppShell: React.FC<AppShellProps> = ({
   onTabChange,
   inSession = false,
   sessionTitle,
+  sessionSubtitle,
   onBack,
   streakDays = 1,
   totalAnswered = 0,
@@ -34,6 +36,7 @@ export const AppShell: React.FC<AppShellProps> = ({
         currentTab={currentTab}
         inSession={inSession}
         sessionTitle={sessionTitle}
+        sessionSubtitle={sessionSubtitle}
         onBack={onBack}
         streakDays={streakDays}
         totalAnswered={totalAnswered}
