@@ -1,5 +1,4 @@
 import type { Question, QuizConfig } from '../types';
-import { ALL_QUESTIONS } from '../data/questions';
 import { OFFICIAL_LET_BLUEPRINTS, type ExamBlueprint } from '../data/exam-blueprint';
 
 /**
@@ -19,7 +18,7 @@ export function shuffleArray<T>(array: T[]): T[] {
  */
 export function generateQuestionsFromBlueprint(
   blueprint: ExamBlueprint,
-  allQuestions: Question[] = ALL_QUESTIONS
+  allQuestions: Question[]
 ): Question[] {
   const resultQuestions: Question[] = [];
   const selectedIds = new Set<string>();
@@ -67,7 +66,7 @@ export function generateQuestionsFromBlueprint(
  */
 export function assembleQuestionsForConfig(
   config: QuizConfig,
-  allQuestions: Question[] = ALL_QUESTIONS,
+  allQuestions: Question[],
   bookmarkedIds: string[] = [],
   missedIds: string[] = []
 ): Question[] {
@@ -79,7 +78,7 @@ export function assembleQuestionsForConfig(
     );
   }
 
-  let pool = [...allQuestions];
+  let pool = [...(allQuestions || [])];
 
   // Filter by bookmarked
   if (config.includeOnlyBookmarked) {
