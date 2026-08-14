@@ -40,6 +40,8 @@ export default function App() {
 
   const [activeResult, setActiveResult] = useState<QuizResult | null>(null);
   const [activeMaterial, setActiveMaterial] = useState<StudyMaterial | null>(null);
+  const [materialsPage, setMaterialsPage] = useState(1);
+  const [subjectsPage, setSubjectsPage] = useState(1);
 
   // Start a new quiz session (practice or exam)
   const handleStartQuiz = (config: QuizConfig) => {
@@ -252,6 +254,8 @@ export default function App() {
               bookmarkedMaterialIds={stats.bookmarkedMaterialIds}
               completedMaterialIds={stats.completedMaterialIds}
               onToggleMaterialBookmark={toggleMaterialBookmark}
+              currentPage={materialsPage}
+              onPageChange={setMaterialsPage}
             />
           )}
 
@@ -264,6 +268,8 @@ export default function App() {
               onStartQuiz={handleStartQuiz}
               onOpenMaterial={handleOpenMaterial}
               subjectMastery={stats.subjectMastery}
+              currentPage={subjectsPage}
+              onPageChange={setSubjectsPage}
             />
           )}
 
@@ -278,13 +284,14 @@ export default function App() {
           {currentTab === 'bank' && (
             <div className="space-y-4">
               <div className="flex items-center justify-between">
-                <button
-                  type="button"
-                  onClick={() => setCurrentTab('progress')}
-                  className="text-xs font-semibold text-indigo-600 dark:text-indigo-400 hover:underline inline-flex items-center gap-1"
-                >
-                  ← Back to Progress & Stats
-                </button>
+                <div>
+                  <h2 className="text-lg sm:text-xl font-bold text-slate-900 dark:text-white">
+                    Study Bank
+                  </h2>
+                  <p className="text-xs text-slate-500 mt-0.5">
+                    Your personal repository of saved questions and practice notes.
+                  </p>
+                </div>
               </div>
               <StudyBankPage
                 bookmarkedIds={stats.bookmarkedQuestionIds}
