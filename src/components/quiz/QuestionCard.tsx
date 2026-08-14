@@ -12,6 +12,7 @@ interface QuestionCardProps {
   isBookmarked?: boolean;
   onSelectChoice: (choiceIndex: number) => void;
   onToggleBookmark?: (questionId: string) => void;
+  onStudyTopic?: (topic: string, subjectId: string) => void;
   mode?: 'practice' | 'exam' | 'topic_drill';
 }
 
@@ -26,6 +27,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
   isBookmarked = false,
   onSelectChoice,
   onToggleBookmark,
+  onStudyTopic,
   mode = 'practice',
 }) => {
   const selectedChoice = userAnswer?.selectedAnswer;
@@ -148,10 +150,21 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
       </div>
 
       {isRevealed && (
-        <div className="mt-2.5 p-3.5 rounded-lg bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700">
-          <div className="flex items-center gap-1.5 text-slate-800 dark:text-slate-200 font-bold text-xs mb-1">
-            <BookOpen className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" />
-            <span>Pedagogical Rationale:</span>
+        <div className="mt-2.5 p-3.5 rounded-lg bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 space-y-2">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-1.5 text-slate-800 dark:text-slate-200 font-bold text-xs">
+              <BookOpen className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" />
+              <span>Pedagogical Rationale:</span>
+            </div>
+            {onStudyTopic && (
+              <button
+                type="button"
+                onClick={() => onStudyTopic(question.topic, question.subjectId)}
+                className="text-[11px] font-semibold text-indigo-600 dark:text-indigo-400 hover:underline inline-flex items-center gap-1 tap-target"
+              >
+                <span>Study Guide →</span>
+              </button>
+            )}
           </div>
           <p className="text-xs text-slate-700 dark:text-slate-300 leading-relaxed">
             {question.explanation}

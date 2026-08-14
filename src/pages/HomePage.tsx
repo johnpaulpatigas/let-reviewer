@@ -78,6 +78,15 @@ export const HomePage: React.FC<HomePageProps> = ({
             <Button
               variant="outline"
               size="md"
+              leftIcon={<BookOpen className="w-4 h-4" />}
+              onClick={() => onNavigateTab('materials')}
+              className="border-slate-700 text-slate-200 hover:bg-slate-800 hover:text-white"
+            >
+              Study Guides & Notes
+            </Button>
+            <Button
+              variant="outline"
+              size="md"
               leftIcon={<BrainCircuit className="w-4 h-4" />}
               onClick={() => onNavigateTab('quiz')}
               className="border-slate-700 text-slate-200 hover:bg-slate-800 hover:text-white"

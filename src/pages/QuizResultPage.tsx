@@ -22,6 +22,7 @@ interface QuizResultPageProps {
   onToggleBookmark: (questionId: string) => void;
   onRetryIncorrect: (missedQuestions: Question[]) => void;
   onRetakeQuiz: () => void;
+  onStudyTopic?: (topic: string, subjectId: string) => void;
   onGoHome: () => void;
 }
 
@@ -31,6 +32,7 @@ export const QuizResultPage: React.FC<QuizResultPageProps> = ({
   onToggleBookmark,
   onRetryIncorrect,
   onRetakeQuiz,
+  onStudyTopic,
   onGoHome,
 }) => {
   const [filterMode, setFilterMode] = useState<'all' | 'incorrect' | 'flagged'>('all');
@@ -384,12 +386,23 @@ export const QuizResultPage: React.FC<QuizResultPageProps> = ({
                       })}
                     </div>
 
-                    <div className="p-3 rounded-md bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 text-xs text-slate-700 dark:text-slate-300 leading-relaxed">
-                      <div className="flex items-center gap-1 text-slate-900 dark:text-slate-100 font-bold mb-1">
-                        <BookOpen className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" />
-                        <span>Pedagogical Rationale:</span>
+                    <div className="p-3 rounded-md bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 text-xs text-slate-700 dark:text-slate-300 leading-relaxed space-y-1.5">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-1 font-bold text-slate-900 dark:text-slate-100">
+                          <BookOpen className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" />
+                          <span>Pedagogical Rationale:</span>
+                        </div>
+                        {onStudyTopic && (
+                          <button
+                            type="button"
+                            onClick={() => onStudyTopic(q.topic, q.subjectId)}
+                            className="text-[11px] font-semibold text-indigo-600 dark:text-indigo-400 hover:underline inline-flex items-center gap-1 tap-target"
+                          >
+                            <span>Read Study Guide →</span>
+                          </button>
+                        )}
                       </div>
-                      {q.explanation}
+                      <p>{q.explanation}</p>
                     </div>
                   </div>
                 )}

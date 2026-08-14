@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { AppShell } from './components/layout/AppShell';
 import { HomePage } from './pages/HomePage';
+import { StudyMaterialsPage } from './pages/StudyMaterialsPage';
+import { StudyMaterialReader } from './components/study/StudyMaterialReader';
 import { SubjectsPage } from './pages/SubjectsPage';
 import { QuizConfigPage } from './pages/QuizConfigPage';
 import { PracticeReviewPage } from './pages/PracticeReviewPage';
@@ -9,13 +11,22 @@ import { QuizResultPage } from './pages/QuizResultPage';
 import { StudyBankPage } from './pages/StudyBankPage';
 import { ProgressPage } from './pages/ProgressPage';
 import { useStudyStats } from './hooks/useStudyStats';
-import { buildQuizQuestions } from './data/questions';
+import { buildQuizQuestions, ALL_QUESTIONS } from './data/questions';
+import { findStudyMaterialForTopic } from './data/study-materials';
 import { SUBJECTS } from './data/subjects';
-import type { NavigationTab, QuizConfig, QuizResult, Question } from './types';
+import type { NavigationTab, QuizConfig, QuizResult, Question, StudyMaterial } from './types';
 
 export default function App() {
   const [currentTab, setCurrentTab] = useState<NavigationTab>('home');
-  const { stats, toggleBookmark, recordQuizResult, clearStats } = useStudyStats();
+  const {
+    stats,
+    toggleBookmark,
+    toggleMaterialBookmark,
+    markMaterialCompleted,
+    markMaterialRead,
+    recordQuizResult,
+    clearStats,
+  } = useStudyStats();
 
   // Active quiz session states
   const [activeSession, setActiveSession] = useState<{
@@ -24,6 +35,7 @@ export default function App() {
   } | null>(null);
 
   const [activeResult, setActiveResult] = useState<QuizResult | null>(null);
+  const [activeMaterial, setActiveMaterial] = useState<StudyMaterial | null>(null);
 
   // Start a new quiz session (practice or exam)
   const handleStartQuiz = (config: QuizConfig) => {
@@ -38,6 +50,7 @@ export default function App() {
       return;
     }
 
+    setActiveMaterial(null);
     setActiveResult(null);
     setActiveSession({
       config,
@@ -47,6 +60,7 @@ export default function App() {
 
   // Start a targeted remediation drill with explicit questions
   const handleStartCustomDrill = (customQuestions: Question[]) => {
+    setActiveMaterial(null);
     setActiveResult(null);
     setActiveSession({
       config: {
@@ -58,6 +72,33 @@ export default function App() {
     });
   };
 
+  // When a study guide is opened
+  const handleOpenMaterial = (material: StudyMaterial) => {
+    markMaterialRead(material.id);
+    setActiveMaterial(material);
+  };
+
+  // Jump to study guide from a question's topic / explanation
+  const handleStudyTopic = (topic: string, subjectId?: string) => {
+    const match = findStudyMaterialForTopic(topic, subjectId);
+    if (match) {
+      handleOpenMaterial(match);
+    } else {
+      setCurrentTab('materials');
+    }
+  };
+
+  // Start practice session directly from study guide
+  const handleStartTopicPractice = (material: StudyMaterial) => {
+    setActiveMaterial(null);
+    handleStartQuiz({
+      mode: 'topic_drill',
+      subjectIds: [material.subjectId],
+      topic: material.topic,
+      questionCount: 15,
+    });
+  };
+
   // When a quiz/exam session completes
   const handleFinishSession = (result: QuizResult) => {
     recordQuizResult(result);
@@ -65,14 +106,16 @@ export default function App() {
     setActiveResult(result);
   };
 
-  // Exit from active session or results
+  // Exit from active session, results, or active material reader
   const handleExitSession = () => {
     setActiveSession(null);
     setActiveResult(null);
+    setActiveMaterial(null);
   };
 
   // Derive session title for header
   const getSessionTitle = () => {
+    if (activeMaterial) return activeMaterial.title;
     if (activeResult) return 'Exam Results & Review';
     if (!activeSession) return '';
 
@@ -95,7 +138,7 @@ export default function App() {
     return 'General Review';
   };
 
-  const inSession = Boolean(activeSession || activeResult);
+  const inSession = Boolean(activeSession || activeResult || activeMaterial);
   const hideNav = inSession;
 
   return (
@@ -113,8 +156,24 @@ export default function App() {
       bankCount={stats.bookmarkedQuestionIds.length}
       hideNav={hideNav}
     >
-      {/* Active Exam Results View */}
-      {activeResult ? (
+      {/* Active Study Material Reading View */}
+      {activeMaterial ? (
+        <StudyMaterialReader
+          material={activeMaterial}
+          relatedQuestionCount={
+            ALL_QUESTIONS.filter(
+              (q) => q.topic === activeMaterial.topic || q.subjectId === activeMaterial.subjectId
+            ).length
+          }
+          isBookmarked={(stats.bookmarkedMaterialIds || []).includes(activeMaterial.id)}
+          isCompleted={(stats.completedMaterialIds || []).includes(activeMaterial.id)}
+          onToggleBookmark={toggleMaterialBookmark}
+          onToggleCompleted={markMaterialCompleted}
+          onStartPractice={handleStartTopicPractice}
+          onBack={handleExitSession}
+        />
+      ) : activeResult ? (
+        /* Active Exam Results View */
         <QuizResultPage
           result={activeResult}
           bookmarkedIds={stats.bookmarkedQuestionIds}
@@ -124,6 +183,7 @@ export default function App() {
             const cfg = activeResult.config;
             handleStartQuiz(cfg);
           }}
+          onStudyTopic={handleStudyTopic}
           onGoHome={() => {
             setActiveResult(null);
             setCurrentTab('home');
@@ -146,12 +206,13 @@ export default function App() {
             questions={activeSession.questions}
             bookmarkedIds={stats.bookmarkedQuestionIds}
             onToggleBookmark={toggleBookmark}
+            onStudyTopic={handleStudyTopic}
             onFinishSession={handleFinishSession}
             onExit={handleExitSession}
           />
         )
       ) : (
-        /* Navigation Tabs */
+        /* Primary Navigation Tabs */
         <>
           {currentTab === 'home' && (
             <HomePage
@@ -162,6 +223,16 @@ export default function App() {
               totalCorrect={stats.totalCorrect}
               bookmarkedCount={stats.bookmarkedQuestionIds.length}
               missedCount={stats.missedQuestionIds.length}
+            />
+          )}
+
+          {currentTab === 'materials' && (
+            <StudyMaterialsPage
+              onOpenMaterial={handleOpenMaterial}
+              onStartQuiz={handleStartQuiz}
+              bookmarkedMaterialIds={stats.bookmarkedMaterialIds}
+              completedMaterialIds={stats.completedMaterialIds}
+              onToggleMaterialBookmark={toggleMaterialBookmark}
             />
           )}
 
