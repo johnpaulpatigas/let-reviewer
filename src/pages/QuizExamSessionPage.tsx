@@ -183,7 +183,7 @@ export const QuizExamSessionPage: React.FC<QuizExamSessionPageProps> = ({
 
   return (
     <div className="space-y-3.5">
-      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-3 flex items-center justify-between gap-3">
+      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg p-3 flex items-center justify-between gap-3">
         {secondsRemaining !== null ? (
           <div
             className={`flex items-center gap-1.5 px-2.5 py-1 rounded-md font-mono text-xs font-bold ${
@@ -192,7 +192,7 @@ export const QuizExamSessionPage: React.FC<QuizExamSessionPageProps> = ({
                 : 'bg-slate-100 text-slate-800 dark:bg-slate-800 dark:text-slate-200'
             }`}
           >
-            <Clock className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400 shrink-0" />
+            <Clock className="w-3.5 h-3.5 text-slate-700 dark:text-slate-300 shrink-0" />
             <span>{formatTime(secondsRemaining)}</span>
           </div>
         ) : (
@@ -205,7 +205,7 @@ export const QuizExamSessionPage: React.FC<QuizExamSessionPageProps> = ({
           <button
             type="button"
             onClick={() => toggleFlag(currentQuestion.id)}
-            className={`flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-semibold transition-colors tap-target ${
+            className={`flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-semibold transition-colors tap-target cursor-pointer ${
               isCurrentFlagged
                 ? 'bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300 border border-amber-300 dark:border-amber-800'
                 : 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400 hover:bg-slate-200'
@@ -218,7 +218,7 @@ export const QuizExamSessionPage: React.FC<QuizExamSessionPageProps> = ({
           <button
             type="button"
             onClick={() => setIsGridOpen(true)}
-            className="flex items-center gap-1 px-2.5 py-1 rounded-md bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs font-semibold transition-colors tap-target"
+            className="flex items-center gap-1 px-2.5 py-1 rounded-md bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs font-semibold transition-colors tap-target cursor-pointer"
           >
             <Grid className="w-3.5 h-3.5" />
             <span>{answeredCount}/{questions.length}</span>
@@ -282,7 +282,7 @@ export const QuizExamSessionPage: React.FC<QuizExamSessionPageProps> = ({
 
       {isGridOpen && (
         <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-end sm:items-center justify-center p-0 sm:p-4">
-          <div className="bg-white dark:bg-slate-900 w-full sm:max-w-md rounded-t-2xl sm:rounded-xl p-5 shadow-xl max-h-[85vh] flex flex-col">
+          <div className="bg-white dark:bg-slate-900 w-full sm:max-w-md rounded-t-xl sm:rounded-lg p-5 shadow-xl max-h-[85vh] flex flex-col">
             <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
               <h3 className="font-bold text-slate-900 dark:text-white text-sm">
                 Question Navigator
@@ -290,7 +290,7 @@ export const QuizExamSessionPage: React.FC<QuizExamSessionPageProps> = ({
               <button
                 type="button"
                 onClick={() => setIsGridOpen(false)}
-                className="w-7 h-7 rounded-lg bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-500"
+                className="w-7 h-7 rounded-md bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-500 cursor-pointer"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -298,7 +298,7 @@ export const QuizExamSessionPage: React.FC<QuizExamSessionPageProps> = ({
 
             <div className="flex items-center gap-3 py-2.5 text-xs text-slate-600 dark:text-slate-400 border-b border-slate-100 dark:border-slate-800">
               <div className="flex items-center gap-1.5">
-                <span className="w-2.5 h-2.5 rounded bg-indigo-600" />
+                <span className="w-2.5 h-2.5 rounded bg-slate-900 dark:bg-white" />
                 <span>Answered</span>
               </div>
               <div className="flex items-center gap-1.5">
@@ -321,10 +321,10 @@ export const QuizExamSessionPage: React.FC<QuizExamSessionPageProps> = ({
                   'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700';
                 if (isAnswered) {
                   btnStyle =
-                    'bg-indigo-600 text-white font-bold border-indigo-600';
+                    'bg-slate-900 text-white font-bold border-slate-900 dark:bg-white dark:text-slate-900 dark:border-white';
                 }
                 if (isCurrent) {
-                  btnStyle += ' ring-2 ring-indigo-500 ring-offset-1';
+                  btnStyle += ' ring-2 ring-slate-900 dark:ring-white ring-offset-1';
                 }
 
                 return (
@@ -335,7 +335,7 @@ export const QuizExamSessionPage: React.FC<QuizExamSessionPageProps> = ({
                       setCurrentIndex(idx);
                       setIsGridOpen(false);
                     }}
-                    className={`h-9 rounded-lg border flex flex-col items-center justify-center relative font-semibold text-xs tap-target ${btnStyle}`}
+                    className={`h-9 rounded-md border flex flex-col items-center justify-center relative font-semibold text-xs tap-target cursor-pointer ${btnStyle}`}
                   >
                     <span>{idx + 1}</span>
                     {isFlagged && (
