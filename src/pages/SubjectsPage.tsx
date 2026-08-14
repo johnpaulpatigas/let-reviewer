@@ -1,20 +1,23 @@
-import { useState, useMemo } from 'react';
+import React, { useState, useMemo } from 'react';
 import { SUBJECTS } from '../data/subjects';
 import { getQuestionsBySubject } from '../data/questions';
+import { getStudyMaterialsBySubject } from '../data/study-materials';
 import { SubjectCard } from '../components/study/SubjectCard';
-import { Search, X, Play, Layers } from 'lucide-react';
+import { Search, X, Play, BookOpen, Layers, Clock, ArrowRight } from 'lucide-react';
 import { IconHelper } from '../components/ui/IconHelper';
 import { CategoryBadge } from '../components/ui/Badge';
 import { Button } from '../components/ui/Button';
-import type { Subject, SubjectCategory, QuizConfig } from '../types';
+import type { Subject, SubjectCategory, QuizConfig, StudyMaterial } from '../types';
 
 interface SubjectsPageProps {
   onStartQuiz: (config: QuizConfig) => void;
+  onOpenMaterial?: (material: StudyMaterial) => void;
   subjectMastery?: Record<string, { answered: number; correct: number }>;
 }
 
 export const SubjectsPage: React.FC<SubjectsPageProps> = ({
   onStartQuiz,
+  onOpenMaterial,
   subjectMastery = {},
 }) => {
   const [selectedCategory, setSelectedCategory] = useState<'all' | SubjectCategory>('all');
@@ -25,6 +28,14 @@ export const SubjectsPage: React.FC<SubjectsPageProps> = ({
     const counts: Record<string, number> = {};
     SUBJECTS.forEach((sub) => {
       counts[sub.id] = getQuestionsBySubject(sub.id).length;
+    });
+    return counts;
+  }, []);
+
+  const subjectGuideCounts = useMemo(() => {
+    const counts: Record<string, number> = {};
+    SUBJECTS.forEach((sub) => {
+      counts[sub.id] = getStudyMaterialsBySubject(sub.id).length;
     });
     return counts;
   }, []);
@@ -45,32 +56,35 @@ export const SubjectsPage: React.FC<SubjectsPageProps> = ({
     });
   }, [selectedCategory, searchQuery]);
 
-  const handleQuickPractice = (subject: Subject) => {
+  const activeGuides = useMemo(() => {
+    if (!activeSubjectDetails) return [];
+    return getStudyMaterialsBySubject(activeSubjectDetails.id);
+  }, [activeSubjectDetails]);
+
+  const handleStartSubjectPractice = (subject: Subject) => {
+    setActiveSubjectDetails(null);
     onStartQuiz({
       mode: 'practice',
       subjectIds: [subject.id],
-      questionCount: subjectQuestionCounts[subject.id] || 10,
+      questionCount: subjectQuestionCounts[subject.id] || 15,
     });
   };
 
-  const handleStartTopicDrill = (subject: Subject, topic: string) => {
+  const handleSelectMaterial = (material: StudyMaterial) => {
     setActiveSubjectDetails(null);
-    onStartQuiz({
-      mode: 'topic_drill',
-      subjectIds: [subject.id],
-      topic,
-      questionCount: 10,
-    });
+    if (onOpenMaterial) {
+      onOpenMaterial(material);
+    }
   };
 
   return (
     <div className="space-y-4">
       <div>
         <h2 className="text-lg sm:text-xl font-bold text-slate-900 dark:text-white">
-          Subject Library
+          Subject Directory
         </h2>
         <p className="text-xs text-slate-500 mt-0.5">
-          Browse competencies across General and Professional Education.
+          Browse by subject domain to access structured guides and question pools.
         </p>
       </div>
 
@@ -100,7 +114,7 @@ export const SubjectsPage: React.FC<SubjectsPageProps> = ({
           onClick={() => setSelectedCategory('all')}
           className={`flex-1 py-1.5 px-3 text-xs font-semibold rounded transition-colors tap-target ${
             selectedCategory === 'all'
-              ? 'bg-white dark:bg-slate-800 text-indigo-600 dark:text-indigo-400 shadow-sm'
+              ? 'bg-white dark:bg-slate-800 text-indigo-600 dark:text-indigo-400 shadow-sm font-bold'
               : 'text-slate-600 dark:text-slate-400 hover:text-slate-900'
           }`}
         >
@@ -111,7 +125,7 @@ export const SubjectsPage: React.FC<SubjectsPageProps> = ({
           onClick={() => setSelectedCategory('gen_ed')}
           className={`flex-1 py-1.5 px-3 text-xs font-semibold rounded transition-colors tap-target ${
             selectedCategory === 'gen_ed'
-              ? 'bg-white dark:bg-slate-800 text-indigo-600 dark:text-indigo-400 shadow-sm'
+              ? 'bg-white dark:bg-slate-800 text-sky-600 dark:text-sky-400 shadow-sm font-bold'
               : 'text-slate-600 dark:text-slate-400 hover:text-slate-900'
           }`}
         >
@@ -122,7 +136,7 @@ export const SubjectsPage: React.FC<SubjectsPageProps> = ({
           onClick={() => setSelectedCategory('prof_ed')}
           className={`flex-1 py-1.5 px-3 text-xs font-semibold rounded transition-colors tap-target ${
             selectedCategory === 'prof_ed'
-              ? 'bg-white dark:bg-slate-800 text-indigo-600 dark:text-indigo-400 shadow-sm'
+              ? 'bg-white dark:bg-slate-800 text-indigo-600 dark:text-indigo-400 shadow-sm font-bold'
               : 'text-slate-600 dark:text-slate-400 hover:text-slate-900'
           }`}
         >
@@ -143,9 +157,9 @@ export const SubjectsPage: React.FC<SubjectsPageProps> = ({
               key={subject.id}
               subject={subject}
               questionCount={subjectQuestionCounts[subject.id] || 0}
+              guideCount={subjectGuideCounts[subject.id] || 0}
               masteryPercentage={mastery}
               onSelect={(sub) => setActiveSubjectDetails(sub)}
-              onQuickStart={handleQuickPractice}
             />
           );
         })}
@@ -172,23 +186,37 @@ export const SubjectsPage: React.FC<SubjectsPageProps> = ({
         </div>
       )}
 
+      {/* Subject Detail & Organization Modal */}
       {activeSubjectDetails && (
-        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-end sm:items-center justify-center p-0 sm:p-4">
+        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-end sm:items-center justify-center p-0 sm:p-4 animate-fadeIn">
           <div
-            className="bg-white dark:bg-slate-900 w-full sm:max-w-md rounded-t-2xl sm:rounded-xl p-5 shadow-xl max-h-[85vh] overflow-y-auto"
+            className="bg-white dark:bg-slate-900 w-full sm:max-w-lg rounded-t-2xl sm:rounded-xl p-5 shadow-2xl max-h-[88vh] overflow-y-auto space-y-4"
             role="dialog"
             aria-modal="true"
           >
+            {/* Modal Header */}
             <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
               <div className="flex items-center gap-2.5">
                 <div
-                  className={`w-9 h-9 rounded-lg flex items-center justify-center ${activeSubjectDetails.colorScheme.bg} ${activeSubjectDetails.colorScheme.text} border ${activeSubjectDetails.colorScheme.border}`}
+                  className={`w-10 h-10 rounded-lg flex items-center justify-center ${activeSubjectDetails.colorScheme.bg} ${activeSubjectDetails.colorScheme.text} border ${activeSubjectDetails.colorScheme.border}`}
                 >
-                  <IconHelper name={activeSubjectDetails.iconName} className="w-4 h-4" />
+                  <IconHelper name={activeSubjectDetails.iconName} className="w-5 h-5" />
                 </div>
                 <div>
-                  <CategoryBadge category={activeSubjectDetails.category} size="sm" />
-                  <h3 className="font-bold text-slate-900 dark:text-white text-sm mt-0.5">
+                  <div className="flex items-center gap-1.5">
+                    <CategoryBadge category={activeSubjectDetails.category} size="sm" />
+                    {subjectMastery[activeSubjectDetails.id]?.answered ? (
+                      <span className="text-[11px] font-bold text-emerald-600 dark:text-emerald-400">
+                        {Math.round(
+                          (subjectMastery[activeSubjectDetails.id].correct /
+                            subjectMastery[activeSubjectDetails.id].answered) *
+                            100
+                        )}
+                        % Mastery
+                      </span>
+                    ) : null}
+                  </div>
+                  <h3 className="font-bold text-slate-900 dark:text-white text-base mt-0.5">
                     {activeSubjectDetails.name}
                   </h3>
                 </div>
@@ -196,69 +224,95 @@ export const SubjectsPage: React.FC<SubjectsPageProps> = ({
               <button
                 type="button"
                 onClick={() => setActiveSubjectDetails(null)}
-                className="w-7 h-7 rounded-lg bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-500 hover:text-slate-700"
+                className="w-8 h-8 rounded-lg bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-500 hover:text-slate-700 dark:hover:text-white"
               >
                 <X className="w-4 h-4" />
               </button>
             </div>
 
-            <p className="text-xs text-slate-600 dark:text-slate-400 mt-3 leading-relaxed">
+            <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
               {activeSubjectDetails.description}
             </p>
 
-            <div className="mt-4">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
-                  Topic Competencies
+            {/* Study Guides for this Subject */}
+            <div className="space-y-2 pt-1">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300 flex items-center gap-1.5">
+                  <BookOpen className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" />
+                  <span>Subject Study Guides</span>
                 </span>
-                <span className="text-xs text-slate-500">
-                  {subjectQuestionCounts[activeSubjectDetails.id] || 0} questions
+                <span className="text-[11px] text-slate-500">
+                  {activeGuides.length} {activeGuides.length === 1 ? 'guide' : 'guides'}
                 </span>
               </div>
 
-              <div className="space-y-1.5">
-                {activeSubjectDetails.topics.map((topic, i) => (
-                  <button
-                    key={i}
-                    type="button"
-                    onClick={() => handleStartTopicDrill(activeSubjectDetails, topic)}
-                    className="w-full text-left p-2.5 rounded-lg border border-slate-200 dark:border-slate-800 hover:border-indigo-400 bg-slate-50/60 dark:bg-slate-800/40 flex items-center justify-between group transition-colors tap-target"
-                  >
-                    <div>
-                      <h4 className="text-xs font-semibold text-slate-800 dark:text-slate-200 group-hover:text-indigo-600 dark:group-hover:text-indigo-400">
-                        {topic}
-                      </h4>
-                      <p className="text-[10px] text-slate-500">Targeted drill</p>
+              {activeGuides.length > 0 ? (
+                <div className="space-y-2">
+                  {activeGuides.map((guide) => (
+                    <div
+                      key={guide.id}
+                      onClick={() => handleSelectMaterial(guide)}
+                      className="p-3 rounded-lg border border-slate-200 dark:border-slate-800 hover:border-indigo-300 dark:hover:border-indigo-700 bg-slate-50/60 dark:bg-slate-800/40 cursor-pointer flex items-center justify-between gap-3 group transition-colors"
+                    >
+                      <div className="min-w-0 flex-1">
+                        <h4 className="text-xs font-bold text-slate-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 truncate">
+                          {guide.title}
+                        </h4>
+                        <div className="flex items-center gap-2 text-[10px] text-slate-500 mt-0.5">
+                          <span className="inline-flex items-center gap-0.5">
+                            <Clock className="w-2.5 h-2.5" />
+                            {guide.readTimeMinutes} mins
+                          </span>
+                          <span>•</span>
+                          <span className="truncate">{guide.topic}</span>
+                        </div>
+                      </div>
+                      <ArrowRight className="w-4 h-4 text-slate-400 group-hover:text-indigo-600 group-hover:translate-x-0.5 transition-all shrink-0" />
                     </div>
-                    <span className="w-6 h-6 rounded bg-white dark:bg-slate-700 flex items-center justify-center text-slate-400 group-hover:text-indigo-600 transition-colors">
-                      <Play className="w-3 h-3 fill-current" />
-                    </span>
-                  </button>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-xs text-slate-500 italic p-2 bg-slate-50 dark:bg-slate-850 rounded">
+                  No study guides currently published for this subject.
+                </p>
+              )}
+            </div>
+
+            {/* Core Competencies List */}
+            <div className="space-y-1.5 pt-1">
+              <span className="text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300 block">
+                Topics & Competencies
+              </span>
+              <div className="flex flex-wrap gap-1.5">
+                {activeSubjectDetails.topics.map((topic, i) => (
+                  <span
+                    key={i}
+                    className="text-xs px-2.5 py-1 rounded bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-medium"
+                  >
+                    {topic}
+                  </span>
                 ))}
               </div>
             </div>
 
-            <div className="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800 flex gap-2">
+            {/* Primary Action Footer */}
+            <div className="pt-3 border-t border-slate-100 dark:border-slate-800 flex gap-2">
               <Button
                 variant="secondary"
                 size="md"
                 fullWidth
                 onClick={() => setActiveSubjectDetails(null)}
               >
-                Close
+                Back to Directory
               </Button>
               <Button
                 variant="primary"
                 size="md"
                 fullWidth
                 leftIcon={<Play className="w-4 h-4 fill-current" />}
-                onClick={() => {
-                  const sub = activeSubjectDetails;
-                  setActiveSubjectDetails(null);
-                  handleQuickPractice(sub);
-                }}
+                onClick={() => handleStartSubjectPractice(activeSubjectDetails)}
               >
-                Practice All ({subjectQuestionCounts[activeSubjectDetails.id] || 0})
+                Practice Questions ({subjectQuestionCounts[activeSubjectDetails.id] || 0})
               </Button>
             </div>
           </div>
