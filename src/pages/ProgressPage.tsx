@@ -2,18 +2,15 @@ import React, { useState } from 'react';
 import {
   TrendingUp,
   RotateCcw,
-  BookOpen,
-  Award,
   ChevronDown,
 } from 'lucide-react';
 import { ProgressBar } from '../components/ui/ProgressBar';
 import { Button } from '../components/ui/Button';
 import { SUBJECTS } from '../data/subjects';
-import { ALL_QUESTIONS } from '../data/questions';
-import type { UserStats } from '../types';
+import type { UserStudyStats, QuizResult, SubjectScoreBreakdown } from '../types';
 
 interface ProgressPageProps {
-  stats: UserStats;
+  stats: UserStudyStats;
   onClearStats: () => void;
   onOpenStudyBank?: () => void;
 }
@@ -31,10 +28,11 @@ export const ProgressPage: React.FC<ProgressPageProps> = ({
     totalCorrect,
     streakDays,
     subjectMastery,
-    examHistory = [],
+    quizHistory = [],
     bookmarkedQuestionIds = [],
     missedQuestionIds = [],
   } = stats;
+  const examHistory = quizHistory;
 
   const overallAccuracy =
     totalAnswered > 0 ? Math.round((totalCorrect / totalAnswered) * 100) : 0;
@@ -239,8 +237,8 @@ export const ProgressPage: React.FC<ProgressPageProps> = ({
 
         {examHistory.length > 0 ? (
           <div className="space-y-2">
-            {examHistory.map((exam) => {
-              const isExpanded = expandedExamId === exam.id;
+            {examHistory.map((exam: QuizResult) => {
+              const isExpanded = expandedExamId === exam.sessionId;
               const dateStr = new Date(exam.timestamp).toLocaleDateString(undefined, {
                 month: 'short',
                 day: 'numeric',
@@ -250,12 +248,12 @@ export const ProgressPage: React.FC<ProgressPageProps> = ({
 
               return (
                 <div
-                  key={exam.id}
+                  key={exam.sessionId}
                   className="border border-slate-200 dark:border-slate-800 rounded-md p-3 space-y-2 bg-slate-50/40 dark:bg-slate-900"
                 >
                   <div
                     onClick={() =>
-                      setExpandedExamId((prev) => (prev === exam.id ? null : exam.id))
+                      setExpandedExamId((prev) => (prev === exam.sessionId ? null : exam.sessionId))
                     }
                     className="flex items-center justify-between cursor-pointer select-none"
                   >
@@ -291,7 +289,7 @@ export const ProgressPage: React.FC<ProgressPageProps> = ({
                       <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 block">
                         Subject Breakdown
                       </span>
-                      {exam.subjectBreakdown.map((sb) => (
+                      {exam.subjectBreakdown.map((sb: SubjectScoreBreakdown) => (
                         <div
                           key={sb.subjectId}
                           className="flex justify-between text-xs text-slate-600 dark:text-slate-400"

@@ -5,7 +5,7 @@ interface ProgressBarProps {
   max?: number; // Total count (default 100)
   label?: string;
   showPercentage?: boolean;
-  colorVariant?: 'primary' | 'indigo' | 'emerald' | 'amber' | 'rose' | 'sky';
+  colorVariant?: 'primary' | 'emerald' | 'amber' | 'rose' | 'sky';
   className?: string;
 }
 
@@ -21,7 +21,6 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
 
   const colors = {
     primary: 'bg-slate-800 dark:bg-slate-200',
-    indigo: 'bg-slate-800 dark:bg-slate-200',
     emerald: 'bg-emerald-600 dark:bg-emerald-500',
     amber: 'bg-amber-600 dark:bg-amber-500',
     rose: 'bg-rose-600 dark:bg-rose-500',

@@ -29,6 +29,7 @@ export default function App() {
     markMaterialCompleted,
     markMaterialRead,
     recordQuizResult,
+    clearMissedQuestions,
     clearStats,
   } = useStudyStats();
 
@@ -251,8 +252,8 @@ export default function App() {
           {currentTab === 'materials' && (
             <StudyMaterialsPage
               onOpenMaterial={handleOpenMaterial}
-              bookmarkedMaterialIds={stats.bookmarkedMaterialIds}
-              completedMaterialIds={stats.completedMaterialIds}
+              bookmarkedMaterialIds={stats.bookmarkedMaterialIds || []}
+              completedMaterialIds={stats.completedMaterialIds || []}
               onToggleMaterialBookmark={toggleMaterialBookmark}
               currentPage={materialsPage}
               onPageChange={setMaterialsPage}
@@ -282,24 +283,14 @@ export default function App() {
           )}
 
           {currentTab === 'bank' && (
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h2 className="text-lg sm:text-xl font-bold text-slate-900 dark:text-white">
-                    Study Bank
-                  </h2>
-                  <p className="text-xs text-slate-500 mt-0.5">
-                    Your personal repository of saved questions and practice notes.
-                  </p>
-                </div>
-              </div>
-              <StudyBankPage
-                bookmarkedIds={stats.bookmarkedQuestionIds}
-                missedIds={stats.missedQuestionIds}
-                onToggleBookmark={toggleBookmark}
-                onStartQuiz={handleStartQuiz}
-              />
-            </div>
+            <StudyBankPage
+              bookmarkedIds={stats.bookmarkedQuestionIds}
+              missedIds={stats.missedQuestionIds}
+              onToggleBookmark={toggleBookmark}
+              onClearMissed={clearMissedQuestions}
+              onStartQuiz={handleStartQuiz}
+              onStudyTopic={handleStudyTopic}
+            />
           )}
         </>
       )}

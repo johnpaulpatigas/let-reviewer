@@ -152,6 +152,13 @@ export function useStudyStats() {
     });
   }, []);
 
+  const clearMissedQuestions = useCallback(() => {
+    setStats((prev) => ({
+      ...prev,
+      missedQuestionIds: [],
+    }));
+  }, []);
+
   const clearStats = useCallback(() => {
     const today = new Date().toISOString().split('T')[0];
     const freshStats: UserStudyStats = {
@@ -182,6 +189,7 @@ export function useStudyStats() {
     markMaterialCompleted,
     markMaterialRead,
     recordQuizResult,
+    clearMissedQuestions,
     clearStats,
   };
 }

@@ -1,40 +1,54 @@
 import React, { useState } from 'react';
 import {
   Award,
-  CheckCircle2,
-  XCircle,
-  Clock,
   RotateCcw,
   Home,
   Check,
   X,
   ChevronDown,
-  BookOpen,
+  Bookmark,
 } from 'lucide-react';
 import { Button } from '../components/ui/Button';
 import { ProgressBar } from '../components/ui/ProgressBar';
 import { CategoryBadge, DifficultyBadge } from '../components/ui/Badge';
-import type { QuizResult, UserAnswer } from '../types';
+import type { QuizResult, UserAnswer, Question } from '../types';
 
 interface QuizResultPageProps {
   result: QuizResult;
+  bookmarkedIds?: string[];
+  onToggleBookmark?: (questionId: string) => void;
+  onRetryIncorrect?: (customQuestions: Question[]) => void;
+  onRetakeIncorrect?: () => void;
   onRetakeQuiz: () => void;
-  onRetakeIncorrect: () => void;
   onGoHome: () => void;
-  onStudyTopic?: (topic: string, subjectId: string) => void;
+  onStudyTopic?: (topic: string, subjectId?: string) => void;
 }
 
 const CHOICE_LETTERS = ['A', 'B', 'C', 'D'];
 
 export const QuizResultPage: React.FC<QuizResultPageProps> = ({
   result,
-  onRetakeQuiz,
+  bookmarkedIds = [],
+  onToggleBookmark,
+  onRetryIncorrect,
   onRetakeIncorrect,
+  onRetakeQuiz,
   onGoHome,
   onStudyTopic,
 }) => {
   const [filterMode, setFilterMode] = useState<'all' | 'incorrect' | 'correct'>('all');
   const [expandedQuestionId, setExpandedQuestionId] = useState<string | null>(null);
+
+  const handleRetakeIncorrectQuestions = () => {
+    const incorrectQuestions = questions.filter(
+      (q) => !answers[q.id] || !answers[q.id].isCorrect
+    );
+    if (onRetryIncorrect) {
+      onRetryIncorrect(incorrectQuestions);
+    } else if (onRetakeIncorrect) {
+      onRetakeIncorrect();
+    }
+  };
 
   const {
     totalQuestions,
@@ -146,7 +160,7 @@ export const QuizResultPage: React.FC<QuizResultPageProps> = ({
             size="md"
             fullWidth
             leftIcon={<RotateCcw className="w-4 h-4" />}
-            onClick={onRetakeIncorrect}
+            onClick={handleRetakeIncorrectQuestions}
           >
             Retake Missed ({incorrectCount})
           </Button>
@@ -302,9 +316,31 @@ export const QuizResultPage: React.FC<QuizResultPageProps> = ({
                     </div>
                   </div>
 
-                  <div className="shrink-0 pt-0.5 text-slate-400">
+                  <div className="flex items-center gap-1 shrink-0 pt-0.5">
+                    {onToggleBookmark && (
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onToggleBookmark(q.id);
+                        }}
+                        aria-label={bookmarkedIds.includes(q.id) ? 'Remove bookmark' : 'Bookmark question'}
+                        className={`p-1.5 rounded transition-colors ${
+                          bookmarkedIds.includes(q.id)
+                            ? 'text-amber-600 bg-amber-50 dark:bg-amber-950'
+                            : 'text-slate-400 hover:text-slate-600'
+                        }`}
+                      >
+                        <Bookmark
+                          className={`w-3.5 h-3.5 ${
+                            bookmarkedIds.includes(q.id) ? 'fill-current' : ''
+                          }`}
+                        />
+                      </button>
+                    )}
+
                     <ChevronDown
-                      className={`w-4 h-4 transition-transform duration-200 ${
+                      className={`w-4 h-4 text-slate-400 transition-transform duration-200 ${
                         isExpanded ? 'rotate-180' : ''
                       }`}
                     />

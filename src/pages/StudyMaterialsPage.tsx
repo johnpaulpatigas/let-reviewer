@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
-import { ALL_STUDY_MATERIALS } from '../data/study-materials';
-import { getQuestionsByTopicAndSubject } from '../data/questions';
+import { ALL_STUDY_MATERIALS, getQuestionsForStudyMaterial } from '../data/study-materials';
+import { ALL_QUESTIONS } from '../data/questions';
 import { SUBJECTS } from '../data/subjects';
 import { Pagination } from '../components/ui/Pagination';
 import { CategoryBadge } from '../components/ui/Badge';
@@ -28,8 +28,8 @@ const GUIDES_PER_PAGE = 8;
 
 export const StudyMaterialsPage: React.FC<StudyMaterialsPageProps> = ({
   onOpenMaterial,
-  bookmarkedMaterialIds,
-  completedMaterialIds,
+  bookmarkedMaterialIds = [],
+  completedMaterialIds = [],
   onToggleMaterialBookmark,
   currentPage: controlledPage,
   onPageChange: controlledOnPageChange,
@@ -51,7 +51,7 @@ export const StudyMaterialsPage: React.FC<StudyMaterialsPageProps> = ({
   const questionCountMap = useMemo(() => {
     const map: Record<string, number> = {};
     ALL_STUDY_MATERIALS.forEach((mat) => {
-      map[mat.id] = getQuestionsByTopicAndSubject(mat.topic, mat.subjectId).length;
+      map[mat.id] = getQuestionsForStudyMaterial(mat, ALL_QUESTIONS).length;
     });
     return map;
   }, []);

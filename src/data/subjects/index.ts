@@ -3,7 +3,7 @@ import type { Subject } from '../../types';
 export const SUBJECTS: Subject[] = [
   // General Education
   {
-    id: 'gen-english',
+    id: 'gen-eng',
     name: 'English & Communication',
     category: 'gen_ed',
     description: 'Grammar, vocabulary in context, reading comprehension, critical analysis, and Philippine & World literature.',
@@ -17,7 +17,7 @@ export const SUBJECTS: Subject[] = [
     topics: ['Grammar & Correct Usage', 'Vocabulary & Context Clues', 'Reading Comprehension', 'Philippine & World Literature'],
   },
   {
-    id: 'gen-filipino',
+    id: 'gen-fil',
     name: 'Filipino at Panitikan',
     category: 'gen_ed',
     description: 'Balarila, ponolohiya, morpolohiya, wastong gamit ng mga salita, tayutay, idyoma, at panitikang Pilipino.',
