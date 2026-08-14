@@ -2,14 +2,13 @@ import React, { useState } from 'react';
 import {
   Clock,
   Zap,
-  Award,
-  BookOpen,
   SlidersHorizontal,
-  CheckCircle,
+  Scale,
 } from 'lucide-react';
 import { Button } from '../components/ui/Button';
 import { SUBJECTS } from '../data/subjects';
-import { ALL_QUESTIONS } from '../data/questions';
+import { OFFICIAL_LET_BLUEPRINTS, type ExamBlueprint } from '../data/exam-blueprint';
+import { ExamBriefingModal } from '../components/quiz/ExamBriefingModal';
 import type { QuizConfig, SubjectCategory, Difficulty } from '../types';
 
 interface QuizConfigPageProps {
@@ -23,47 +22,39 @@ export const QuizConfigPage: React.FC<QuizConfigPageProps> = ({ onStartExam }) =
   const [selectedSubjectIds, setSelectedSubjectIds] = useState<string[]>([]);
   const [questionCount, setQuestionCount] = useState<number>(15);
   const [timeLimitMinutes, setTimeLimitMinutes] = useState<number>(20);
+  const [activeBriefingBlueprint, setActiveBriefingBlueprint] = useState<ExamBlueprint | null>(null);
 
-  const handleStartPreset = (preset: 'quick_practice' | 'mock_exam' | 'gen_ed' | 'prof_ed') => {
-    switch (preset) {
-      case 'quick_practice':
-        onStartExam({
-          mode: 'practice',
-          subjectIds: [],
-          category: 'all',
-          difficulty: 'all',
-          questionCount: 10,
-        });
-        break;
-      case 'mock_exam':
-        onStartExam({
-          mode: 'exam',
-          subjectIds: [],
-          category: 'all',
-          difficulty: 'all',
-          questionCount: 20,
-          timeLimitMinutes: 25,
-        });
-        break;
-      case 'gen_ed':
-        onStartExam({
-          mode: 'practice',
-          subjectIds: [],
-          category: 'gen_ed',
-          difficulty: 'all',
-          questionCount: 15,
-        });
-        break;
-      case 'prof_ed':
-        onStartExam({
-          mode: 'practice',
-          subjectIds: [],
-          category: 'prof_ed',
-          difficulty: 'all',
-          questionCount: 15,
-        });
-        break;
+  const handleLaunchBlueprint = (blueprintKey: string) => {
+    const bp = OFFICIAL_LET_BLUEPRINTS[blueprintKey];
+    if (bp) {
+      setActiveBriefingBlueprint(bp);
     }
+  };
+
+  const handleConfirmStartBriefing = () => {
+    if (!activeBriefingBlueprint) return;
+    const bp = activeBriefingBlueprint;
+    setActiveBriefingBlueprint(null);
+    onStartExam({
+      mode: 'exam',
+      subjectIds: [],
+      category: 'all',
+      difficulty: 'all',
+      questionCount: bp.totalQuestions,
+      timeLimitMinutes: bp.totalTimeMinutes,
+      blueprintId: bp.id,
+      title: bp.title,
+    });
+  };
+
+  const handleStartQuickPractice = (category: SubjectCategory | 'all' = 'all') => {
+    onStartExam({
+      mode: 'practice',
+      subjectIds: [],
+      category,
+      difficulty: 'all',
+      questionCount: 10,
+    });
   };
 
   const toggleSubject = (subjectId: string) => {
@@ -86,192 +77,277 @@ export const QuizConfigPage: React.FC<QuizConfigPageProps> = ({ onStartExam }) =
   };
 
   return (
-    <div className="space-y-5 animate-fade-in">
+    <div className="space-y-6 animate-fade-in pb-6">
       {/* Header */}
       <div>
         <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
-          Practice & Examination Center
+          Examination & Practice Center
         </h1>
         <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-1 leading-relaxed">
-          Configure a practice drill with immediate pedagogical feedback or simulate timed board conditions.
+          High-fidelity LET simulation batteries aligned with PRC Board for Professional Teachers specifications, or self-paced competency drills.
         </p>
       </div>
 
-      {/* Quick Launch Presets */}
-      <div className="space-y-2.5">
-        <h2 className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">
-          Quick Launch Presets
-        </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5">
-          <button
-            type="button"
-            onClick={() => handleStartPreset('quick_practice')}
-            className="text-left p-3.5 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-slate-400 dark:hover:border-slate-600 transition-colors flex flex-col justify-between cursor-pointer group"
+      {/* 1. Full LET Simulations (Verified PRC Blueprint) */}
+      <section className="space-y-3">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-1.5">
+            <Scale className="w-4 h-4 text-slate-700 dark:text-slate-300" />
+            <h2 className="text-xs font-bold text-slate-900 dark:text-slate-100 uppercase tracking-wider">
+              Full LET Simulations
+            </h2>
+          </div>
+          <span className="text-[11px] text-slate-500 font-medium">Standardized Timed Batteries</span>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          {/* Elementary Track */}
+          <div
+            onClick={() => handleLaunchBlueprint('full-let-elementary')}
+            className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-slate-900 dark:hover:border-white rounded-lg p-4 transition-all duration-150 active:scale-[0.99] cursor-pointer group flex flex-col justify-between space-y-3 select-none"
           >
-            <div>
-              <div className="flex items-center justify-between mb-2">
-                <span className="p-1 rounded bg-amber-50 dark:bg-amber-950 text-amber-700 dark:text-amber-400">
-                  <Zap className="w-3.5 h-3.5 fill-current" />
+            <div className="space-y-1.5">
+              <div className="flex items-center justify-between">
+                <span className="px-2 py-0.5 rounded bg-sky-50 dark:bg-sky-950 text-sky-800 dark:text-sky-300 text-[10px] font-bold uppercase tracking-wider border border-sky-200 dark:border-sky-800">
+                  Elementary Level
                 </span>
-                <span className="text-[10px] font-semibold text-slate-500">
-                  Practice
-                </span>
+                <span className="text-xs font-mono text-slate-500 font-semibold">100 Mins</span>
               </div>
-              <h3 className="font-bold text-sm text-slate-900 dark:text-white group-hover:text-slate-700 dark:group-hover:text-slate-200 transition-colors">
-                Quick Mix Practice
+              <h3 className="font-bold text-slate-900 dark:text-white text-sm sm:text-base group-hover:text-slate-700 dark:group-hover:text-slate-200 transition-colors">
+                Full LET Simulation — Elementary
               </h3>
-              <p className="text-xs text-slate-500 mt-0.5">
-                10 random mixed questions with instant rationales.
+              <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+                40 GenEd items (40% weight) + 60 ProfEd items (60% weight). Realistic timed board exam conditions.
               </p>
             </div>
-            <div className="mt-3 pt-2 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs text-slate-500">
-              <span className="font-mono">10 Items</span>
-              <span>Self-Paced</span>
+            <div className="pt-2 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs text-slate-500">
+              <span className="font-mono">100 Items • ≥ 75% GWA</span>
+              <span className="font-semibold text-slate-900 dark:text-white group-hover:underline">
+                View Briefing →
+              </span>
             </div>
+          </div>
+
+          {/* Secondary Track */}
+          <div
+            onClick={() => handleLaunchBlueprint('full-let-secondary')}
+            className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-slate-900 dark:hover:border-white rounded-lg p-4 transition-all duration-150 active:scale-[0.99] cursor-pointer group flex flex-col justify-between space-y-3 select-none"
+          >
+            <div className="space-y-1.5">
+              <div className="flex items-center justify-between">
+                <span className="px-2 py-0.5 rounded bg-amber-50 dark:bg-amber-950 text-amber-800 dark:text-amber-300 text-[10px] font-bold uppercase tracking-wider border border-amber-200 dark:border-amber-800">
+                  Secondary Level
+                </span>
+                <span className="text-xs font-mono text-slate-500 font-semibold">100 Mins</span>
+              </div>
+              <h3 className="font-bold text-slate-900 dark:text-white text-sm sm:text-base group-hover:text-slate-700 dark:group-hover:text-slate-200 transition-colors">
+                Full LET Simulation — Secondary Core
+              </h3>
+              <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+                40 GenEd core items + 60 ProfEd pedagogical items. Continuous countdown with zero intermediate feedback.
+              </p>
+            </div>
+            <div className="pt-2 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs text-slate-500">
+              <span className="font-mono">100 Items • ≥ 75% GWA</span>
+              <span className="font-semibold text-slate-900 dark:text-white group-hover:underline">
+                View Briefing →
+              </span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 2. Domain Mock Batteries */}
+      <section className="space-y-3">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-1.5">
+            <Clock className="w-4 h-4 text-slate-700 dark:text-slate-300" />
+            <h2 className="text-xs font-bold text-slate-900 dark:text-slate-100 uppercase tracking-wider">
+              Domain Mock Exams
+            </h2>
+          </div>
+          <span className="text-[11px] text-slate-500 font-medium">Single-Domain Timed Tests</span>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          {/* GenEd Battery */}
+          <div
+            onClick={() => handleLaunchBlueprint('gen-ed-battery')}
+            className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-sky-300 dark:hover:border-sky-800 rounded-lg p-4 transition-all duration-150 active:scale-[0.99] cursor-pointer group flex flex-col justify-between space-y-2.5 select-none"
+          >
+            <div>
+              <div className="flex items-center justify-between mb-1">
+                <span className="font-bold text-xs text-sky-800 dark:text-sky-300 uppercase tracking-wider">
+                  General Education Battery
+                </span>
+                <span className="text-xs font-mono text-slate-500">50 Mins</span>
+              </div>
+              <h3 className="font-bold text-slate-900 dark:text-white text-sm">
+                50-Item GenEd Timed Mock
+              </h3>
+              <p className="text-xs text-slate-500 mt-1">
+                Comprehensive evaluation covering English, Filipino, Math, Science, Social Sciences, and ICT.
+              </p>
+            </div>
+            <div className="pt-2 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs text-slate-500">
+              <span>50 Questions</span>
+              <span className="font-semibold text-sky-700 dark:text-sky-400 group-hover:underline">
+                Start Mock →
+              </span>
+            </div>
+          </div>
+
+          {/* ProfEd Battery */}
+          <div
+            onClick={() => handleLaunchBlueprint('prof-ed-battery')}
+            className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-amber-300 dark:hover:border-amber-800 rounded-lg p-4 transition-all duration-150 active:scale-[0.99] cursor-pointer group flex flex-col justify-between space-y-2.5 select-none"
+          >
+            <div>
+              <div className="flex items-center justify-between mb-1">
+                <span className="font-bold text-xs text-amber-800 dark:text-amber-300 uppercase tracking-wider">
+                  Professional Education Battery
+                </span>
+                <span className="text-xs font-mono text-slate-500">60 Mins</span>
+              </div>
+              <h3 className="font-bold text-slate-900 dark:text-white text-sm">
+                60-Item ProfEd Timed Mock
+              </h3>
+              <p className="text-xs text-slate-500 mt-1">
+                Deep pedagogical testing covering Foundations, Child Dev, Methods, Assessment, Curriculum, and Ethics.
+              </p>
+            </div>
+            <div className="pt-2 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs text-slate-500">
+              <span>60 Questions</span>
+              <span className="font-semibold text-amber-700 dark:text-amber-400 group-hover:underline">
+                Start Mock →
+              </span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 3. Quick Practice Drills (Self-Paced with Rationales) */}
+      <section className="space-y-3">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-1.5">
+            <Zap className="w-4 h-4 text-slate-700 dark:text-slate-300" />
+            <h2 className="text-xs font-bold text-slate-900 dark:text-slate-100 uppercase tracking-wider">
+              Self-Paced Practice Drills
+            </h2>
+          </div>
+          <span className="text-[11px] text-slate-500 font-medium">Instant Pedagogical Feedback</span>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+          <button
+            type="button"
+            onClick={() => handleStartQuickPractice('all')}
+            className="p-3 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-slate-400 text-left transition-colors flex flex-col justify-between cursor-pointer group"
+          >
+            <div>
+              <span className="font-bold text-xs text-slate-900 dark:text-white block">
+                Quick Mix (10 Items)
+              </span>
+              <p className="text-[11px] text-slate-500 mt-0.5">
+                Randomized cross-curricular sample.
+              </p>
+            </div>
+            <span className="text-[11px] font-semibold text-slate-700 dark:text-slate-300 group-hover:underline mt-2">
+              Start Drill →
+            </span>
           </button>
 
           <button
             type="button"
-            onClick={() => handleStartPreset('mock_exam')}
-            className="text-left p-3.5 rounded-lg bg-slate-900 text-white border border-slate-800 hover:border-slate-700 transition-colors flex flex-col justify-between cursor-pointer group"
+            onClick={() => handleStartQuickPractice('gen_ed')}
+            className="p-3 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-sky-300 text-left transition-colors flex flex-col justify-between cursor-pointer group"
           >
             <div>
-              <div className="flex items-center justify-between mb-2">
-                <span className="p-1 rounded bg-slate-800 text-white">
-                  <Award className="w-3.5 h-3.5" />
-                </span>
-                <span className="text-[10px] font-semibold text-slate-300">
-                  Simulation
-                </span>
-              </div>
-              <h3 className="font-bold text-sm text-white">
-                Full LET Mock Exam
-              </h3>
-              <p className="text-xs text-slate-400 mt-0.5">
-                Official timed simulation without midway answers.
+              <span className="font-bold text-xs text-sky-800 dark:text-sky-300 block">
+                GenEd Drill (10 Items)
+              </span>
+              <p className="text-[11px] text-slate-500 mt-0.5">
+                Core general education subjects.
               </p>
             </div>
-            <div className="mt-3 pt-2 border-t border-slate-800 flex items-center justify-between text-xs text-slate-400">
-              <span className="font-mono">20 Items</span>
-              <span>25 Mins</span>
-            </div>
+            <span className="text-[11px] font-semibold text-sky-700 dark:text-sky-400 group-hover:underline mt-2">
+              Start Drill →
+            </span>
           </button>
 
           <button
             type="button"
-            onClick={() => handleStartPreset('gen_ed')}
-            className="text-left p-3.5 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-slate-400 dark:hover:border-slate-600 transition-colors flex flex-col justify-between cursor-pointer group"
+            onClick={() => handleStartQuickPractice('prof_ed')}
+            className="p-3 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-amber-300 text-left transition-colors flex flex-col justify-between cursor-pointer group"
           >
             <div>
-              <div className="flex items-center justify-between mb-2">
-                <span className="p-1 rounded bg-sky-50 dark:bg-sky-950 text-sky-700 dark:text-sky-400">
-                  <BookOpen className="w-3.5 h-3.5" />
-                </span>
-                <span className="text-[10px] font-semibold text-slate-500">
-                  Domain Drill
-                </span>
-              </div>
-              <h3 className="font-bold text-sm text-slate-900 dark:text-white group-hover:text-slate-700 dark:group-hover:text-slate-200 transition-colors">
-                General Education
-              </h3>
-              <p className="text-xs text-slate-500 mt-0.5">
-                Math, Science, English, Filipino, SocSci & ICT.
+              <span className="font-bold text-xs text-amber-800 dark:text-amber-300 block">
+                ProfEd Drill (10 Items)
+              </span>
+              <p className="text-[11px] text-slate-500 mt-0.5">
+                Professional education competencies.
               </p>
             </div>
-            <div className="mt-3 pt-2 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs text-slate-500">
-              <span className="font-mono">15 Items</span>
-              <span>Self-Paced</span>
-            </div>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => handleStartPreset('prof_ed')}
-            className="text-left p-3.5 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-slate-400 dark:hover:border-slate-600 transition-colors flex flex-col justify-between cursor-pointer group"
-          >
-            <div>
-              <div className="flex items-center justify-between mb-2">
-                <span className="p-1 rounded bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300">
-                  <Award className="w-3.5 h-3.5" />
-                </span>
-                <span className="text-[10px] font-semibold text-slate-500">
-                  Domain Drill
-                </span>
-              </div>
-              <h3 className="font-bold text-sm text-slate-900 dark:text-white group-hover:text-slate-700 dark:group-hover:text-slate-200 transition-colors">
-                Professional Education
-              </h3>
-              <p className="text-xs text-slate-500 mt-0.5">
-                Foundations, Pedagogy, Assessment & Ethics.
-              </p>
-            </div>
-            <div className="mt-3 pt-2 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs text-slate-500">
-              <span className="font-mono">15 Items</span>
-              <span>Self-Paced</span>
-            </div>
+            <span className="text-[11px] font-semibold text-amber-700 dark:text-amber-400 group-hover:underline mt-2">
+              Start Drill →
+            </span>
           </button>
         </div>
-      </div>
+      </section>
 
-      {/* Custom Session Builder */}
-      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg p-4 sm:p-5 space-y-4">
-        <div className="flex items-center gap-2 border-b border-slate-100 dark:border-slate-800 pb-3">
+      {/* 4. Custom Session Builder */}
+      <section className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg p-4 sm:p-5 space-y-4">
+        <div className="flex items-center gap-1.5 border-b border-slate-100 dark:border-slate-800 pb-3">
           <SlidersHorizontal className="w-4 h-4 text-slate-700 dark:text-slate-300" />
-          <h2 className="font-bold text-slate-900 dark:text-white text-sm">
+          <h2 className="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider">
             Custom Session Builder
           </h2>
         </div>
 
         {/* Mode Selector */}
-        <div>
-          <label className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider block mb-1.5">
+        <div className="space-y-1.5">
+          <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
             Session Mode
           </label>
           <div className="grid grid-cols-2 gap-2">
             <button
               type="button"
               onClick={() => setSelectedMode('practice')}
-              className={`p-3 rounded-md border text-left transition-colors tap-target cursor-pointer ${
+              className={`p-3 rounded-md border text-left transition-colors cursor-pointer ${
                 selectedMode === 'practice'
-                  ? 'bg-slate-100 dark:bg-slate-800 border-slate-900 dark:border-white text-slate-900 dark:text-white font-bold ring-1 ring-slate-900 dark:ring-white'
-                  : 'border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400'
+                  ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 border-slate-900 dark:border-white font-bold'
+                  : 'bg-slate-50 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700'
               }`}
             >
-              <div className="flex items-center gap-1.5 text-xs font-bold text-slate-900 dark:text-white mb-0.5">
-                <Zap className="w-3.5 h-3.5 text-amber-600 fill-current" />
-                <span>Practice Mode</span>
+              <div className="text-xs">Practice Mode</div>
+              <div className={`text-[11px] mt-0.5 ${selectedMode === 'practice' ? 'text-slate-300 dark:text-slate-700' : 'text-slate-500'}`}>
+                Instant rationales & untimed
               </div>
-              <p className="text-[11px] text-slate-500 font-normal leading-normal">
-                Immediate answers and detailed rationales.
-              </p>
             </button>
 
             <button
               type="button"
               onClick={() => setSelectedMode('exam')}
-              className={`p-3 rounded-md border text-left transition-colors tap-target cursor-pointer ${
+              className={`p-3 rounded-md border text-left transition-colors cursor-pointer ${
                 selectedMode === 'exam'
-                  ? 'bg-slate-100 dark:bg-slate-800 border-slate-900 dark:border-white text-slate-900 dark:text-white font-bold ring-1 ring-slate-900 dark:ring-white'
-                  : 'border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400'
+                  ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 border-slate-900 dark:border-white font-bold'
+                  : 'bg-slate-50 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700'
               }`}
             >
-              <div className="flex items-center gap-1.5 text-xs font-bold text-slate-900 dark:text-white mb-0.5">
-                <Clock className="w-3.5 h-3.5 text-slate-700 dark:text-slate-300" />
-                <span>Mock Exam Mode</span>
+              <div className="text-xs">Timed Exam Mode</div>
+              <div className={`text-[11px] mt-0.5 ${selectedMode === 'exam' ? 'text-slate-300 dark:text-slate-700' : 'text-slate-500'}`}>
+                Timed & scored after submit
               </div>
-              <p className="text-[11px] text-slate-500 font-normal leading-normal">
-                Timed test conditions, answers revealed at end.
-              </p>
             </button>
           </div>
         </div>
 
-        {/* Domain Filter */}
-        <div>
-          <label className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider block mb-1.5">
-            Target Domain
+        {/* Domain Category Filter */}
+        <div className="space-y-1.5">
+          <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+            Domain Focus
           </label>
-          <div className="flex gap-2">
+          <div className="flex gap-1.5">
             {[
               { id: 'all', label: 'All Domains' },
               { id: 'gen_ed', label: 'General Education' },
@@ -281,10 +357,10 @@ export const QuizConfigPage: React.FC<QuizConfigPageProps> = ({ onStartExam }) =
                 key={cat.id}
                 type="button"
                 onClick={() => setSelectedCategory(cat.id as SubjectCategory | 'all')}
-                className={`flex-1 py-1.5 px-3 text-xs font-medium rounded-md border transition-colors tap-target cursor-pointer ${
+                className={`flex-1 py-1.5 rounded-md text-xs font-semibold border transition-colors cursor-pointer ${
                   selectedCategory === cat.id
-                    ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 border-slate-900 dark:border-white font-bold'
-                    : 'border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800'
+                    ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 border-slate-900'
+                    : 'bg-slate-50 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700'
                 }`}
               >
                 {cat.label}
@@ -293,14 +369,63 @@ export const QuizConfigPage: React.FC<QuizConfigPageProps> = ({ onStartExam }) =
           </div>
         </div>
 
-        {/* Difficulty Filter */}
-        <div>
-          <label className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider block mb-1.5">
-            Difficulty Level
+        {/* Question Count & Time Limit */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+              Number of Questions ({questionCount})
+            </label>
+            <div className="flex gap-1.5">
+              {[10, 20, 30, 50].map((count) => (
+                <button
+                  key={count}
+                  type="button"
+                  onClick={() => setQuestionCount(count)}
+                  className={`flex-1 py-1.5 rounded-md text-xs font-semibold border transition-colors cursor-pointer ${
+                    questionCount === count
+                      ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 border-slate-900'
+                      : 'bg-slate-50 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700'
+                  }`}
+                >
+                  {count}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {selectedMode === 'exam' && (
+            <div className="space-y-1.5">
+              <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                Time Limit ({timeLimitMinutes} Mins)
+              </label>
+              <div className="flex gap-1.5">
+                {[15, 25, 45, 60].map((mins) => (
+                  <button
+                    key={mins}
+                    type="button"
+                    onClick={() => setTimeLimitMinutes(mins)}
+                    className={`flex-1 py-1.5 rounded-md text-xs font-semibold border transition-colors cursor-pointer ${
+                      timeLimitMinutes === mins
+                        ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 border-slate-900'
+                        : 'bg-slate-50 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700'
+                    }`}
+                  >
+                    {mins}m
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Difficulty Selector */}
+        <div className="space-y-1.5">
+          <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+            Item Difficulty
           </label>
-          <div className="flex gap-2">
+          <div className="flex gap-1.5">
             {[
-              { id: 'all', label: 'Mixed / All' },
+              { id: 'all', label: 'All Difficulties' },
               { id: 'easy', label: 'Easy' },
               { id: 'medium', label: 'Medium' },
               { id: 'hard', label: 'Hard' },
@@ -309,10 +434,10 @@ export const QuizConfigPage: React.FC<QuizConfigPageProps> = ({ onStartExam }) =
                 key={diff.id}
                 type="button"
                 onClick={() => setSelectedDifficulty(diff.id as Difficulty | 'all')}
-                className={`flex-1 py-1.5 px-2 text-xs font-medium rounded-md border transition-colors tap-target cursor-pointer ${
+                className={`flex-1 py-1.5 rounded-md text-xs font-semibold border transition-colors cursor-pointer ${
                   selectedDifficulty === diff.id
-                    ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 border-slate-900 dark:border-white font-bold'
-                    : 'border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800'
+                    ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 border-slate-900'
+                    : 'bg-slate-50 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700'
                 }`}
               >
                 {diff.label}
@@ -321,110 +446,66 @@ export const QuizConfigPage: React.FC<QuizConfigPageProps> = ({ onStartExam }) =
           </div>
         </div>
 
-        {/* Specific Subjects Selection */}
-        <div>
-          <div className="flex items-center justify-between mb-1.5">
-            <label className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">
-              Specific Subjects (Optional)
+        {/* Subject Filter Selection */}
+        <div className="space-y-1.5">
+          <div className="flex items-center justify-between">
+            <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+              Filter by Subject ({selectedSubjectIds.length > 0 ? `${selectedSubjectIds.length} Selected` : 'All Subjects'})
             </label>
             {selectedSubjectIds.length > 0 && (
               <button
                 type="button"
                 onClick={() => setSelectedSubjectIds([])}
-                className="text-xs text-slate-600 dark:text-slate-400 hover:underline cursor-pointer"
+                className="text-[11px] text-slate-500 hover:underline cursor-pointer"
               >
-                Clear selection ({selectedSubjectIds.length})
+                Clear selection
               </button>
             )}
           </div>
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 max-h-44 overflow-y-auto pr-1">
-            {SUBJECTS.filter(
-              (s) => selectedCategory === 'all' || s.category === selectedCategory
-            ).map((sub) => {
-              const isChecked = selectedSubjectIds.includes(sub.id);
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-1.5 max-h-48 overflow-y-auto p-1 bg-slate-50 dark:bg-slate-800/40 rounded-md border border-slate-200 dark:border-slate-700">
+            {SUBJECTS.map((sub) => {
+              const isSelected = selectedSubjectIds.includes(sub.id);
               return (
                 <button
                   key={sub.id}
                   type="button"
                   onClick={() => toggleSubject(sub.id)}
-                  className={`p-2.5 rounded-md border text-left text-xs font-medium transition-colors flex items-center justify-between cursor-pointer ${
-                    isChecked
-                      ? 'bg-slate-100 dark:bg-slate-800 border-slate-900 dark:border-white text-slate-900 dark:text-white font-bold'
-                      : 'border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:border-slate-300'
+                  className={`p-2 rounded text-left text-xs transition-colors border cursor-pointer ${
+                    isSelected
+                      ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 border-slate-900 font-semibold'
+                      : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700'
                   }`}
                 >
-                  <span className="truncate pr-1">{sub.name}</span>
-                  {isChecked && <CheckCircle className="w-3.5 h-3.5 text-slate-900 dark:text-white shrink-0" />}
+                  <span className="truncate block">{sub.name}</span>
                 </button>
               );
             })}
           </div>
         </div>
 
-        {/* Question Count */}
-        <div>
-          <label className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider block mb-1.5">
-            Question Count
-          </label>
-          <div className="flex gap-2">
-            {[10, 20, 30, 50, ALL_QUESTIONS.length].map((count) => (
-              <button
-                key={count}
-                type="button"
-                onClick={() => setQuestionCount(count)}
-                className={`flex-1 py-1.5 px-2 text-xs font-mono font-medium rounded-md border transition-colors tap-target cursor-pointer ${
-                  questionCount === count
-                    ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 border-slate-900 dark:border-white font-bold'
-                    : 'border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800'
-                }`}
-              >
-                {count === ALL_QUESTIONS.length ? `All (${count})` : `${count}`}
-              </button>
-            ))}
-          </div>
+        {/* Start Custom Button */}
+        <div className="pt-2">
+          <Button
+            variant="primary"
+            size="lg"
+            fullWidth
+            onClick={handleStartCustomSession}
+            className="font-bold"
+          >
+            {selectedMode === 'exam' ? 'Launch Timed Exam' : 'Launch Practice Drill'}
+          </Button>
         </div>
+      </section>
 
-        {/* Time Limit (Only relevant for exam mode) */}
-        {selectedMode === 'exam' && (
-          <div>
-            <label className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider block mb-1.5">
-              Time Limit
-            </label>
-            <div className="flex gap-2">
-              {[
-                { mins: 5, label: '5m' },
-                { mins: 10, label: '10m' },
-                { mins: 15, label: '15m' },
-                { mins: 30, label: '30m' },
-                { mins: 0, label: 'Untimed' },
-              ].map((timer) => (
-                <button
-                  key={timer.mins}
-                  type="button"
-                  onClick={() => setTimeLimitMinutes(timer.mins)}
-                  className={`flex-1 py-1.5 px-2 text-xs font-medium rounded-md border transition-colors tap-target cursor-pointer ${
-                    timeLimitMinutes === timer.mins
-                      ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 border-slate-900 dark:border-white font-bold'
-                      : 'border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800'
-                  }`}
-                >
-                  {timer.label}
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
-
-        <Button
-          variant="primary"
-          size="lg"
-          fullWidth
-          onClick={handleStartCustomSession}
-          className="mt-2"
-        >
-          {selectedMode === 'exam' ? 'Start Mock Examination' : 'Start Practice Drill'}
-        </Button>
-      </div>
+      {/* Pre-Exam Briefing Modal */}
+      {activeBriefingBlueprint && (
+        <ExamBriefingModal
+          blueprint={activeBriefingBlueprint}
+          isOpen={Boolean(activeBriefingBlueprint)}
+          onClose={() => setActiveBriefingBlueprint(null)}
+          onConfirmStart={handleConfirmStartBriefing}
+        />
+      )}
     </div>
   );
 };

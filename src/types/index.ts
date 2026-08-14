@@ -50,6 +50,8 @@ export interface QuizConfig {
   timeLimitMinutes?: number; // null or undefined for untimed
   includeOnlyBookmarked?: boolean;
   includeOnlyIncorrect?: boolean;
+  blueprintId?: string;
+  title?: string;
 }
 
 export interface QuizSession {

@@ -1,5 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
-import { QuestionCard } from '../components/quiz/QuestionCard';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Button } from '../components/ui/Button';
 import { ProgressBar } from '../components/ui/ProgressBar';
 import {
@@ -11,6 +10,8 @@ import {
   AlertTriangle,
   CheckCircle2,
   X,
+  Scale,
+  RotateCcw,
 } from 'lucide-react';
 import type { Question, QuizConfig, UserAnswer, QuizResult } from '../types';
 
@@ -23,28 +24,105 @@ interface QuizExamSessionPageProps {
   onExit: () => void;
 }
 
+const CHOICE_LETTERS = ['A', 'B', 'C', 'D'];
+
 export const QuizExamSessionPage: React.FC<QuizExamSessionPageProps> = ({
   config,
   questions,
-  bookmarkedIds,
-  onToggleBookmark,
   onFinishSession,
   onExit,
 }) => {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [answers, setAnswers] = useState<Record<string, UserAnswer>>({});
-  const [flaggedIds, setFlaggedIds] = useState<Set<string>>(new Set());
-  const [isGridOpen, setIsGridOpen] = useState(false);
-  const [isSubmitConfirmOpen, setIsSubmitConfirmOpen] = useState(false);
-  const [startTime] = useState<number>(() => Date.now());
+  const sessionKey = `let_exam_session_${config.blueprintId || 'custom'}_${questions.length}`;
+
+  // Persistent state initializer
+  const [currentIndex, setCurrentIndex] = useState<number>(() => {
+    try {
+      const saved = sessionStorage.getItem(`${sessionKey}_index`);
+      return saved ? parseInt(saved, 10) : 0;
+    } catch {
+      return 0;
+    }
+  });
+
+  const [answers, setAnswers] = useState<Record<string, UserAnswer>>(() => {
+    try {
+      const saved = sessionStorage.getItem(`${sessionKey}_answers`);
+      return saved ? JSON.parse(saved) : {};
+    } catch {
+      return {};
+    }
+  });
+
+  const [flaggedIds, setFlaggedIds] = useState<Set<string>>(() => {
+    try {
+      const saved = sessionStorage.getItem(`${sessionKey}_flagged`);
+      return saved ? new Set(JSON.parse(saved)) : new Set();
+    } catch {
+      return new Set();
+    }
+  });
+
+  const [startTime] = useState<number>(() => {
+    try {
+      const saved = sessionStorage.getItem(`${sessionKey}_start_time`);
+      if (saved) return parseInt(saved, 10);
+      const now = Date.now();
+      sessionStorage.setItem(`${sessionKey}_start_time`, now.toString());
+      return now;
+    } catch {
+      return Date.now();
+    }
+  });
 
   const totalSeconds = config.timeLimitMinutes ? config.timeLimitMinutes * 60 : null;
-  const [secondsRemaining, setSecondsRemaining] = useState<number | null>(totalSeconds);
+  const [secondsRemaining, setSecondsRemaining] = useState<number | null>(() => {
+    if (!totalSeconds) return null;
+    try {
+      const saved = sessionStorage.getItem(`${sessionKey}_remaining`);
+      return saved ? parseInt(saved, 10) : totalSeconds;
+    } catch {
+      return totalSeconds;
+    }
+  });
+
+  const [isGridOpen, setIsGridOpen] = useState(false);
+  const [gridFilter, setGridFilter] = useState<'all' | 'unanswered' | 'flagged'>('all');
+  const [isSubmitConfirmOpen, setIsSubmitConfirmOpen] = useState(false);
+  const [isExitConfirmOpen, setIsExitConfirmOpen] = useState(false);
+
   const hasFinishedRef = useRef(false);
+
+  // Sync state to sessionStorage
+  useEffect(() => {
+    try {
+      sessionStorage.setItem(`${sessionKey}_index`, currentIndex.toString());
+      sessionStorage.setItem(`${sessionKey}_answers`, JSON.stringify(answers));
+      sessionStorage.setItem(`${sessionKey}_flagged`, JSON.stringify(Array.from(flaggedIds)));
+      if (secondsRemaining !== null) {
+        sessionStorage.setItem(`${sessionKey}_remaining`, secondsRemaining.toString());
+      }
+    } catch {
+      // ignore
+    }
+  }, [currentIndex, answers, flaggedIds, secondsRemaining, sessionKey]);
+
+  // Clean up session storage upon submit
+  const cleanupStorage = useCallback(() => {
+    try {
+      sessionStorage.removeItem(`${sessionKey}_index`);
+      sessionStorage.removeItem(`${sessionKey}_answers`);
+      sessionStorage.removeItem(`${sessionKey}_flagged`);
+      sessionStorage.removeItem(`${sessionKey}_remaining`);
+      sessionStorage.removeItem(`${sessionKey}_start_time`);
+    } catch {
+      // ignore
+    }
+  }, [sessionKey]);
 
   const calculateAndSubmitResults = useCallback(() => {
     if (hasFinishedRef.current) return;
     hasFinishedRef.current = true;
+    cleanupStorage();
 
     const totalQuestions = questions.length;
     let correctCount = 0;
@@ -105,15 +183,11 @@ export const QuizExamSessionPage: React.FC<QuizExamSessionPageProps> = ({
     };
 
     onFinishSession(result);
-  }, [answers, config, onFinishSession, questions, startTime]);
+  }, [answers, cleanupStorage, config, onFinishSession, questions, startTime]);
 
+  // Real Countdown Timer
   useEffect(() => {
     if (secondsRemaining === null) return;
-
-    if (secondsRemaining <= 0) {
-      calculateAndSubmitResults();
-      return;
-    }
 
     const interval = setInterval(() => {
       setSecondsRemaining((prev) => {
@@ -135,10 +209,10 @@ export const QuizExamSessionPage: React.FC<QuizExamSessionPageProps> = ({
 
   if (!currentQuestion) {
     return (
-      <div className="text-center py-12">
-        <p className="text-slate-500">No questions available.</p>
-        <Button variant="secondary" onClick={onExit} className="mt-4">
-          Exit Exam
+      <div className="text-center py-12 space-y-3">
+        <p className="text-slate-500">No questions available in this session.</p>
+        <Button variant="secondary" onClick={onExit}>
+          Exit Examination
         </Button>
       </div>
     );
@@ -181,71 +255,159 @@ export const QuizExamSessionPage: React.FC<QuizExamSessionPageProps> = ({
   const answeredCount = Object.keys(answers).length;
   const unansweredCount = questions.length - answeredCount;
 
-  return (
-    <div className="space-y-3.5">
-      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg p-3 flex items-center justify-between gap-3">
-        {secondsRemaining !== null ? (
-          <div
-            className={`flex items-center gap-1.5 px-2.5 py-1 rounded-md font-mono text-xs font-bold ${
-              secondsRemaining < 120
-                ? 'bg-rose-100 text-rose-700 dark:bg-rose-950 dark:text-rose-300'
-                : 'bg-slate-100 text-slate-800 dark:bg-slate-800 dark:text-slate-200'
-            }`}
-          >
-            <Clock className="w-3.5 h-3.5 text-slate-700 dark:text-slate-300 shrink-0" />
-            <span>{formatTime(secondsRemaining)}</span>
-          </div>
-        ) : (
-          <div className="text-xs font-semibold text-slate-500">
-            Untimed Exam
-          </div>
-        )}
+  // Jump to first unanswered
+  const handleReviewUnanswered = () => {
+    const firstUnansweredIdx = questions.findIndex((q) => !answers[q.id]);
+    if (firstUnansweredIdx !== -1) {
+      setCurrentIndex(firstUnansweredIdx);
+    }
+    setIsGridOpen(false);
+    setIsSubmitConfirmOpen(false);
+  };
 
-        <div className="flex items-center gap-1.5">
+  // Jump to first flagged
+  const handleReviewFlagged = () => {
+    const firstFlaggedIdx = questions.findIndex((q) => flaggedIds.has(q.id));
+    if (firstFlaggedIdx !== -1) {
+      setCurrentIndex(firstFlaggedIdx);
+    }
+    setIsGridOpen(false);
+    setIsSubmitConfirmOpen(false);
+  };
+
+  const filteredGridQuestions = questions.filter((q) => {
+    if (gridFilter === 'unanswered') return !answers[q.id];
+    if (gridFilter === 'flagged') return flaggedIds.has(q.id);
+    return true;
+  });
+
+  return (
+    <div className="space-y-4 animate-fade-in pb-8">
+      {/* Examination Title & Session Bar */}
+      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg p-3 sm:p-3.5 flex items-center justify-between gap-2.5">
+        <div className="flex items-center gap-2 min-w-0">
+          <div className="p-1.5 rounded-md bg-slate-900 text-white dark:bg-white dark:text-slate-900 shrink-0">
+            <Scale className="w-3.5 h-3.5" />
+          </div>
+          <div className="min-w-0">
+            <h2 className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white truncate">
+              {config.title || 'LET Examination Simulation'}
+            </h2>
+            <span className="text-[10px] text-slate-500 block truncate">
+              {currentQuestion.category === 'gen_ed' ? 'General Education' : 'Professional Education'} • Item {currentIndex + 1} of {questions.length}
+            </span>
+          </div>
+        </div>
+
+        {/* Timer & Controls */}
+        <div className="flex items-center gap-1.5 shrink-0">
+          {secondsRemaining !== null && (
+            <div
+              className={`flex items-center gap-1.5 px-2.5 py-1 rounded-md font-mono text-xs font-bold border ${
+                secondsRemaining < 300
+                  ? 'bg-rose-50 text-rose-700 dark:bg-rose-950/60 dark:text-rose-300 border-rose-300 dark:border-rose-800'
+                  : 'bg-slate-100 text-slate-900 dark:bg-slate-800 dark:text-slate-100 border-slate-200 dark:border-slate-700'
+              }`}
+            >
+              <Clock className="w-3.5 h-3.5 shrink-0" />
+              <span>{formatTime(secondsRemaining)}</span>
+            </div>
+          )}
+
           <button
             type="button"
             onClick={() => toggleFlag(currentQuestion.id)}
-            className={`flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-semibold transition-colors tap-target cursor-pointer ${
+            title={isCurrentFlagged ? 'Unflag question' : 'Flag question for review'}
+            className={`flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-semibold transition-colors tap-target cursor-pointer border ${
               isCurrentFlagged
-                ? 'bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300 border border-amber-300 dark:border-amber-800'
-                : 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400 hover:bg-slate-200'
+                ? 'bg-amber-50 text-amber-900 dark:bg-amber-950 dark:text-amber-300 border-amber-300 dark:border-amber-700 font-bold'
+                : 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400 border-slate-200 dark:border-slate-700 hover:bg-slate-200'
             }`}
           >
             <Flag className={`w-3.5 h-3.5 ${isCurrentFlagged ? 'fill-current' : ''}`} />
-            <span>{isCurrentFlagged ? 'Flagged' : 'Flag'}</span>
+            <span className="hidden xs:inline">{isCurrentFlagged ? 'Flagged' : 'Flag'}</span>
           </button>
 
           <button
             type="button"
             onClick={() => setIsGridOpen(true)}
-            className="flex items-center gap-1 px-2.5 py-1 rounded-md bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs font-semibold transition-colors tap-target cursor-pointer"
+            className="flex items-center gap-1 px-2.5 py-1 rounded-md bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs font-semibold transition-colors tap-target cursor-pointer border border-slate-200 dark:border-slate-700"
           >
             <Grid className="w-3.5 h-3.5" />
-            <span>{answeredCount}/{questions.length}</span>
+            <span className="font-mono">{answeredCount}/{questions.length}</span>
           </button>
         </div>
       </div>
 
+      {/* Progress Line */}
       <ProgressBar
         value={currentIndex + 1}
         max={questions.length}
-        label={`Item ${currentIndex + 1} of ${questions.length}`}
+        label={`Question ${currentIndex + 1} of ${questions.length}`}
         showPercentage
       />
 
-      <QuestionCard
-        key={currentQuestion.id}
-        question={currentQuestion}
-        questionNumber={currentIndex + 1}
-        totalQuestions={questions.length}
-        userAnswer={currentUserAnswer}
-        isAnswerSubmitted={false}
-        isBookmarked={bookmarkedIds.includes(currentQuestion.id)}
-        onSelectChoice={handleSelectChoice}
-        onToggleBookmark={onToggleBookmark}
-        mode="exam"
-      />
+      {/* Main Examination Item Card */}
+      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg p-4 sm:p-6 space-y-4 shadow-xs">
+        {/* Topic & Metadata */}
+        <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-2.5">
+          <div className="space-y-0.5">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+              {currentQuestion.subjectName}
+            </span>
+            <div className="text-xs font-semibold text-slate-800 dark:text-slate-200">
+              {currentQuestion.topic}
+            </div>
+          </div>
+          <span className="px-2 py-0.5 bg-slate-100 dark:bg-slate-800 rounded text-xs font-mono font-bold text-slate-700 dark:text-slate-300">
+            #{currentIndex + 1}
+          </span>
+        </div>
 
+        {/* Question Stem */}
+        <div className="text-slate-900 dark:text-slate-100 text-sm sm:text-base font-medium leading-relaxed">
+          {currentQuestion.question}
+        </div>
+
+        {/* Examination Answer Choices */}
+        <div className="space-y-2.5 pt-1" role="radiogroup" aria-label="Exam choices">
+          {currentQuestion.choices.map((choiceText, index) => {
+            const isSelected = currentUserAnswer?.selectedAnswer === index;
+
+            return (
+              <button
+                key={index}
+                type="button"
+                role="radio"
+                aria-checked={isSelected}
+                onClick={() => handleSelectChoice(index)}
+                className={`w-full text-left p-3.5 rounded-lg border transition-all duration-150 active:scale-[0.99] flex items-center justify-between gap-3 tap-target cursor-pointer ${
+                  isSelected
+                    ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 border-slate-900 dark:border-white font-semibold ring-2 ring-slate-900/20 dark:ring-white/20'
+                    : 'bg-slate-50/70 dark:bg-slate-800/40 text-slate-800 dark:text-slate-200 border-slate-200 dark:border-slate-800 hover:border-slate-400 dark:hover:border-slate-600'
+                }`}
+              >
+                <div className="flex items-center gap-3 flex-1 min-w-0">
+                  <span
+                    className={`w-6 h-6 rounded-md border flex items-center justify-center font-bold text-xs shrink-0 font-mono ${
+                      isSelected
+                        ? 'bg-white text-slate-900 dark:bg-slate-900 dark:text-white border-transparent'
+                        : 'bg-white dark:bg-slate-700 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-600'
+                    }`}
+                  >
+                    {CHOICE_LETTERS[index]}
+                  </span>
+                  <span className="text-xs sm:text-sm leading-snug break-words">
+                    {choiceText}
+                  </span>
+                </div>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Navigation Controls */}
       <div className="flex items-center justify-between gap-2.5 pt-1">
         <Button
           variant="outline"
@@ -265,7 +427,7 @@ export const QuizExamSessionPage: React.FC<QuizExamSessionPageProps> = ({
               onClick={() => setCurrentIndex((prev) => Math.min(questions.length - 1, prev + 1))}
               rightIcon={<ChevronRight className="w-4 h-4" />}
             >
-              Next
+              Next Item
             </Button>
           ) : (
             <Button
@@ -273,20 +435,45 @@ export const QuizExamSessionPage: React.FC<QuizExamSessionPageProps> = ({
               size="md"
               onClick={() => setIsSubmitConfirmOpen(true)}
               leftIcon={<CheckCircle2 className="w-4 h-4" />}
+              className="font-bold"
             >
-              Submit Exam
+              Submit Examination
             </Button>
           )}
         </div>
       </div>
 
+      {/* Quick Finish Button on Footer Bar */}
+      <div className="flex items-center justify-between pt-2 border-t border-slate-200 dark:border-slate-800 text-xs text-slate-500">
+        <button
+          type="button"
+          onClick={() => setIsExitConfirmOpen(true)}
+          className="hover:underline cursor-pointer"
+        >
+          Pause & Exit
+        </button>
+        <button
+          type="button"
+          onClick={() => setIsSubmitConfirmOpen(true)}
+          className="font-bold text-slate-800 dark:text-slate-200 hover:underline cursor-pointer"
+        >
+          Finish & Grade Exam →
+        </button>
+      </div>
+
+      {/* Question Navigator Drawer / Modal */}
       {isGridOpen && (
-        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-end sm:items-center justify-center p-0 sm:p-4">
-          <div className="bg-white dark:bg-slate-900 w-full sm:max-w-md rounded-t-xl sm:rounded-lg p-5 shadow-xl max-h-[85vh] flex flex-col">
-            <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
-              <h3 className="font-bold text-slate-900 dark:text-white text-sm">
-                Question Navigator
-              </h3>
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-end sm:items-center justify-center p-0 sm:p-4 animate-fade-in">
+          <div className="bg-white dark:bg-slate-900 w-full sm:max-w-md rounded-t-xl sm:rounded-xl p-5 shadow-2xl max-h-[85vh] flex flex-col space-y-3">
+            <div className="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800">
+              <div>
+                <h3 className="font-bold text-slate-900 dark:text-white text-sm">
+                  Question Navigator
+                </h3>
+                <p className="text-xs text-slate-500">
+                  {answeredCount} of {questions.length} answered ({unansweredCount} remaining)
+                </p>
+              </div>
               <button
                 type="button"
                 onClick={() => setIsGridOpen(false)}
@@ -296,26 +483,50 @@ export const QuizExamSessionPage: React.FC<QuizExamSessionPageProps> = ({
               </button>
             </div>
 
-            <div className="flex items-center gap-3 py-2.5 text-xs text-slate-600 dark:text-slate-400 border-b border-slate-100 dark:border-slate-800">
-              <div className="flex items-center gap-1.5">
-                <span className="w-2.5 h-2.5 rounded bg-slate-900 dark:bg-white" />
-                <span>Answered</span>
-              </div>
-              <div className="flex items-center gap-1.5">
-                <span className="w-2.5 h-2.5 rounded bg-slate-200 dark:bg-slate-700" />
-                <span>Unanswered</span>
-              </div>
-              <div className="flex items-center gap-1.5">
-                <span className="w-2.5 h-2.5 rounded bg-amber-400" />
-                <span>Flagged</span>
-              </div>
+            {/* Filter Pills */}
+            <div className="flex gap-1 p-1 bg-slate-100 dark:bg-slate-800 rounded-md text-xs font-medium">
+              <button
+                type="button"
+                onClick={() => setGridFilter('all')}
+                className={`flex-1 py-1 rounded transition-colors cursor-pointer ${
+                  gridFilter === 'all'
+                    ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white font-bold shadow-xs'
+                    : 'text-slate-600 dark:text-slate-400'
+                }`}
+              >
+                All ({questions.length})
+              </button>
+              <button
+                type="button"
+                onClick={() => setGridFilter('unanswered')}
+                className={`flex-1 py-1 rounded transition-colors cursor-pointer ${
+                  gridFilter === 'unanswered'
+                    ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white font-bold shadow-xs'
+                    : 'text-slate-600 dark:text-slate-400'
+                }`}
+              >
+                Unanswered ({unansweredCount})
+              </button>
+              <button
+                type="button"
+                onClick={() => setGridFilter('flagged')}
+                className={`flex-1 py-1 rounded transition-colors cursor-pointer ${
+                  gridFilter === 'flagged'
+                    ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white font-bold shadow-xs'
+                    : 'text-slate-600 dark:text-slate-400'
+                }`}
+              >
+                Flagged ({flaggedIds.size})
+              </button>
             </div>
 
-            <div className="grid grid-cols-5 gap-2 py-3 overflow-y-auto max-h-60">
-              {questions.map((q, idx) => {
+            {/* Questions Grid */}
+            <div className="grid grid-cols-5 sm:grid-cols-6 gap-2 py-2 overflow-y-auto max-h-64">
+              {filteredGridQuestions.map((q) => {
+                const originalIdx = questions.findIndex((item) => item.id === q.id);
                 const isAnswered = answers[q.id] !== undefined;
                 const isFlagged = flaggedIds.has(q.id);
-                const isCurrent = idx === currentIndex;
+                const isCurrent = originalIdx === currentIndex;
 
                 let btnStyle =
                   'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700';
@@ -332,12 +543,12 @@ export const QuizExamSessionPage: React.FC<QuizExamSessionPageProps> = ({
                     key={q.id}
                     type="button"
                     onClick={() => {
-                      setCurrentIndex(idx);
+                      setCurrentIndex(originalIdx);
                       setIsGridOpen(false);
                     }}
                     className={`h-9 rounded-md border flex flex-col items-center justify-center relative font-semibold text-xs tap-target cursor-pointer ${btnStyle}`}
                   >
-                    <span>{idx + 1}</span>
+                    <span>{originalIdx + 1}</span>
                     {isFlagged && (
                       <Flag className="w-2.5 h-2.5 fill-amber-400 text-amber-400 absolute top-0.5 right-0.5" />
                     )}
@@ -346,14 +557,15 @@ export const QuizExamSessionPage: React.FC<QuizExamSessionPageProps> = ({
               })}
             </div>
 
-            <div className="pt-3 border-t border-slate-100 dark:border-slate-800 flex gap-2">
+            {/* Footer Buttons */}
+            <div className="pt-2 border-t border-slate-100 dark:border-slate-800 flex gap-2">
               <Button
                 variant="secondary"
                 size="md"
                 fullWidth
                 onClick={() => setIsGridOpen(false)}
               >
-                Back to Exam
+                Back to Item
               </Button>
               <Button
                 variant="success"
@@ -371,45 +583,71 @@ export const QuizExamSessionPage: React.FC<QuizExamSessionPageProps> = ({
         </div>
       )}
 
+      {/* Submission Confirmation Modal */}
       {isSubmitConfirmOpen && (
-        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white dark:bg-slate-900 w-full max-w-sm rounded-xl p-5 text-center space-y-3">
-            <div className="w-10 h-10 rounded-lg bg-amber-100 text-amber-700 flex items-center justify-center mx-auto">
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 animate-fade-in">
+          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 w-full max-w-sm rounded-xl p-5 text-center space-y-3.5 shadow-2xl">
+            <div className="w-10 h-10 rounded-full bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300 flex items-center justify-center mx-auto">
               <AlertTriangle className="w-5 h-5" />
             </div>
 
-            <h3 className="text-base font-bold text-slate-900 dark:text-white">
-              Ready to submit your exam?
-            </h3>
+            <div>
+              <h3 className="text-base font-bold text-slate-900 dark:text-white">
+                Submit Examination?
+              </h3>
+              <p className="text-xs text-slate-500 mt-0.5">
+                Please verify your responses before final grading.
+              </p>
+            </div>
 
-            <div className="bg-slate-50 dark:bg-slate-800/60 rounded-lg p-3 text-xs text-slate-600 dark:text-slate-300 space-y-1">
-              <div className="flex justify-between">
-                <span>Answered:</span>
-                <span className="font-bold text-slate-900 dark:text-white">
-                  {answeredCount} / {questions.length}
+            <div className="bg-slate-50 dark:bg-slate-800/60 rounded-lg p-3 text-xs text-slate-700 dark:text-slate-300 space-y-1.5 border border-slate-200 dark:border-slate-700 text-left">
+              <div className="flex justify-between items-center">
+                <span>Total Items Answered:</span>
+                <span className="font-bold text-slate-900 dark:text-white font-mono">
+                  {answeredCount} of {questions.length}
                 </span>
               </div>
-              <div className="flex justify-between">
-                <span>Unanswered:</span>
-                <span className={`font-bold ${unansweredCount > 0 ? 'text-rose-600' : 'text-slate-500'}`}>
+              <div className="flex justify-between items-center">
+                <span>Unanswered Items:</span>
+                <span className={`font-bold font-mono ${unansweredCount > 0 ? 'text-rose-600 dark:text-rose-400' : 'text-slate-500'}`}>
                   {unansweredCount}
                 </span>
               </div>
               {flaggedIds.size > 0 && (
-                <div className="flex justify-between">
-                  <span>Flagged items:</span>
-                  <span className="font-bold text-amber-600">
+                <div className="flex justify-between items-center">
+                  <span>Flagged for Review:</span>
+                  <span className="font-bold font-mono text-amber-600 dark:text-amber-400">
                     {flaggedIds.size}
                   </span>
                 </div>
               )}
             </div>
 
-            <p className="text-xs text-slate-500">
-              Once submitted, your session will be scored against the 75% PRC passing mark.
+            {unansweredCount > 0 && (
+              <button
+                type="button"
+                onClick={handleReviewUnanswered}
+                className="text-xs font-semibold text-sky-700 dark:text-sky-400 hover:underline block w-full text-center cursor-pointer"
+              >
+                Review Unanswered Items ({unansweredCount}) →
+              </button>
+            )}
+
+            {flaggedIds.size > 0 && (
+              <button
+                type="button"
+                onClick={handleReviewFlagged}
+                className="text-xs font-semibold text-amber-700 dark:text-amber-400 hover:underline block w-full text-center cursor-pointer"
+              >
+                Review Flagged Items ({flaggedIds.size}) →
+              </button>
+            )}
+
+            <p className="text-[11px] text-slate-500 leading-snug">
+              Once submitted, your examination answers will be locked and graded against the 75.00% PRC LET passing standard.
             </p>
 
-            <div className="flex gap-2 pt-2">
+            <div className="flex gap-2 pt-1">
               <Button
                 variant="secondary"
                 size="md"
@@ -426,8 +664,48 @@ export const QuizExamSessionPage: React.FC<QuizExamSessionPageProps> = ({
                   setIsSubmitConfirmOpen(false);
                   calculateAndSubmitResults();
                 }}
+                className="font-bold"
               >
                 Confirm Submit
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Accidental Exit Modal */}
+      {isExitConfirmOpen && (
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 animate-fade-in">
+          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 w-full max-w-sm rounded-xl p-5 text-center space-y-3 shadow-2xl">
+            <div className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 flex items-center justify-center mx-auto">
+              <RotateCcw className="w-5 h-5" />
+            </div>
+
+            <div>
+              <h3 className="text-base font-bold text-slate-900 dark:text-white">
+                Leave Active Examination?
+              </h3>
+              <p className="text-xs text-slate-500 mt-1 leading-relaxed">
+                Your current responses and remaining time are saved in this browser. You can return to resume this exam session.
+              </p>
+            </div>
+
+            <div className="flex gap-2 pt-2">
+              <Button
+                variant="secondary"
+                size="md"
+                fullWidth
+                onClick={() => setIsExitConfirmOpen(false)}
+              >
+                Continue Exam
+              </Button>
+              <Button
+                variant="danger"
+                size="md"
+                fullWidth
+                onClick={onExit}
+              >
+                Exit to Menu
               </Button>
             </div>
           </div>
