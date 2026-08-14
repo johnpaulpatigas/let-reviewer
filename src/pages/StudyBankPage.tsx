@@ -8,7 +8,6 @@ import {
   Play,
   Search,
   ChevronDown,
-  ChevronUp,
   CheckCircle2,
   X,
   BookOpen,
@@ -69,7 +68,7 @@ export const StudyBankPage: React.FC<StudyBankPageProps> = ({
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 animate-fade-in">
       <div>
         <h2 className="text-lg sm:text-xl font-bold text-slate-900 dark:text-white">
           Targeted Study Bank
@@ -188,17 +187,17 @@ export const StudyBankPage: React.FC<StudyBankPageProps> = ({
                   </button>
 
                   <span className="text-slate-400 p-1">
-                    {isExpanded ? (
-                      <ChevronUp className="w-4 h-4" />
-                    ) : (
-                      <ChevronDown className="w-4 h-4" />
-                    )}
+                    <ChevronDown
+                      className={`w-4 h-4 transition-transform duration-200 ${
+                        isExpanded ? 'rotate-180 text-slate-600 dark:text-slate-200' : 'rotate-0'
+                      }`}
+                    />
                   </span>
                 </div>
               </div>
 
               {isExpanded && (
-                <div className="px-3.5 pb-3.5 pt-2 border-t border-slate-100 dark:border-slate-800 bg-slate-50/40 dark:bg-slate-800/20 space-y-2.5 text-xs">
+                <div className="px-3.5 pb-3.5 pt-2 border-t border-slate-100 dark:border-slate-800 bg-slate-50/40 dark:bg-slate-800/20 space-y-2.5 text-xs animate-fade-in">
                   <div className="space-y-1.5">
                     <span className="font-semibold text-slate-600 dark:text-slate-400 block mb-1">
                       Options:

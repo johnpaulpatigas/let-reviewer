@@ -64,7 +64,7 @@ export const ProgressPage: React.FC<ProgressPageProps> = ({
   const profEdStats = computeCategoryStats(profEdSubjects);
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 animate-fade-in">
       <div>
         <h2 className="text-lg sm:text-xl font-bold text-slate-900 dark:text-white">
           Study Progress & Analytics

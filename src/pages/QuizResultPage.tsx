@@ -7,7 +7,6 @@ import {
   RotateCcw,
   Home,
   ChevronDown,
-  ChevronUp,
   Bookmark,
   AlertCircle,
   BookOpen,
@@ -79,7 +78,7 @@ export const QuizResultPage: React.FC<QuizResultPageProps> = ({
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 animate-fade-in">
       <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-5 text-center">
         <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-slate-100 dark:bg-slate-800 mb-2.5">
           {isPassed ? (
@@ -334,17 +333,17 @@ export const QuizResultPage: React.FC<QuizResultPageProps> = ({
                     </button>
 
                     <span className="text-slate-400 p-1">
-                      {isExpanded ? (
-                        <ChevronUp className="w-4 h-4" />
-                      ) : (
-                        <ChevronDown className="w-4 h-4" />
-                      )}
+                      <ChevronDown
+                        className={`w-4 h-4 transition-transform duration-200 ${
+                          isExpanded ? 'rotate-180 text-slate-600 dark:text-slate-200' : 'rotate-0'
+                        }`}
+                      />
                     </span>
                   </div>
                 </div>
 
                 {isExpanded && (
-                  <div className="px-3.5 pb-3.5 pt-1 border-t border-slate-100 dark:border-slate-800 space-y-2.5">
+                  <div className="px-3.5 pb-3.5 pt-1 border-t border-slate-100 dark:border-slate-800 space-y-2.5 animate-fade-in">
                     <div className="space-y-1.5">
                       {q.choices.map((choice, cIdx) => {
                         const isSelected = ans?.selectedAnswer === cIdx;

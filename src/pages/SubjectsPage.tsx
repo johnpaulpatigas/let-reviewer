@@ -118,7 +118,7 @@ export const SubjectsPage: React.FC<SubjectsPageProps> = ({
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 animate-fade-in">
       <div>
         <h2 className="text-lg sm:text-xl font-bold text-slate-900 dark:text-white">
           Subject Directory
