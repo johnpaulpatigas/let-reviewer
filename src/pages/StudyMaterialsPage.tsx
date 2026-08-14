@@ -11,14 +11,11 @@ import {
   Bookmark,
   ChevronRight,
   X,
-  Play,
 } from 'lucide-react';
-import type { StudyMaterial, SubjectCategory, QuizConfig } from '../types';
+import type { StudyMaterial, SubjectCategory } from '../types';
 
 interface StudyMaterialsPageProps {
   onOpenMaterial: (material: StudyMaterial) => void;
-  onStartQuiz: (config: QuizConfig) => void;
-  onStartPracticeMaterial?: (material: StudyMaterial) => void;
   bookmarkedMaterialIds?: string[];
   completedMaterialIds?: string[];
   onToggleMaterialBookmark: (materialId: string) => void;
@@ -26,8 +23,6 @@ interface StudyMaterialsPageProps {
 
 export const StudyMaterialsPage: React.FC<StudyMaterialsPageProps> = ({
   onOpenMaterial,
-  onStartQuiz,
-  onStartPracticeMaterial,
   bookmarkedMaterialIds = [],
   completedMaterialIds = [],
   onToggleMaterialBookmark,
@@ -76,20 +71,6 @@ export const StudyMaterialsPage: React.FC<StudyMaterialsPageProps> = ({
   const completedCount = completedMaterialIds.length;
   const totalCount = ALL_STUDY_MATERIALS.length;
   const progressPercent = Math.round((completedCount / totalCount) * 100);
-
-  const handleQuickPracticeTopic = (e: React.MouseEvent, material: StudyMaterial) => {
-    e.stopPropagation();
-    if (onStartPracticeMaterial) {
-      onStartPracticeMaterial(material);
-    } else {
-      onStartQuiz({
-        mode: 'topic_drill',
-        subjectIds: [material.subjectId],
-        topic: material.topic,
-        questionCount: 15,
-      });
-    }
-  };
 
   return (
     <div className="space-y-4">
@@ -300,29 +281,18 @@ export const StudyMaterialsPage: React.FC<StudyMaterialsPageProps> = ({
               </div>
 
               <div className="pt-2 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs">
-                <div className="flex items-center gap-3 text-slate-500 text-[11px]">
+                <div className="flex items-center gap-2.5 text-slate-500 text-[11px]">
                   <span className="inline-flex items-center gap-1">
                     <Clock className="w-3 h-3" />
-                    {material.readTimeMinutes} mins
+                    {material.readTimeMinutes} mins read
                   </span>
                   <span>•</span>
-                  <span>{qCount > 0 ? `${qCount} related Qs` : 'No questions yet'}</span>
+                  <span>{qCount > 0 ? `${qCount} practice Qs` : 'No questions yet'}</span>
                 </div>
 
-                <div className="flex items-center gap-1.5">
-                  {qCount > 0 ? (
-                    <button
-                      type="button"
-                      onClick={(e) => handleQuickPracticeTopic(e, material)}
-                      className="px-2 py-1 rounded bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-semibold text-[11px] inline-flex items-center gap-1 transition-colors tap-target"
-                    >
-                      <Play className="w-3 h-3 fill-current" />
-                      <span>Practice ({qCount})</span>
-                    </button>
-                  ) : null}
-                  <div className="w-6 h-6 rounded flex items-center justify-center text-slate-400 group-hover:text-indigo-600 group-hover:translate-x-0.5 transition-all">
-                    <ChevronRight className="w-4 h-4" />
-                  </div>
+                <div className="flex items-center gap-1 text-slate-400 group-hover:text-indigo-600 transition-colors">
+                  <span className="text-[11px] font-semibold group-hover:underline">Read</span>
+                  <ChevronRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
                 </div>
               </div>
             </div>

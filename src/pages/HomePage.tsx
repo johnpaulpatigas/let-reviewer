@@ -88,10 +88,10 @@ export const HomePage: React.FC<HomePageProps> = ({
               variant="outline"
               size="md"
               leftIcon={<BrainCircuit className="w-4 h-4" />}
-              onClick={() => onNavigateTab('quiz')}
+              onClick={() => onNavigateTab('practice')}
               className="border-slate-700 text-slate-200 hover:bg-slate-800 hover:text-white"
             >
-              Mock Exam Mode
+              Practice & Mock Exam
             </Button>
           </div>
         </div>
