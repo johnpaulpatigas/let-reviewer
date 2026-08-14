@@ -2,6 +2,8 @@ import React from 'react';
 import {
   ArrowRight,
   BookmarkCheck,
+  BookOpen,
+  GraduationCap,
 } from 'lucide-react';
 import { Button } from '../components/ui/Button';
 import { CategoryBadge } from '../components/ui/Badge';
@@ -31,15 +33,6 @@ export const HomePage: React.FC<HomePageProps> = ({
   const overallAccuracy =
     totalAnswered > 0 ? Math.round((totalCorrect / totalAnswered) * 100) : 0;
 
-  const handleStartQuickMix = () => {
-    onStartQuiz({
-      mode: 'practice',
-      subjectIds: [],
-      category: 'all',
-      questionCount: 10,
-    });
-  };
-
   const handleStartCategoryPractice = (category: SubjectCategory) => {
     onStartQuiz({
       mode: 'practice',
@@ -63,30 +56,23 @@ export const HomePage: React.FC<HomePageProps> = ({
         </div>
 
         {/* Primary Action Buttons */}
-        <div className="flex flex-col sm:flex-row gap-2 pt-1">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-1">
           <Button
             variant="primary"
-            size="md"
-            onClick={handleStartQuickMix}
-            className="flex-1"
-          >
-            Start Quick Practice (10 Items)
-          </Button>
-
-          <Button
-            variant="secondary"
-            size="md"
+            size="lg"
+            leftIcon={<BookOpen className="w-4 h-4 stroke-[2.25] shrink-0" />}
             onClick={() => onNavigateTab('materials')}
-            className="flex-1"
+            className="w-full text-center justify-center font-semibold"
           >
             Study Guides & Notes
           </Button>
 
           <Button
-            variant="outline"
-            size="md"
+            variant="primary"
+            size="lg"
+            leftIcon={<GraduationCap className="w-4 h-4 stroke-[2.25] shrink-0" />}
             onClick={() => onNavigateTab('practice')}
-            className="flex-1"
+            className="w-full text-center justify-center font-semibold"
           >
             Mock Exam & Practice
           </Button>
