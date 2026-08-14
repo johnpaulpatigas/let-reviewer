@@ -140,7 +140,7 @@ export const SubjectsPage: React.FC<SubjectsPageProps> = ({
           <button
             type="button"
             onClick={handleBackToDirectory}
-            className="inline-flex items-center gap-1 text-xs font-bold text-indigo-600 dark:text-indigo-400 hover:underline tap-target py-1 -ml-1 cursor-pointer group"
+            className="inline-flex items-center gap-1 text-xs font-semibold text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:underline tap-target py-1 -ml-1 cursor-pointer group"
           >
             <ChevronLeft className="w-4 h-4 transition-transform duration-150 group-hover:-translate-x-0.5" />
             <span>Back to Subjects</span>
@@ -150,11 +150,11 @@ export const SubjectsPage: React.FC<SubjectsPageProps> = ({
         </div>
 
         {/* Subject Identity & Overview Card */}
-        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-4 sm:p-5 space-y-3.5 shadow-xs">
+        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg p-4 sm:p-5 space-y-3.5">
           <div className="flex items-start justify-between gap-3">
             <div className="flex items-center gap-3">
               <div
-                className={`w-11 h-11 rounded-xl flex items-center justify-center ${activeSubjectDetails.colorScheme.bg} ${activeSubjectDetails.colorScheme.text} border ${activeSubjectDetails.colorScheme.border} shrink-0`}
+                className={`w-10 h-10 rounded-md flex items-center justify-center ${activeSubjectDetails.colorScheme.bg} ${activeSubjectDetails.colorScheme.text} border ${activeSubjectDetails.colorScheme.border} shrink-0`}
               >
                 <IconHelper name={activeSubjectDetails.iconName} className="w-5 h-5" />
               </div>
@@ -163,15 +163,15 @@ export const SubjectsPage: React.FC<SubjectsPageProps> = ({
                   {activeSubjectDetails.name}
                 </h2>
                 <div className="flex items-center gap-2 mt-1 text-xs text-slate-500">
-                  <span className="font-medium">{subjectQuestionCounts[activeSubjectDetails.id] || 0} Questions</span>
+                  <span className="font-medium font-mono">{subjectQuestionCounts[activeSubjectDetails.id] || 0}</span> Questions
                   <span>•</span>
-                  <span className="font-medium">{activeGuides.length} Study Guides</span>
+                  <span className="font-medium font-mono">{activeGuides.length}</span> Study Guides
                 </div>
               </div>
             </div>
 
             {mastery > 0 ? (
-              <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400 px-2 py-0.5 bg-emerald-50 dark:bg-emerald-950/60 rounded shrink-0">
+              <span className="text-xs font-bold text-emerald-700 dark:text-emerald-300 px-2 py-0.5 bg-emerald-50 dark:bg-emerald-950/60 rounded shrink-0">
                 {mastery}% Mastery
               </span>
             ) : null}
@@ -198,7 +198,7 @@ export const SubjectsPage: React.FC<SubjectsPageProps> = ({
         <div className="space-y-2.5">
           <div className="flex items-center justify-between">
             <h3 className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
-              <BookOpen className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" />
+              <BookOpen className="w-3.5 h-3.5 text-slate-600 dark:text-slate-400" />
               <span>Study Guides & Notes ({activeGuides.length})</span>
             </h3>
           </div>
@@ -209,13 +209,13 @@ export const SubjectsPage: React.FC<SubjectsPageProps> = ({
                 <div
                   key={guide.id}
                   onClick={() => handleSelectMaterial(guide)}
-                  className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 rounded-xl p-3.5 sm:p-4 transition-all duration-150 active:scale-[0.99] hover:shadow-xs cursor-pointer group flex items-center justify-between gap-3"
+                  className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-slate-400 dark:hover:border-slate-600 rounded-lg p-3.5 sm:p-4 transition-all duration-150 active:scale-[0.99] cursor-pointer group flex items-center justify-between gap-3"
                 >
                   <div className="min-w-0 flex-1">
-                    <div className="text-[10px] font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-wider mb-0.5">
+                    <div className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider mb-0.5">
                       {guide.topic}
                     </div>
-                    <h4 className="text-xs sm:text-sm font-semibold text-slate-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors line-clamp-1">
+                    <h4 className="text-xs sm:text-sm font-semibold text-slate-900 dark:text-white group-hover:text-slate-700 dark:group-hover:text-slate-200 transition-colors line-clamp-1">
                       {guide.title}
                     </h4>
                     <div className="flex items-center gap-2 mt-1 text-[11px] text-slate-500">
@@ -225,7 +225,7 @@ export const SubjectsPage: React.FC<SubjectsPageProps> = ({
                       </span>
                     </div>
                   </div>
-                  <div className="flex items-center gap-1 text-slate-400 group-hover:text-indigo-600 transition-colors shrink-0">
+                  <div className="flex items-center gap-1 text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white transition-colors shrink-0">
                     <span className="text-xs font-semibold hidden xs:inline">Read</span>
                     <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
                   </div>
@@ -233,14 +233,14 @@ export const SubjectsPage: React.FC<SubjectsPageProps> = ({
               ))}
             </div>
           ) : (
-            <div className="p-5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-center text-xs text-slate-500">
+            <div className="p-5 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-center text-xs text-slate-500">
               No study guides available for this subject yet.
             </div>
           )}
         </div>
 
         {/* Core Competencies & Topics Tested */}
-        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-4 space-y-2">
+        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg p-4 space-y-2">
           <h3 className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">
             Core Competencies & Topics Tested
           </h3>
@@ -263,11 +263,11 @@ export const SubjectsPage: React.FC<SubjectsPageProps> = ({
   return (
     <div className="space-y-4 animate-fade-in">
       <div>
-        <h2 className="text-lg sm:text-xl font-bold text-slate-900 dark:text-white">
+        <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
           Subject Directory
-        </h2>
-        <p className="text-xs text-slate-500 mt-0.5">
-          Browse by subject domain to access structured guides and question pools.
+        </h1>
+        <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-1 leading-relaxed">
+          Explore board exam subjects, core curriculum competencies, and corresponding practice pools.
         </p>
       </div>
 
@@ -278,26 +278,26 @@ export const SubjectsPage: React.FC<SubjectsPageProps> = ({
           placeholder="Search subjects or competencies..."
           value={searchQuery}
           onChange={(e) => handleSearchChange(e.target.value)}
-          className="w-full h-10 pl-9 pr-9 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg text-xs sm:text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:border-indigo-500 transition-colors"
+          className="w-full h-9 pl-9 pr-9 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-md text-xs sm:text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:border-slate-500 transition-colors"
         />
         {searchQuery && (
           <button
             type="button"
             onClick={() => handleSearchChange('')}
-            className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-1"
+            className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-1 cursor-pointer"
           >
             <X className="w-3.5 h-3.5" />
           </button>
         )}
       </div>
 
-      <div className="flex gap-1.5 p-1 bg-slate-100 dark:bg-slate-900 rounded-lg">
+      <div className="flex gap-1 p-1 bg-slate-100 dark:bg-slate-900 rounded-md">
         <button
           type="button"
           onClick={() => handleCategorySelect('all')}
-          className={`flex-1 py-1.5 px-3 text-xs font-semibold rounded transition-colors tap-target ${
+          className={`flex-1 py-1.5 px-3 text-xs font-medium rounded transition-colors tap-target cursor-pointer ${
             selectedCategory === 'all'
-              ? 'bg-white dark:bg-slate-800 text-indigo-600 dark:text-indigo-400 shadow-sm font-bold'
+              ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 font-bold'
               : 'text-slate-600 dark:text-slate-400 hover:text-slate-900'
           }`}
         >
@@ -306,9 +306,9 @@ export const SubjectsPage: React.FC<SubjectsPageProps> = ({
         <button
           type="button"
           onClick={() => handleCategorySelect('gen_ed')}
-          className={`flex-1 py-1.5 px-3 text-xs font-semibold rounded transition-colors tap-target ${
+          className={`flex-1 py-1.5 px-3 text-xs font-medium rounded transition-colors tap-target cursor-pointer ${
             selectedCategory === 'gen_ed'
-              ? 'bg-white dark:bg-slate-800 text-sky-600 dark:text-sky-400 shadow-sm font-bold'
+              ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 font-bold'
               : 'text-slate-600 dark:text-slate-400 hover:text-slate-900'
           }`}
         >
@@ -317,9 +317,9 @@ export const SubjectsPage: React.FC<SubjectsPageProps> = ({
         <button
           type="button"
           onClick={() => handleCategorySelect('prof_ed')}
-          className={`flex-1 py-1.5 px-3 text-xs font-semibold rounded transition-colors tap-target ${
+          className={`flex-1 py-1.5 px-3 text-xs font-medium rounded transition-colors tap-target cursor-pointer ${
             selectedCategory === 'prof_ed'
-              ? 'bg-white dark:bg-slate-800 text-indigo-600 dark:text-indigo-400 shadow-sm font-bold'
+              ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 font-bold'
               : 'text-slate-600 dark:text-slate-400 hover:text-slate-900'
           }`}
         >
@@ -361,7 +361,7 @@ export const SubjectsPage: React.FC<SubjectsPageProps> = ({
       )}
 
       {filteredSubjects.length === 0 && (
-        <div className="text-center py-10 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-6">
+        <div className="text-center py-10 bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-800 p-6">
           <Layers className="w-8 h-8 text-slate-400 mx-auto mb-2" />
           <h3 className="font-bold text-slate-800 dark:text-slate-200 text-sm">No subjects found</h3>
           <p className="text-xs text-slate-500 mt-0.5">
