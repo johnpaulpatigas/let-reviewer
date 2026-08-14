@@ -264,8 +264,14 @@ export const StudyMaterialReader: React.FC<StudyMaterialReaderProps> = ({
             Reinforce this Topic with Exam Questions
           </h3>
           <p className="text-xs text-slate-300 mt-0.5">
-            Test your comprehension with {relatedQuestionCount} authentic LET questions for{' '}
-            <span className="font-semibold text-indigo-300">{material.topic}</span>.
+            {relatedQuestionCount > 0 ? (
+              <>
+                Test your comprehension with {relatedQuestionCount} authentic LET questions for{' '}
+                <span className="font-semibold text-indigo-300">{material.topic}</span>.
+              </>
+            ) : (
+              <>No practice questions are currently available for this topic in the question bank.</>
+            )}
           </p>
         </div>
 
@@ -274,10 +280,13 @@ export const StudyMaterialReader: React.FC<StudyMaterialReaderProps> = ({
             variant="primary"
             size="md"
             fullWidth
+            disabled={relatedQuestionCount === 0}
             leftIcon={<Play className="w-4 h-4 fill-current" />}
             onClick={() => onStartPractice(material)}
           >
-            Practice This Topic ({relatedQuestionCount} Qs)
+            {relatedQuestionCount > 0
+              ? `Practice This Topic (${relatedQuestionCount} Qs)`
+              : 'No Practice Questions Available'}
           </Button>
           <Button
             variant="secondary"

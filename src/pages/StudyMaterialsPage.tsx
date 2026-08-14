@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { ALL_STUDY_MATERIALS } from '../data/study-materials';
+import { ALL_STUDY_MATERIALS, getQuestionsForStudyMaterial } from '../data/study-materials';
 import { ALL_QUESTIONS } from '../data/questions';
 import { SUBJECTS } from '../data/subjects';
 import { CategoryBadge } from '../components/ui/Badge';
@@ -18,6 +18,7 @@ import type { StudyMaterial, SubjectCategory, QuizConfig } from '../types';
 interface StudyMaterialsPageProps {
   onOpenMaterial: (material: StudyMaterial) => void;
   onStartQuiz: (config: QuizConfig) => void;
+  onStartPracticeMaterial?: (material: StudyMaterial) => void;
   bookmarkedMaterialIds?: string[];
   completedMaterialIds?: string[];
   onToggleMaterialBookmark: (materialId: string) => void;
@@ -26,6 +27,7 @@ interface StudyMaterialsPageProps {
 export const StudyMaterialsPage: React.FC<StudyMaterialsPageProps> = ({
   onOpenMaterial,
   onStartQuiz,
+  onStartPracticeMaterial,
   bookmarkedMaterialIds = [],
   completedMaterialIds = [],
   onToggleMaterialBookmark,
@@ -34,12 +36,11 @@ export const StudyMaterialsPage: React.FC<StudyMaterialsPageProps> = ({
   const [selectedSubjectId, setSelectedSubjectId] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState('');
 
-  // Map topic / subject to questions count
+  // Dynamically compute the question count for each study material directly from the question bank
   const questionCountMap = useMemo(() => {
     const map: Record<string, number> = {};
-    ALL_QUESTIONS.forEach((q) => {
-      map[q.topic] = (map[q.topic] || 0) + 1;
-      map[q.subjectId] = (map[q.subjectId] || 0) + 1;
+    ALL_STUDY_MATERIALS.forEach((material) => {
+      map[material.id] = getQuestionsForStudyMaterial(material, ALL_QUESTIONS).length;
     });
     return map;
   }, []);
@@ -78,12 +79,16 @@ export const StudyMaterialsPage: React.FC<StudyMaterialsPageProps> = ({
 
   const handleQuickPracticeTopic = (e: React.MouseEvent, material: StudyMaterial) => {
     e.stopPropagation();
-    onStartQuiz({
-      mode: 'topic_drill',
-      subjectIds: [material.subjectId],
-      topic: material.topic,
-      questionCount: 10,
-    });
+    if (onStartPracticeMaterial) {
+      onStartPracticeMaterial(material);
+    } else {
+      onStartQuiz({
+        mode: 'topic_drill',
+        subjectIds: [material.subjectId],
+        topic: material.topic,
+        questionCount: 15,
+      });
+    }
   };
 
   return (
@@ -243,7 +248,7 @@ export const StudyMaterialsPage: React.FC<StudyMaterialsPageProps> = ({
         {filteredMaterials.map((material) => {
           const isCompleted = completedMaterialIds.includes(material.id);
           const isBookmarked = bookmarkedMaterialIds.includes(material.id);
-          const qCount = questionCountMap[material.topic] || questionCountMap[material.subjectId] || 0;
+          const qCount = questionCountMap[material.id] ?? 0;
 
           return (
             <div
@@ -301,20 +306,20 @@ export const StudyMaterialsPage: React.FC<StudyMaterialsPageProps> = ({
                     {material.readTimeMinutes} mins
                   </span>
                   <span>•</span>
-                  <span>{qCount} related Qs</span>
+                  <span>{qCount > 0 ? `${qCount} related Qs` : 'No questions yet'}</span>
                 </div>
 
                 <div className="flex items-center gap-1.5">
-                  {qCount > 0 && (
+                  {qCount > 0 ? (
                     <button
                       type="button"
                       onClick={(e) => handleQuickPracticeTopic(e, material)}
                       className="px-2 py-1 rounded bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-semibold text-[11px] inline-flex items-center gap-1 transition-colors tap-target"
                     >
                       <Play className="w-3 h-3 fill-current" />
-                      <span>Practice</span>
+                      <span>Practice ({qCount})</span>
                     </button>
-                  )}
+                  ) : null}
                   <div className="w-6 h-6 rounded flex items-center justify-center text-slate-400 group-hover:text-indigo-600 group-hover:translate-x-0.5 transition-all">
                     <ChevronRight className="w-4 h-4" />
                   </div>

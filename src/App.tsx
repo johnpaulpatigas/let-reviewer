@@ -12,7 +12,11 @@ import { StudyBankPage } from './pages/StudyBankPage';
 import { ProgressPage } from './pages/ProgressPage';
 import { useStudyStats } from './hooks/useStudyStats';
 import { buildQuizQuestions, ALL_QUESTIONS } from './data/questions';
-import { findStudyMaterialForTopic } from './data/study-materials';
+import {
+  findStudyMaterialForTopic,
+  getQuestionsForStudyMaterial,
+  getRelatedQuestionCount,
+} from './data/study-materials';
 import { SUBJECTS } from './data/subjects';
 import type { NavigationTab, QuizConfig, QuizResult, Question, StudyMaterial } from './types';
 
@@ -88,14 +92,24 @@ export default function App() {
     }
   };
 
-  // Start practice session directly from study guide
+  // Start practice session directly from study guide with exact matching questions
   const handleStartTopicPractice = (material: StudyMaterial) => {
+    const matchingQuestions = getQuestionsForStudyMaterial(material, ALL_QUESTIONS);
+    if (matchingQuestions.length === 0) {
+      alert('No practice questions are currently available for this study topic.');
+      return;
+    }
+
     setActiveMaterial(null);
-    handleStartQuiz({
-      mode: 'topic_drill',
-      subjectIds: [material.subjectId],
-      topic: material.topic,
-      questionCount: 15,
+    setActiveResult(null);
+    setActiveSession({
+      config: {
+        mode: 'topic_drill',
+        subjectIds: [material.subjectId],
+        topic: material.topic,
+        questionCount: matchingQuestions.length,
+      },
+      questions: matchingQuestions,
     });
   };
 
@@ -160,11 +174,7 @@ export default function App() {
       {activeMaterial ? (
         <StudyMaterialReader
           material={activeMaterial}
-          relatedQuestionCount={
-            ALL_QUESTIONS.filter(
-              (q) => q.topic === activeMaterial.topic || q.subjectId === activeMaterial.subjectId
-            ).length
-          }
+          relatedQuestionCount={getRelatedQuestionCount(activeMaterial, ALL_QUESTIONS)}
           isBookmarked={(stats.bookmarkedMaterialIds || []).includes(activeMaterial.id)}
           isCompleted={(stats.completedMaterialIds || []).includes(activeMaterial.id)}
           onToggleBookmark={toggleMaterialBookmark}
@@ -230,6 +240,7 @@ export default function App() {
             <StudyMaterialsPage
               onOpenMaterial={handleOpenMaterial}
               onStartQuiz={handleStartQuiz}
+              onStartPracticeMaterial={handleStartTopicPractice}
               bookmarkedMaterialIds={stats.bookmarkedMaterialIds}
               completedMaterialIds={stats.completedMaterialIds}
               onToggleMaterialBookmark={toggleMaterialBookmark}
