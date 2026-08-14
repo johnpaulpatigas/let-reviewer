@@ -4,7 +4,6 @@ import {
   BookmarkCheck,
   BookOpen,
   GraduationCap,
-  Flame,
 } from 'lucide-react';
 import { Button } from '../components/ui/Button';
 import { CategoryBadge } from '../components/ui/Badge';
@@ -15,7 +14,6 @@ import type { QuizConfig, SubjectCategory, NavigationTab } from '../types';
 interface HomePageProps {
   onStartQuiz: (config: QuizConfig) => void;
   onNavigateTab: (tab: NavigationTab) => void;
-  streakDays?: number;
   totalAnswered?: number;
   totalCorrect?: number;
   bookmarkedCount?: number;
@@ -25,7 +23,6 @@ interface HomePageProps {
 export const HomePage: React.FC<HomePageProps> = ({
   onStartQuiz,
   onNavigateTab,
-  streakDays = 1,
   totalAnswered = 0,
   totalCorrect = 0,
   bookmarkedCount = 0,
@@ -88,11 +85,14 @@ export const HomePage: React.FC<HomePageProps> = ({
           <div>
             <span className="font-semibold text-slate-900 dark:text-white font-mono">{totalAnswered}</span> solved ({overallAccuracy}% accuracy)
           </div>
-          <span className="text-slate-300 dark:text-slate-700">•</span>
-          <div className="flex items-center gap-1">
-            <Flame className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400 fill-amber-600 dark:fill-amber-400" />
-            <span className="font-semibold text-slate-900 dark:text-white font-mono">{streakDays}</span> day streak
-          </div>
+          {totalCorrect > 0 && (
+            <>
+              <span className="text-slate-300 dark:text-slate-700">•</span>
+              <div>
+                <span className="font-semibold text-emerald-700 dark:text-emerald-400 font-mono">{totalCorrect}</span> correct
+              </div>
+            </>
+          )}
         </div>
       </section>
 

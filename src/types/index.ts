@@ -134,8 +134,6 @@ export interface StudyMaterial {
 export interface UserStudyStats {
   totalAnswered: number;
   totalCorrect: number;
-  streakDays: number;
-  lastStudyDate: string; // YYYY-MM-DD
   subjectMastery: Record<string, { answered: number; correct: number }>;
   bookmarkedQuestionIds: string[];
   missedQuestionIds: string[];

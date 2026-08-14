@@ -26,7 +26,6 @@ export const ProgressPage: React.FC<ProgressPageProps> = ({
   const {
     totalAnswered,
     totalCorrect,
-    streakDays,
     subjectMastery,
     quizHistory = [],
     bookmarkedQuestionIds = [],
@@ -126,9 +125,9 @@ export const ProgressPage: React.FC<ProgressPageProps> = ({
             </span>
           </div>
           <div>
-            <span className="text-[11px] text-slate-500 block">Study Streak</span>
-            <span className="text-sm sm:text-base font-bold text-amber-700 dark:text-amber-400 font-mono">
-              {streakDays}d
+            <span className="text-[11px] text-slate-500 block">Missed for Review</span>
+            <span className="text-sm sm:text-base font-bold text-rose-700 dark:text-rose-400 font-mono">
+              {missedQuestionIds.length}
             </span>
           </div>
         </div>
@@ -327,7 +326,7 @@ export const ProgressPage: React.FC<ProgressPageProps> = ({
         ) : (
           <div className="p-3 bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900 rounded-lg space-y-2">
             <p className="text-xs text-rose-800 dark:text-rose-300 font-semibold">
-              Are you sure? This will delete all question answers, streaks, and exam history.
+              Are you sure? This will delete all question answers, session logs, and mastery history.
             </p>
             <div className="flex justify-center gap-2">
               <Button

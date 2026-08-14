@@ -178,7 +178,6 @@ export default function App() {
       sessionTitle={getSessionTitle()}
       sessionSubtitle={getSessionSubtitle()}
       onBack={handleExitSession}
-      streakDays={stats.streakDays}
       totalAnswered={stats.totalAnswered}
       bankCount={stats.bookmarkedQuestionIds.length}
       hideNav={hideNav}
@@ -241,7 +240,6 @@ export default function App() {
             <HomePage
               onStartQuiz={handleStartQuiz}
               onNavigateTab={(tab) => setCurrentTab(tab)}
-              streakDays={stats.streakDays}
               totalAnswered={stats.totalAnswered}
               totalCorrect={stats.totalCorrect}
               bookmarkedCount={stats.bookmarkedQuestionIds.length}

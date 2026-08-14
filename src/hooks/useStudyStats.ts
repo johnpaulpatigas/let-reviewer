@@ -4,12 +4,9 @@ import type { UserStudyStats, QuizResult } from '../types';
 const STORAGE_KEY = 'let_reviewer_study_stats_v1';
 
 const getInitialStats = (): UserStudyStats => {
-  const today = new Date().toISOString().split('T')[0];
   const defaultData: UserStudyStats = {
     totalAnswered: 0,
     totalCorrect: 0,
-    streakDays: 1,
-    lastStudyDate: today,
     subjectMastery: {},
     bookmarkedQuestionIds: [],
     missedQuestionIds: [],
@@ -23,22 +20,6 @@ const getInitialStats = (): UserStudyStats => {
     const saved = localStorage.getItem(STORAGE_KEY);
     if (saved) {
       const parsed: UserStudyStats = JSON.parse(saved);
-      // Check streak during initialization
-      if (parsed.lastStudyDate !== today) {
-        const lastDate = new Date(parsed.lastStudyDate);
-        const currentDate = new Date(today);
-        const diffTime = Math.abs(currentDate.getTime() - lastDate.getTime());
-        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
-        return {
-          ...parsed,
-          readMaterialIds: parsed.readMaterialIds || [],
-          completedMaterialIds: parsed.completedMaterialIds || [],
-          bookmarkedMaterialIds: parsed.bookmarkedMaterialIds || [],
-          lastStudyDate: today,
-          streakDays: diffDays === 1 ? parsed.streakDays + 1 : 1,
-        };
-      }
       return {
         ...parsed,
         readMaterialIds: parsed.readMaterialIds || [],
@@ -160,12 +141,9 @@ export function useStudyStats() {
   }, []);
 
   const clearStats = useCallback(() => {
-    const today = new Date().toISOString().split('T')[0];
     const freshStats: UserStudyStats = {
       totalAnswered: 0,
       totalCorrect: 0,
-      streakDays: 1,
-      lastStudyDate: today,
       subjectMastery: {},
       bookmarkedQuestionIds: [],
       missedQuestionIds: [],

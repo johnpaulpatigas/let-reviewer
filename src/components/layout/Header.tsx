@@ -1,5 +1,5 @@
 import React from 'react';
-import { Flame, ChevronLeft, Award } from 'lucide-react';
+import { ChevronLeft, Award } from 'lucide-react';
 import type { NavigationTab } from '../../types';
 
 interface HeaderProps {
@@ -8,7 +8,6 @@ interface HeaderProps {
   sessionTitle?: string;
   sessionSubtitle?: string;
   onBack?: () => void;
-  streakDays?: number;
   totalAnswered?: number;
 }
 
@@ -17,7 +16,6 @@ export const Header: React.FC<HeaderProps> = ({
   sessionTitle,
   sessionSubtitle,
   onBack,
-  streakDays = 1,
   totalAnswered = 0,
 }) => {
   return (
@@ -60,16 +58,12 @@ export const Header: React.FC<HeaderProps> = ({
               </div>
             </div>
 
-            {/* Quick Stats Summary */}
-            <div className="flex items-center gap-2">
-              <div className="flex items-center gap-1.5 px-2.5 py-1 bg-slate-100 dark:bg-slate-800 rounded text-slate-700 dark:text-slate-300 text-xs font-semibold">
-                <Flame className="w-3.5 h-3.5 fill-amber-500 text-amber-500" />
-                <span>{streakDays}d streak</span>
+            {/* Questions Solved Progress */}
+            {totalAnswered > 0 && (
+              <div className="flex items-center gap-1 px-2.5 py-1 bg-slate-100 dark:bg-slate-800 rounded text-slate-700 dark:text-slate-300 text-xs font-medium border border-slate-200 dark:border-slate-700">
+                <span className="font-mono font-bold text-slate-900 dark:text-white">{totalAnswered}</span> solved
               </div>
-              <div className="hidden xs:flex items-center gap-1 px-2.5 py-1 bg-slate-100 dark:bg-slate-800 rounded text-slate-700 dark:text-slate-300 text-xs font-medium">
-                <span className="font-mono">{totalAnswered}</span> solved
-              </div>
-            </div>
+            )}
           </>
         )}
       </div>

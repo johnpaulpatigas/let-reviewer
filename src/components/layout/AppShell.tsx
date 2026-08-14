@@ -11,7 +11,6 @@ interface AppShellProps {
   sessionTitle?: string;
   sessionSubtitle?: string;
   onBack?: () => void;
-  streakDays?: number;
   totalAnswered?: number;
   bankCount?: number;
   hideNav?: boolean;
@@ -25,7 +24,6 @@ export const AppShell: React.FC<AppShellProps> = ({
   sessionTitle,
   sessionSubtitle,
   onBack,
-  streakDays = 1,
   totalAnswered = 0,
   bankCount = 0,
   hideNav = false,
@@ -38,7 +36,6 @@ export const AppShell: React.FC<AppShellProps> = ({
         sessionTitle={sessionTitle}
         sessionSubtitle={sessionSubtitle}
         onBack={onBack}
-        streakDays={streakDays}
         totalAnswered={totalAnswered}
       />
 
