@@ -89,6 +89,47 @@ export interface QuizResult {
   timestamp: number;
 }
 
+export interface KeyTerm {
+  term: string;
+  definition: string;
+}
+
+export interface ComparisonTable {
+  headers: string[];
+  rows: string[][];
+}
+
+export interface StudySection {
+  heading: string;
+  paragraphs: string[];
+  bulletPoints?: string[];
+  keyConcept?: string;
+  example?: {
+    scenario: string;
+    analysis: string;
+  };
+  comparisonTable?: ComparisonTable;
+}
+
+export interface StudyMaterial {
+  id: string;
+  slug: string;
+  title: string;
+  subjectId: string;
+  subjectName: string;
+  category: SubjectCategory;
+  topic: string;
+  description: string;
+  readTimeMinutes: number;
+  overview: string;
+  sections: StudySection[];
+  keyTerms?: KeyTerm[];
+  letTips?: string[];
+  commonMistakes?: string[];
+  summaryPoints?: string[];
+  relatedQuestionIds?: string[];
+}
+
 export interface UserStudyStats {
   totalAnswered: number;
   totalCorrect: number;
@@ -98,6 +139,10 @@ export interface UserStudyStats {
   bookmarkedQuestionIds: string[];
   missedQuestionIds: string[];
   quizHistory: QuizResult[];
+  readMaterialIds?: string[];
+  completedMaterialIds?: string[];
+  bookmarkedMaterialIds?: string[];
 }
 
-export type NavigationTab = 'home' | 'subjects' | 'quiz' | 'bank' | 'progress';
+export type NavigationTab = 'home' | 'materials' | 'subjects' | 'quiz' | 'bank' | 'progress';
+

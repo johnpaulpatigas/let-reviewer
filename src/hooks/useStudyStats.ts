@@ -14,6 +14,9 @@ const getInitialStats = (): UserStudyStats => {
     bookmarkedQuestionIds: [],
     missedQuestionIds: [],
     quizHistory: [],
+    readMaterialIds: [],
+    completedMaterialIds: [],
+    bookmarkedMaterialIds: [],
   };
 
   try {
@@ -29,11 +32,19 @@ const getInitialStats = (): UserStudyStats => {
 
         return {
           ...parsed,
+          readMaterialIds: parsed.readMaterialIds || [],
+          completedMaterialIds: parsed.completedMaterialIds || [],
+          bookmarkedMaterialIds: parsed.bookmarkedMaterialIds || [],
           lastStudyDate: today,
           streakDays: diffDays === 1 ? parsed.streakDays + 1 : 1,
         };
       }
-      return parsed;
+      return {
+        ...parsed,
+        readMaterialIds: parsed.readMaterialIds || [],
+        completedMaterialIds: parsed.completedMaterialIds || [],
+        bookmarkedMaterialIds: parsed.bookmarkedMaterialIds || [],
+      };
     }
   } catch {
     // fallback
@@ -63,6 +74,45 @@ export function useStudyStats() {
       return {
         ...prev,
         bookmarkedQuestionIds: updated,
+      };
+    });
+  }, []);
+
+  const toggleMaterialBookmark = useCallback((materialId: string) => {
+    setStats((prev) => {
+      const current = prev.bookmarkedMaterialIds || [];
+      const isBookmarked = current.includes(materialId);
+      const updated = isBookmarked
+        ? current.filter((id) => id !== materialId)
+        : [...current, materialId];
+
+      return {
+        ...prev,
+        bookmarkedMaterialIds: updated,
+      };
+    });
+  }, []);
+
+  const markMaterialCompleted = useCallback((materialId: string) => {
+    setStats((prev) => {
+      const completed = prev.completedMaterialIds || [];
+      if (completed.includes(materialId)) return prev;
+
+      return {
+        ...prev,
+        completedMaterialIds: [...completed, materialId],
+      };
+    });
+  }, []);
+
+  const markMaterialRead = useCallback((materialId: string) => {
+    setStats((prev) => {
+      const read = prev.readMaterialIds || [];
+      if (read.includes(materialId)) return prev;
+
+      return {
+        ...prev,
+        readMaterialIds: [...read, materialId],
       };
     });
   }, []);
@@ -97,7 +147,7 @@ export function useStudyStats() {
         totalCorrect: prev.totalCorrect + result.correctCount,
         subjectMastery: newSubjectMastery,
         missedQuestionIds: Array.from(newMissed),
-        quizHistory: [result, ...prev.quizHistory].slice(0, 30), // keep last 30 quizzes
+        quizHistory: [result, ...prev.quizHistory].slice(0, 30),
       };
     });
   }, []);
@@ -113,6 +163,9 @@ export function useStudyStats() {
       bookmarkedQuestionIds: [],
       missedQuestionIds: [],
       quizHistory: [],
+      readMaterialIds: [],
+      completedMaterialIds: [],
+      bookmarkedMaterialIds: [],
     };
     setStats(freshStats);
     try {
@@ -125,6 +178,9 @@ export function useStudyStats() {
   return {
     stats,
     toggleBookmark,
+    toggleMaterialBookmark,
+    markMaterialCompleted,
+    markMaterialRead,
     recordQuizResult,
     clearStats,
   };
