@@ -119,6 +119,7 @@ export interface StudyMaterial {
   subjectName: string;
   category: SubjectCategory;
   topic: string;
+  relatedTopics?: string[];
   description: string;
   readTimeMinutes: number;
   overview: string;

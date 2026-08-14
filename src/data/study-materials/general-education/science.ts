@@ -5,10 +5,11 @@ export const SCIENCE_STUDY_MATERIALS: StudyMaterial[] = [
     id: 'mat-gen-sci-001',
     slug: 'cellular-biology-genetics-and-photosynthesis',
     title: 'Cellular Biology, Photosynthesis, and Mendelian Genetics',
-    subjectId: 'science',
+    subjectId: 'gen-sci',
     subjectName: 'Natural Sciences',
     category: 'gen_ed',
-    topic: 'Biological Sciences',
+    topic: 'Cellular Biology & Ecology',
+    relatedTopics: ['Physics & Motion', 'Chemistry & Matter', 'Earth & Space Sciences'],
     description: 'Cell organelles, Mitosis vs. Meiosis, Light and Dark reactions in Photosynthesis, and Punnett Square genetics.',
     readTimeMinutes: 7,
     overview:

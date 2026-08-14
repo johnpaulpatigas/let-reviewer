@@ -5,10 +5,11 @@ export const CURRICULUM_STUDY_MATERIALS: StudyMaterial[] = [
     id: 'mat-prof-curr-001',
     slug: 'types-of-curriculum-and-development-models',
     title: 'Curriculum Development: Types of Curriculum, Tyler, Taba, and Spiral Progression',
-    subjectId: 'curriculum',
+    subjectId: 'prof-curriculum',
     subjectName: 'Curriculum Development',
     category: 'prof_ed',
-    topic: 'Curriculum Development & Spiral Progression',
+    topic: 'Curriculum Models & Theorists',
+    relatedTopics: ['Types of Curriculum', 'K to 12 Framework & Matatag Curriculum'],
     description: 'Operating types of curriculum (written, taught, hidden, null), Ralph Tyler vs. Hilda Taba models, and K-12 spiral progression.',
     readTimeMinutes: 7,
     overview:

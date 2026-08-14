@@ -5,10 +5,11 @@ export const EDTECH_STUDY_MATERIALS: StudyMaterial[] = [
     id: 'mat-prof-tech-001',
     slug: 'samr-model-tpack-and-dales-cone-of-experience',
     title: "Educational Technology: SAMR Model, TPACK Framework, and Edgar Dale's Cone of Experience",
-    subjectId: 'educational-technology',
-    subjectName: 'Educational Technology',
+    subjectId: 'prof-edtech',
+    subjectName: 'Educational Technology & 21st Century Skills',
     category: 'prof_ed',
-    topic: 'Educational Technology',
+    topic: 'TPACK & SAMR Models',
+    relatedTopics: ['Dale’s Cone of Experience', '21st Century Skills Framework'],
     description: 'Frameworks for technology integration, SAMR levels, TPACK intersections, and sensory learning retention rates.',
     readTimeMinutes: 6,
     overview:
@@ -70,7 +71,7 @@ export const EDTECH_STUDY_MATERIALS: StudyMaterial[] = [
     letTips: [
       'In Dale’s Cone, DIRECT PURPOSEFUL EXPERIENCES provide the highest retention and sensory engagement.',
       'A globe or a working model of a human heart is a CONTRIVED EXPERIENCE in Dale’s Cone.',
-      'If a lesson simply replaces paper with a tablet without altering the task, it is SUBSTANTITION.',
+      'If a lesson simply replaces paper with a tablet without altering the task, it is SUBSTITUTION.',
     ],
     commonMistakes: [
       'Assuming that the top of Dale’s Cone is the best. The base is the most concrete; teachers should provide concrete foundations before moving to abstract verbal symbols.',

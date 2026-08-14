@@ -5,10 +5,11 @@ export const MATHEMATICS_STUDY_MATERIALS: StudyMaterial[] = [
     id: 'mat-gen-math-001',
     slug: 'number-theory-and-algebraic-problem-solving',
     title: 'Number Theory, GCF/LCM, and Algebraic Problem Solving',
-    subjectId: 'mathematics',
+    subjectId: 'gen-math',
     subjectName: 'Mathematics',
     category: 'gen_ed',
-    topic: 'Arithmetic & Number Theory',
+    topic: 'Number Theory & Arithmetic',
+    relatedTopics: ['Algebra & Linear Equations', 'Statistics & Probability', 'Geometry & Measurement'],
     description: 'Divisibility rules, prime factorization, Greatest Common Factor (GCF), Least Common Multiple (LCM), and rate/work word problems.',
     readTimeMinutes: 7,
     overview:

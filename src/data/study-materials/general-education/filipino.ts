@@ -5,10 +5,11 @@ export const FILIPINO_STUDY_MATERIALS: StudyMaterial[] = [
     id: 'mat-gen-fil-001',
     slug: 'wastong-gamit-ng-salita-ng-nang-din-rin-may-mayroon',
     title: 'Wastong Gamit ng mga Salita: NG vs. NANG, DIN/RIN, at MAY/MAYROON',
-    subjectId: 'filipino',
+    subjectId: 'gen-fil',
     subjectName: 'Filipino at Panitikan',
     category: 'gen_ed',
-    topic: 'Balarila at Wastong Gamit',
+    topic: 'Wastong Gamit',
+    relatedTopics: ['Balarila at Ponolohiya', 'Tayutay at Idyoma', 'Panitikang Pilipino'],
     description: 'Gabay sa wastong gramatika at balarila ayon sa Komisyon sa Wikang Filipino (KWF) para sa LET General Education.',
     readTimeMinutes: 6,
     overview:
