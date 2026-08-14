@@ -121,9 +121,9 @@ export const StudyMaterialReader: React.FC<StudyMaterialReaderProps> = ({
             )}
 
             {section.keyConcept && (
-              <div className="p-3.5 rounded-md bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 my-3">
-                <div className="flex items-center gap-1.5 text-xs font-bold text-slate-900 dark:text-slate-100 uppercase tracking-wider mb-1">
-                  <Lightbulb className="w-3.5 h-3.5 text-amber-600" />
+              <div className="p-3.5 rounded-md bg-amber-50/50 dark:bg-amber-950/20 border-l-4 border-l-amber-500 border-y border-r border-amber-200 dark:border-amber-900/40 my-3">
+                <div className="flex items-center gap-1.5 text-xs font-bold text-amber-900 dark:text-amber-300 uppercase tracking-wider mb-1">
+                  <Lightbulb className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
                   <span>Key Concept</span>
                 </div>
                 <p className="text-xs sm:text-sm text-slate-800 dark:text-slate-200 leading-relaxed">
@@ -133,14 +133,14 @@ export const StudyMaterialReader: React.FC<StudyMaterialReaderProps> = ({
             )}
 
             {section.example && (
-              <div className="p-3.5 rounded-md bg-slate-50 dark:bg-slate-850 border border-slate-200 dark:border-slate-800 my-3 space-y-1.5 text-xs sm:text-sm">
-                <span className="font-bold text-slate-900 dark:text-slate-100 block text-xs uppercase tracking-wider">
+              <div className="p-3.5 rounded-md bg-sky-50/40 dark:bg-sky-950/20 border-l-4 border-l-sky-500 border-y border-r border-sky-200 dark:border-sky-900/40 my-3 space-y-1.5 text-xs sm:text-sm">
+                <span className="font-bold text-sky-900 dark:text-sky-300 block text-xs uppercase tracking-wider">
                   Classroom Scenario
                 </span>
                 <p className="text-slate-700 dark:text-slate-300 italic">
                   "{section.example.scenario}"
                 </p>
-                <div className="pt-1.5 border-t border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200">
+                <div className="pt-1.5 border-t border-sky-200/60 dark:border-sky-900/40 text-slate-800 dark:text-slate-200">
                   <strong className="text-slate-900 dark:text-white">Analysis: </strong>
                   {section.example.analysis}
                 </div>
@@ -181,7 +181,7 @@ export const StudyMaterialReader: React.FC<StudyMaterialReaderProps> = ({
       {material.keyTerms && material.keyTerms.length > 0 && (
         <section className="space-y-2.5 pt-4 border-t border-slate-200 dark:border-slate-800">
           <div className="flex items-center gap-1.5 text-slate-900 dark:text-white font-bold text-sm">
-            <BookOpen className="w-4 h-4 text-slate-700 dark:text-slate-300" />
+            <BookOpen className="w-4 h-4 text-sky-700 dark:text-sky-300" />
             <span>High-Yield Vocabulary & Definitions</span>
           </div>
           <div className="space-y-2">
@@ -204,9 +204,9 @@ export const StudyMaterialReader: React.FC<StudyMaterialReaderProps> = ({
 
       {/* LET Tips */}
       {material.letTips && material.letTips.length > 0 && (
-        <section className="p-4 rounded-md bg-amber-50/70 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-900/50 space-y-2">
+        <section className="p-4 rounded-md bg-amber-50/60 dark:bg-amber-950/20 border-l-4 border-l-amber-500 border-y border-r border-amber-200 dark:border-amber-900/50 space-y-2">
           <div className="flex items-center gap-1.5 text-xs font-bold text-amber-900 dark:text-amber-300 uppercase tracking-wider">
-            <Lightbulb className="w-3.5 h-3.5 text-amber-600" />
+            <Lightbulb className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
             <span>LET Board Exam Tips</span>
           </div>
           <ul className="space-y-1.5 pl-4 list-disc text-xs text-slate-700 dark:text-slate-300 leading-relaxed">
@@ -219,9 +219,9 @@ export const StudyMaterialReader: React.FC<StudyMaterialReaderProps> = ({
 
       {/* Common Traps / Misconceptions */}
       {material.commonMistakes && material.commonMistakes.length > 0 && (
-        <section className="p-4 rounded-md bg-rose-50/70 dark:bg-rose-950/20 border border-rose-200 dark:border-rose-900/50 space-y-2">
+        <section className="p-4 rounded-md bg-rose-50/60 dark:bg-rose-950/20 border-l-4 border-l-rose-500 border-y border-r border-rose-200 dark:border-rose-900/50 space-y-2">
           <div className="flex items-center gap-1.5 text-xs font-bold text-rose-900 dark:text-rose-300 uppercase tracking-wider">
-            <AlertTriangle className="w-3.5 h-3.5 text-rose-600" />
+            <AlertTriangle className="w-3.5 h-3.5 text-rose-600 dark:text-rose-400" />
             <span>Common Exam Traps & Misconceptions</span>
           </div>
           <ul className="space-y-1.5 pl-4 list-disc text-xs text-slate-700 dark:text-slate-300 leading-relaxed">

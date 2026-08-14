@@ -70,13 +70,13 @@ export const SubjectCard: React.FC<SubjectCardProps> = ({
         <div className="flex items-center gap-2 text-[11px]">
           {guideCount > 0 && (
             <span className="inline-flex items-center gap-1 font-medium text-slate-700 dark:text-slate-300">
-              <BookOpen className="w-3 h-3 text-slate-500" />
+              <BookOpen className="w-3 h-3 text-sky-600 dark:text-sky-400" />
               {guideCount} {guideCount === 1 ? 'guide' : 'guides'}
             </span>
           )}
           {guideCount > 0 && <span>•</span>}
           <span>
-            <strong className="font-semibold text-slate-700 dark:text-slate-300">
+            <strong className="font-semibold text-slate-700 dark:text-slate-300 font-mono">
               {questionCount}
             </strong>{' '}
             questions
@@ -84,7 +84,7 @@ export const SubjectCard: React.FC<SubjectCardProps> = ({
         </div>
 
         {masteryPercentage > 0 ? (
-          <span className="font-semibold text-emerald-700 dark:text-emerald-300 text-[11px]">
+          <span className="font-semibold text-emerald-700 dark:text-emerald-300 text-[11px] font-mono">
             {masteryPercentage}% mastery
           </span>
         ) : (

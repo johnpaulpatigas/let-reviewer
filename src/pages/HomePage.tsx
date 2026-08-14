@@ -4,6 +4,7 @@ import {
   BookmarkCheck,
   BookOpen,
   GraduationCap,
+  Flame,
 } from 'lucide-react';
 import { Button } from '../components/ui/Button';
 import { CategoryBadge } from '../components/ui/Badge';
@@ -88,7 +89,8 @@ export const HomePage: React.FC<HomePageProps> = ({
             <span className="font-semibold text-slate-900 dark:text-white font-mono">{totalAnswered}</span> solved ({overallAccuracy}% accuracy)
           </div>
           <span className="text-slate-300 dark:text-slate-700">•</span>
-          <div>
+          <div className="flex items-center gap-1">
+            <Flame className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400 fill-amber-600 dark:fill-amber-400" />
             <span className="font-semibold text-slate-900 dark:text-white font-mono">{streakDays}</span> day streak
           </div>
         </div>
@@ -114,7 +116,7 @@ export const HomePage: React.FC<HomePageProps> = ({
           {/* General Education */}
           <div
             onClick={() => handleStartCategoryPractice('gen_ed')}
-            className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-slate-400 dark:hover:border-slate-600 rounded-lg p-4 transition-all duration-150 active:scale-[0.99] cursor-pointer group flex flex-col justify-between space-y-3"
+            className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-sky-300 dark:hover:border-sky-800 rounded-lg p-4 transition-all duration-150 active:scale-[0.99] cursor-pointer group flex flex-col justify-between space-y-3"
           >
             <div className="space-y-1.5">
               <div className="flex items-center justify-between">
@@ -130,7 +132,7 @@ export const HomePage: React.FC<HomePageProps> = ({
             </div>
             <div className="pt-2 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs text-slate-500">
               <span>Practice 10 random items</span>
-              <span className="font-semibold text-slate-800 dark:text-slate-200 group-hover:underline flex items-center gap-1">
+              <span className="font-semibold text-sky-700 dark:text-sky-400 group-hover:underline flex items-center gap-1">
                 Start drill <ArrowRight className="w-3.5 h-3.5" />
               </span>
             </div>
@@ -139,14 +141,14 @@ export const HomePage: React.FC<HomePageProps> = ({
           {/* Professional Education */}
           <div
             onClick={() => handleStartCategoryPractice('prof_ed')}
-            className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-slate-400 dark:hover:border-slate-600 rounded-lg p-4 transition-all duration-150 active:scale-[0.99] cursor-pointer group flex flex-col justify-between space-y-3"
+            className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-amber-300 dark:hover:border-amber-800 rounded-lg p-4 transition-all duration-150 active:scale-[0.99] cursor-pointer group flex flex-col justify-between space-y-3"
           >
             <div className="space-y-1.5">
               <div className="flex items-center justify-between">
                 <CategoryBadge category="prof_ed" size="sm" />
                 <span className="text-xs text-slate-500 font-medium">7 Subjects</span>
               </div>
-              <h3 className="font-bold text-slate-900 dark:text-white text-sm sm:text-base group-hover:text-slate-700 dark:group-hover:text-slate-200 transition-colors">
+              <h3 className="font-bold text-slate-900 dark:text-white text-sm sm:text-base group-hover:text-amber-700 dark:group-hover:text-amber-300 transition-colors">
                 Professional Education
               </h3>
               <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
@@ -155,7 +157,7 @@ export const HomePage: React.FC<HomePageProps> = ({
             </div>
             <div className="pt-2 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs text-slate-500">
               <span>Practice 10 random items</span>
-              <span className="font-semibold text-slate-800 dark:text-slate-200 group-hover:underline flex items-center gap-1">
+              <span className="font-semibold text-amber-700 dark:text-amber-400 group-hover:underline flex items-center gap-1">
                 Start drill <ArrowRight className="w-3.5 h-3.5" />
               </span>
             </div>

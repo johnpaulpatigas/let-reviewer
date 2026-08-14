@@ -157,7 +157,7 @@ export const ProgressPage: React.FC<ProgressPageProps> = ({
 
         <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg p-3.5 space-y-1.5">
           <div className="flex justify-between items-center">
-            <span className="text-xs font-bold text-slate-800 dark:text-slate-300 uppercase tracking-wider">
+            <span className="text-xs font-bold text-amber-800 dark:text-amber-400 uppercase tracking-wider">
               Professional Education
             </span>
             <span className="text-xs font-bold text-slate-900 dark:text-white font-mono">
@@ -167,7 +167,7 @@ export const ProgressPage: React.FC<ProgressPageProps> = ({
           <ProgressBar
             value={profEdStats.percentage}
             max={100}
-            colorVariant="primary"
+            colorVariant="amber"
           />
           <p className="text-[11px] text-slate-500">
             {profEdStats.correct} of {profEdStats.answered} questions answered correctly

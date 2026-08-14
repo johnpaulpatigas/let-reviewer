@@ -14,7 +14,7 @@ export const Badge: React.FC<BadgeProps> = ({
   size = 'sm',
   className = '',
 }) => {
-  const baseClasses = 'inline-flex items-center font-medium rounded';
+  const baseClasses = 'inline-flex items-center font-semibold rounded';
 
   const sizeClasses = {
     sm: 'px-1.5 py-0.5 text-[10px] sm:text-[11px]',
@@ -31,7 +31,7 @@ export const Badge: React.FC<BadgeProps> = ({
     danger:
       'bg-rose-50 text-rose-800 dark:bg-rose-950/60 dark:text-rose-300 border border-rose-200 dark:border-rose-800/60',
     warning:
-      'bg-amber-50 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300 border border-amber-200 dark:border-amber-800/60',
+      'bg-amber-50 text-amber-900 dark:bg-amber-950/60 dark:text-amber-300 border border-amber-200 dark:border-amber-800/60',
     info:
       'bg-sky-50 text-sky-800 dark:bg-sky-950/60 dark:text-sky-300 border border-sky-200 dark:border-sky-800/60',
     outline:
@@ -57,7 +57,7 @@ export const CategoryBadge: React.FC<{ category: SubjectCategory; size?: 'sm' | 
     );
   }
   return (
-    <Badge variant="primary" size={size}>
+    <Badge variant="warning" size={size}>
       Professional Education
     </Badge>
   );
