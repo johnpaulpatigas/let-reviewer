@@ -9,7 +9,7 @@ export const PRINCIPLES_TEACHING_STUDY_MATERIALS: StudyMaterial[] = [
     subjectName: 'Principles & Teaching Methodologies',
     category: 'prof_ed',
     topic: 'Bloom’s Taxonomy & HOTS',
-    relatedTopics: ['Learner-Centered Approaches'],
+    relatedTopics: ['Learner-Centered Approaches', 'Teaching Methods & Strategies', 'Differentiated Instruction'],
     description: 'Anderson and Krathwohl’s cognitive dimensions, verb classifications, wait time mechanics, and Socratic questioning techniques.',
     readTimeMinutes: 7,
     overview:
@@ -59,105 +59,203 @@ export const PRINCIPLES_TEACHING_STUDY_MATERIALS: StudyMaterial[] = [
         definition: 'A 2001 framework by Anderson and Krathwohl classifying cognitive processes into Remembering, Understanding, Applying, Analyzing, Evaluating, and Creating.',
       },
       {
-        term: 'Wait Time (3-5 seconds)',
-        definition: 'Deliberate pause after asking a question or after a student response that significantly enhances cognitive engagement.',
-      },
-      {
-        term: 'HOTS',
-        definition: 'Higher-Order Thinking Skills encompassing Analyzing, Evaluating, and Creating.',
+        term: 'Wait Time (Mary Budd Rowe)',
+        definition: 'Deliberate 3-to-5-second pauses after asking a question or after a student answers to enhance higher-order thinking.',
       },
     ],
     letTips: [
-      'If an exam question asks for the HIGHEST level in the revised taxonomy, the answer is CREATING (not Evaluating).',
-      'The ideal questioning procedure is: 1. Ask question to the whole class -> 2. Pause (Wait Time 3-5s) -> 3. Call a student by name -> 4. Listen -> 5. Provide constructive feedback.',
-    ],
-    commonMistakes: [
-      'Assuming "Evaluation" is still the top level. That was the 1956 original Bloom taxonomy; the 2001 revision places "Creating" at the top.',
-      'Calling on a specific student first before stating the question. Always state the question to the entire class first so everyone thinks.',
+      'In Revised Bloom’s, Creating is highest (not Evaluating).',
+      'Always pose the question to the entire class first, pause for wait time, and then call on an individual student.',
     ],
     summaryPoints: [
-      'Revised Taxonomy: Remembering, Understanding, Applying, Analyzing, Evaluating, Creating.',
-      'LOTS: Remembering, Understanding, Applying; HOTS: Analyzing, Evaluating, Creating.',
-      'Wait Time of 3 to 5 seconds increases student verbal elaboration and critical thinking.',
+      'Cognitive domain spans Remembering to Creating.',
+      'Knowledge spans Factual, Conceptual, Procedural, and Metacognitive.',
+      'Wait time significantly elevates student response depth.',
     ],
   },
   {
     id: 'mat-prof-prin-002',
-    slug: 'teaching-methods-inductive-deductive-and-jigsaw',
+    slug: 'teaching-methodologies-inductive-deductive-cooperative',
     title: 'Teaching Methodologies: Inductive vs. Deductive, Discovery, and Cooperative Learning',
     subjectId: 'prof-principles',
     subjectName: 'Principles & Teaching Methodologies',
     category: 'prof_ed',
     topic: 'Teaching Methods & Strategies',
-    relatedTopics: ['Learner-Centered Approaches', 'Differentiated Instruction'],
-    description: 'Detailed comparison of Inductive (specific to general) and Deductive (general to specific) inquiry, and Aronson’s Jigsaw classroom.',
-    readTimeMinutes: 6,
+    relatedTopics: ['Learner-Centered Approaches', 'Bloom’s Taxonomy & HOTS'],
+    description: 'Detailed breakdown of direct vs. indirect instruction, inductive/deductive models, Jigsaw, Think-Pair-Share, and inquiry methods.',
+    readTimeMinutes: 8,
     overview:
-      'Instructional strategies determine how students encounter and process concepts. Understanding the flow of inquiry methods is a core competency tested on the Professional Education exam.',
+      'Pedagogical methodology determines how instruction is structured and delivered. This guide provides a comparison between teacher-directed expository models and student-centered discovery strategies.',
     sections: [
       {
-        heading: '1. Inductive vs. Deductive Teaching Approaches',
+        heading: '1. Inductive vs. Deductive Teaching Methods',
         paragraphs: [
-          'Inductive and Deductive reasoning represent opposite directional flows of concept development:',
+          'Inductive Method (Bottom-Up / Discovery): Moves from SPECIFIC examples, observations, or laboratory data to GENERAL principles, rules, or formulas (Specific -> General). Fosters student active discovery and critical reasoning.',
+          'Deductive Method (Top-Down / Direct Instruction): Moves from GENERAL rules, definitions, or formulas to SPECIFIC applications and problem-solving exercises (General -> Specific). Highly efficient for teaching structured procedural skills.',
         ],
         comparisonTable: {
-          headers: ['Dimension', 'Inductive Method (Discovery / In-Direct)', 'Deductive Method (Expository / Direct)'],
+          headers: ['Method', 'Direction of Logic', 'Teacher Role', 'Best Used For'],
           rows: [
-            ['Direction of Flow', 'Specific examples / observations → General rule or formula (Bottom-up)', 'General rule, principle, or formula → Specific examples and applications (Top-down)'],
-            ['Student Role', 'Active discoverer, investigator, formulator of rules', 'Attentive receiver, follower of steps, applier of presented rules'],
-            ['Teacher Role', 'Facilitator presenting structured examples and counter-examples', 'Direct instructor stating the theorem, definition, or formula explicitly upfront'],
-            ['Classroom Advantage', 'Higher retention, deep conceptual understanding, fosters inquiry', 'Time-efficient, covers large volumes of content, excellent for procedural algorithms'],
-            ['Sample Lesson', 'Students measure circumference and diameter of 5 circular objects, calculate ratio, and discover Pi = 3.14 on their own', 'Teacher writes C = 2πr on the board, defines each variable, and demonstrates 3 practice word problems'],
+            ['Inductive Method', 'Specific Examples -> General Rule / Principle', 'Guide / Facilitator questioning student observations', 'Concept formation, discovery labs, rule derivation'],
+            ['Deductive Method', 'General Rule / Theorem -> Specific Applications', 'Direct instructor / Demonstrator of explicit steps', 'Grammar drills, standard mathematical algorithms, safety procedures'],
           ],
         },
-        keyConcept:
-          'Inductive teaching starts with concrete experiences and guided observation to help learners formulate their own generalizations (Specific to General).',
       },
       {
-        heading: "2. Cooperative Learning & Elliot Aronson's Jigsaw Strategy",
+        heading: '2. Cooperative Learning Structures (Kagan and Lyman)',
         paragraphs: [
-          'In a Jigsaw classroom, students are initially placed in "Home Groups." Each member is assigned a distinct sub-topic (e.g. Member 1: Causes of WWI, Member 2: Major Battles, Member 3: Treaty of Versailles).',
-          'Students from different home groups who have the same assignment meet in "Expert Groups" to master their sub-topic and plan how to teach it.',
-          'Students return to their "Home Groups" and take turns teaching their specific piece of the puzzle to their teammates. This ensures positive interdependence and individual accountability.',
+          'Jigsaw (Elliot Aronson): Students are assigned to "home groups" and "expert groups." Each expert group masters a specialized subtopic, then returns to teach their home group peers.',
+          'Think-Pair-Share (Frank Lyman): Teacher poses a prompt -> Students think individually (1 min) -> Pair with an elbow partner to discuss (2 mins) -> Share synthesis with whole class.',
+          'Fishbowl Technique: An inner circle discusses/debates a controversial topic while an outer circle observes, tracks arguments, and evaluates dialogue quality.',
         ],
       },
       {
-        heading: '3. Thorndike’s Connectionism & Three Primary Laws of Learning',
+        heading: '3. The 4As Lesson Plan Framework',
         paragraphs: [
-          'Edward Thorndike established the Laws of Learning through his stimulus-response puzzle box experiments:',
-          '1. Law of Readiness: When a person is prepared to respond or act, doing so is satisfying; being prevented or forced when unready is annoying.',
-          '2. Law of Exercise: Stimulus-response connections are strengthened with practice and repetition (Law of Use) and weakened when practice is discontinued (Law of Disuse).',
-          '3. Law of Effect: Behaviors followed by satisfying consequences are more likely to recur, while behaviors followed by discomfort are weakened.',
+          'Activity: Experiential entry task that engages prior knowledge.',
+          'Analysis: Critical processing questions that examine student observations and data.',
+          'Abstraction: Synthesizing concepts, defining rules, and deriving overarching theories.',
+          'Application: Authentic transfer of learning to real-world problems or new scenarios.',
         ],
       },
     ],
     keyTerms: [
       {
         term: 'Inductive Method',
-        definition: 'A pedagogical approach moving from specific concrete examples to general rules, formulas, and concepts.',
+        definition: 'Instructional process proceeding from concrete specific examples to general rules or concepts.',
       },
       {
-        term: 'Deductive Method',
-        definition: 'A pedagogical approach moving from an explicitly stated general rule or theorem down to specific examples and practice applications.',
-      },
-      {
-        term: 'Jigsaw Technique',
-        definition: 'A cooperative learning structure where students split into expert groups to master sub-topics and return to teach their home group members.',
+        term: 'Jigsaw Strategy',
+        definition: 'Cooperative structure where students form expert groups to master subtopics and return to teach their home groups.',
       },
     ],
     letTips: [
-      'Mnemonic for Inductive: I-S-G (Inductive = Specific to General).',
-      'Mnemonic for Deductive: D-G-S (Deductive = General to Specific).',
-      'Whenever a question highlights "positive interdependence" and "expert groups teaching home groups," select JIGSAW STRATEGY.',
-    ],
-    commonMistakes: [
-      'Thinking inductive is always better than deductive. While inductive promotes inquiry, deductive is crucial when time is limited or safety instructions must be directly delivered.',
+      'Inductive = Examples first, rule last. Deductive = Rule first, examples last.',
+      'In the 4As format, Abstraction is where the generalization and theoretical concept are formulated.',
     ],
     summaryPoints: [
-      'Inductive = Specific to General (Discovery).',
-      'Deductive = General to Specific (Direct Instruction).',
-      'Jigsaw = Home Groups -> Expert Groups -> Return to Home Groups.',
-      'Thorndike: Laws of Readiness, Exercise, and Effect.',
+      'Inductive builds from specific observations to generalizations.',
+      'Deductive applies general rules to specific problem sets.',
+      'Cooperative learning builds positive interdependence and individual accountability.',
+    ],
+  },
+  {
+    id: 'mat-prof-prin-003',
+    slug: 'learner-centered-approaches-and-discovery-learning',
+    title: 'Learner-Centered Approaches: Discovery Learning, PBL, and Meaningful Learning',
+    subjectId: 'prof-principles',
+    subjectName: 'Principles & Teaching Methodologies',
+    category: 'prof_ed',
+    topic: 'Learner-Centered Approaches',
+    relatedTopics: ['Bloom’s Taxonomy & HOTS', 'Teaching Methods & Strategies'],
+    description: 'Jerome Bruner’s modes of representation and discovery learning, David Ausubel’s advance organizers, Problem-Based Learning (PBL), and Flipped Classrooms.',
+    readTimeMinutes: 7,
+    overview:
+      'Learner-centered paradigms position the student as an active meaning-maker rather than a passive receptacle of information, emphasizing inquiry, authentic problem solving, and metacognitive regulation.',
+    sections: [
+      {
+        heading: '1. Jerome Bruner’s Discovery Learning and Modes of Representation',
+        paragraphs: [
+          'Discovery Learning: Students actively discover relationships and principles on their own through inquiry and hypothesis testing.',
+          'Three Modes of Representation:\n- Enactive Mode (Action-based): Learning through physical touch and manipulation of concrete objects.\n- Iconic Mode (Image-based): Learning through visual diagrams, pictures, maps, and models.\n- Symbolic Mode (Language-based): Learning through abstract words, symbols, and mathematical notations.',
+        ],
+      },
+      {
+        heading: '2. David Ausubel’s Meaningful Verbal Learning & Advance Organizers',
+        paragraphs: [
+          'Subsumption Theory: New knowledge is anchored into pre-existing cognitive structures (subsumers). Meaningful learning occurs when new information is related substantively to prior knowledge.',
+          'Advance Organizers: Instructional scaffolding (concept maps, narrative previews) presented prior to a lesson to build cognitive bridges between old and new material.',
+        ],
+      },
+      {
+        heading: '3. Problem-Based Learning (PBL) and the Flipped Classroom',
+        paragraphs: [
+          'Problem-Based Learning (PBL): Instruction begins with an authentic, ill-structured real-world problem that drives student research, self-directed study, and collaborative solution development.',
+          'Flipped Classroom: Inverts traditional lecture-homework structure; direct lecture input occurs asynchronously at home via videos/readings, reserving classroom time for collaborative problem solving.',
+        ],
+      },
+    ],
+    keyTerms: [
+      {
+        term: 'Advance Organizer',
+        definition: 'An introductory cognitive tool presented prior to instruction to bridge prior knowledge with new concepts.',
+      },
+      {
+        term: 'Enactive Representation',
+        definition: 'Bruner\'s mode of representing knowledge through physical action and tangible manipulation.',
+      },
+    ],
+    letTips: [
+      'Bruner\'s sequence of representation: Enactive (action) -> Iconic (image) -> Symbolic (words/abstract symbols).',
+      'Ausubel argued that the most important single factor influencing learning is what the learner already knows.',
+    ],
+    summaryPoints: [
+      'Bruner proposed enactive, iconic, and symbolic cognitive representations.',
+      'Ausubel\'s advance organizers anchor new content into existing schemas.',
+      'PBL and flipped learning maximize active classroom inquiry.',
+    ],
+  },
+  {
+    id: 'mat-prof-prin-004',
+    slug: 'differentiated-instruction-and-universal-design-for-learning',
+    title: 'Differentiated Instruction, Universal Design for Learning (UDL), and Learner Diversity',
+    subjectId: 'prof-principles',
+    subjectName: 'Principles & Teaching Methodologies',
+    category: 'prof_ed',
+    topic: 'Differentiated Instruction',
+    relatedTopics: ['Learner-Centered Approaches', 'Bloom’s Taxonomy & HOTS'],
+    description: 'Carol Ann Tomlinson’s model (Content, Process, Product, Environment), UDL 3 principles, tiered assignments, and catering to diverse learner profiles.',
+    readTimeMinutes: 7,
+    overview:
+      'Classrooms are heterogeneous environments with diverse student readiness levels, interests, and learning profiles. Differentiated instruction and UDL proactively design flexible pathways so all learners achieve curriculum mastery.',
+    sections: [
+      {
+        heading: '1. Carol Ann Tomlinson’s Differentiated Instruction Framework',
+        paragraphs: [
+          'Teachers differentiate instruction by adjusting four major curricular elements based on student Readiness, Interests, and Learning Profiles:',
+          '- Content: WHAT the student learns or how access to information is varied (e.g. tiered texts at varying reading levels, audiobooks, video summaries).',
+          '- Process: HOW students make sense of and internalize concepts (e.g. learning centers, graphic organizers, jigsaw groups, choice boards).',
+          '- Product: HOW students demonstrate and showcase mastery (e.g. choice between writing an editorial, performing a podcast, or creating a digital infographic).',
+          '- Learning Environment: The physical and affective classroom setting (e.g. quiet study nooks, collaborative table clusters).',
+        ],
+        comparisonTable: {
+          headers: ['Curricular Element', 'Modification Area', 'Classroom Example'],
+          rows: [
+            ['Content', 'Input / Resource complexity', 'Providing leveled science articles with vocabulary glossaries for struggling readers'],
+            ['Process', 'Activities / Learning pathways', 'Using Think-Pair-Share, tiered lab experiments, or hands-on simulations'],
+            ['Product', 'Assessment outputs / Evidence', 'Allowing students to choose between an essay, video report, or digital model'],
+            ['Environment', 'Physical / Emotional climate', 'Arranging flexible seating with designated silent zones and group hubs'],
+          ],
+        },
+      },
+      {
+        heading: '2. Universal Design for Learning (UDL) Principles',
+        paragraphs: [
+          'Universal Design for Learning (CAST) removes instructional barriers proactively from the initial curriculum design phase through three neural network principles:',
+          '1. Multiple Means of Representation (The "What" of learning): Present information and content in multiple sensory formats (text, audio, visuals, captions).',
+          '2. Multiple Means of Action and Expression (The "How" of learning): Provide varied physical options and tools for students to demonstrate their learning.',
+          '3. Multiple Means of Engagement (The "Why" of learning): Offer choices, optimize autonomy, and sustain motivation through relevant authentic challenges.',
+        ],
+      },
+    ],
+    keyTerms: [
+      {
+        term: 'Differentiated Instruction',
+        definition: 'A pedagogical approach modifying Content, Process, Product, and Environment to meet diverse student readiness and interests.',
+      },
+      {
+        term: 'Universal Design for Learning (UDL)',
+        definition: 'An educational framework optimizing teaching through multiple means of representation, expression, and engagement.',
+      },
+    ],
+    letTips: [
+      'Differentiation is NOT individualized tutoring for 40 students; it is providing flexible structured options across Content, Process, and Product.',
+      'UDL designs accessible options upfront for everyone rather than retrofitting accommodations after failure.',
+    ],
+    summaryPoints: [
+      'Tomlinson differentiates Content, Process, Product, and Environment.',
+      'UDL emphasizes Representation, Expression, and Engagement.',
+      'Tiered assignments adjust task complexity to student readiness levels.',
     ],
   },
 ];
