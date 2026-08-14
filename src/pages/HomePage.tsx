@@ -1,3 +1,4 @@
+import React from 'react';
 import {
   Flame,
   BrainCircuit,
@@ -54,7 +55,8 @@ export const HomePage: React.FC<HomePageProps> = ({
 
   return (
     <div className="space-y-4">
-      <div className="bg-slate-900 text-white rounded-xl p-5 sm:p-6 border border-slate-800">
+      {/* Hero Welcome Card */}
+      <div className="bg-slate-900 text-white rounded-xl p-5 sm:p-6 border border-slate-800 shadow-sm">
         <div className="max-w-xl">
           <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md bg-slate-800 text-indigo-300 text-xs font-semibold mb-2.5 border border-slate-700">
             PRC LET Board Exam Prep
@@ -66,41 +68,43 @@ export const HomePage: React.FC<HomePageProps> = ({
             Practice board-exam competencies with comprehensive rationales, topic drills, and timed mock simulations.
           </p>
 
-          <div className="mt-4 flex flex-col xs:flex-row gap-2.5">
-            <Button
-              variant="primary"
-              size="md"
-              leftIcon={<Zap className="w-4 h-4 text-amber-300 fill-current" />}
+          {/* Primary Action Buttons with High Visual Contrast */}
+          <div className="mt-4 flex flex-col sm:flex-row gap-2.5">
+            <button
+              type="button"
               onClick={handleStartQuickMix}
+              className="h-11 px-4 rounded-lg bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-700 text-white font-bold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-sm shadow-indigo-950/50 transition-colors tap-target cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900"
             >
-              Quick Practice (10 Items)
-            </Button>
-            <Button
-              variant="outline"
-              size="md"
-              leftIcon={<BookOpen className="w-4 h-4" />}
+              <Zap className="w-4 h-4 text-amber-300 fill-amber-300 shrink-0" />
+              <span>Quick Practice (10 Items)</span>
+            </button>
+
+            <button
+              type="button"
               onClick={() => onNavigateTab('materials')}
-              className="border-slate-700 text-slate-200 hover:bg-slate-800 hover:text-white"
+              className="h-11 px-4 rounded-lg bg-slate-800 hover:bg-slate-700 active:bg-slate-800 text-white font-bold text-xs sm:text-sm flex items-center justify-center gap-2 border border-slate-600 hover:border-indigo-400 shadow-sm shadow-slate-950/30 transition-colors tap-target cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900"
             >
-              Study Guides & Notes
-            </Button>
-            <Button
-              variant="outline"
-              size="md"
-              leftIcon={<BrainCircuit className="w-4 h-4" />}
+              <BookOpen className="w-4 h-4 text-indigo-400 shrink-0" />
+              <span>Study Guides & Notes</span>
+            </button>
+
+            <button
+              type="button"
               onClick={() => onNavigateTab('practice')}
-              className="border-slate-700 text-slate-200 hover:bg-slate-800 hover:text-white"
+              className="h-11 px-4 rounded-lg bg-slate-800 hover:bg-slate-700 active:bg-slate-800 text-white font-bold text-xs sm:text-sm flex items-center justify-center gap-2 border border-slate-600 hover:border-sky-400 shadow-sm shadow-slate-950/30 transition-colors tap-target cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900"
             >
-              Practice & Mock Exam
-            </Button>
+              <BrainCircuit className="w-4 h-4 text-sky-400 shrink-0" />
+              <span>Practice & Mock Exam</span>
+            </button>
           </div>
         </div>
       </div>
 
+      {/* Accuracy & Progress Metrics */}
       <div className="grid grid-cols-3 gap-2.5">
         <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-3 sm:p-3.5">
           <div className="flex items-center justify-between">
-            <span className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">
+            <span className="text-[11px] font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider">
               Accuracy
             </span>
             <CheckCircle2 className="w-4 h-4 text-emerald-500" />
@@ -109,7 +113,7 @@ export const HomePage: React.FC<HomePageProps> = ({
             <div className="text-lg sm:text-xl font-bold text-slate-900 dark:text-white">
               {overallAccuracy}%
             </div>
-            <p className="text-[11px] text-slate-500 mt-0.5">
+            <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
               {totalCorrect}/{totalAnswered} correct
             </p>
           </div>
@@ -117,7 +121,7 @@ export const HomePage: React.FC<HomePageProps> = ({
 
         <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-3 sm:p-3.5">
           <div className="flex items-center justify-between">
-            <span className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">
+            <span className="text-[11px] font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider">
               Streak
             </span>
             <Flame className="w-4 h-4 text-amber-500 fill-current" />
@@ -126,7 +130,7 @@ export const HomePage: React.FC<HomePageProps> = ({
             <div className="text-lg sm:text-xl font-bold text-slate-900 dark:text-white">
               {streakDays} <span className="text-xs font-normal text-slate-500">days</span>
             </div>
-            <p className="text-[11px] text-slate-500 mt-0.5">
+            <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
               Daily study
             </p>
           </div>
@@ -134,7 +138,7 @@ export const HomePage: React.FC<HomePageProps> = ({
 
         <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-3 sm:p-3.5">
           <div className="flex items-center justify-between">
-            <span className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">
+            <span className="text-[11px] font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider">
               Bank
             </span>
             <BookOpen className="w-4 h-4 text-indigo-500" />
@@ -143,13 +147,14 @@ export const HomePage: React.FC<HomePageProps> = ({
             <div className="text-lg sm:text-xl font-bold text-slate-900 dark:text-white">
               {ALL_QUESTIONS.length}
             </div>
-            <p className="text-[11px] text-slate-500 mt-0.5">
+            <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
               Questions
             </p>
           </div>
         </div>
       </div>
 
+      {/* Review by Domain */}
       <div>
         <div className="flex items-center justify-between mb-2">
           <h3 className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">
@@ -179,7 +184,7 @@ export const HomePage: React.FC<HomePageProps> = ({
                 <h4 className="font-bold text-slate-900 dark:text-white text-sm group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
                   General Education
                 </h4>
-                <p className="text-xs text-slate-500">
+                <p className="text-xs text-slate-600 dark:text-slate-400">
                   English, Filipino, Math, Science, SocSci, ICT
                 </p>
               </div>
@@ -200,7 +205,7 @@ export const HomePage: React.FC<HomePageProps> = ({
                 <h4 className="font-bold text-slate-900 dark:text-white text-sm group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
                   Professional Education
                 </h4>
-                <p className="text-xs text-slate-500">
+                <p className="text-xs text-slate-600 dark:text-slate-400">
                   Foundations, Pedagogy, Assessment, Ethics, Tech
                 </p>
               </div>
@@ -210,6 +215,7 @@ export const HomePage: React.FC<HomePageProps> = ({
         </div>
       </div>
 
+      {/* Targeted Remediation Bank */}
       {(bookmarkedCount > 0 || missedCount > 0) && (
         <div className="bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-900/50 rounded-xl p-4">
           <div className="flex items-center justify-between mb-1.5">
@@ -227,7 +233,7 @@ export const HomePage: React.FC<HomePageProps> = ({
               Open Bank
             </button>
           </div>
-          <p className="text-xs text-slate-600 dark:text-slate-400 mb-3 leading-relaxed">
+          <p className="text-xs text-slate-700 dark:text-slate-300 mb-3 leading-relaxed">
             Review {bookmarkedCount} saved question{bookmarkedCount === 1 ? '' : 's'} and drill {missedCount} missed item{missedCount === 1 ? '' : 's'} from previous sessions.
           </p>
           <div className="flex gap-2">
@@ -267,6 +273,7 @@ export const HomePage: React.FC<HomePageProps> = ({
         </div>
       )}
 
+      {/* High Yield LET Tip */}
       <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-4">
         <div className="flex items-center gap-2 text-slate-700 dark:text-slate-300 font-bold text-xs uppercase tracking-wider mb-1.5">
           <BrainCircuit className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
