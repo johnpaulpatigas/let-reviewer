@@ -8,6 +8,8 @@ import {
   Trash2,
   TrendingUp,
   AlertCircle,
+  BookMarked,
+  ArrowRight,
 } from 'lucide-react';
 import type { UserStudyStats, QuizResult } from '../types';
 
@@ -15,11 +17,13 @@ interface ProgressPageProps {
   stats: UserStudyStats;
   onClearStats: () => void;
   onViewQuizResult?: (result: QuizResult) => void;
+  onOpenStudyBank?: () => void;
 }
 
 export const ProgressPage: React.FC<ProgressPageProps> = ({
   stats,
   onClearStats,
+  onOpenStudyBank,
 }) => {
   const [isResetModalOpen, setIsResetModalOpen] = useState(false);
 
@@ -232,8 +236,35 @@ export const ProgressPage: React.FC<ProgressPageProps> = ({
           })}
         </div>
       </div>
+      {/* Saved & Remediation Bank Card */}
+      {onOpenStudyBank && (
+        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-4 sm:p-5 flex items-center justify-between gap-3">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-lg bg-amber-50 dark:bg-amber-950/60 text-amber-600 dark:text-amber-400 border border-amber-200 dark:border-amber-900/50 flex items-center justify-center font-bold">
+              <BookMarked className="w-5 h-5" />
+            </div>
+            <div>
+              <h3 className="font-bold text-slate-900 dark:text-white text-xs sm:text-sm">
+                Targeted Remediation & Bookmarks
+              </h3>
+              <p className="text-[11px] text-slate-500 mt-0.5">
+                {stats.bookmarkedQuestionIds.length} saved bookmarks • {stats.missedQuestionIds.length} missed items
+              </p>
+            </div>
+          </div>
 
-      {quizHistory.length > 0 && (
+          <button
+            type="button"
+            onClick={onOpenStudyBank}
+            className="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-900 dark:text-white text-xs font-semibold inline-flex items-center gap-1 transition-colors tap-target shrink-0"
+          >
+            <span>Open Bank</span>
+            <ArrowRight className="w-3.5 h-3.5" />
+          </button>
+        </div>
+      )}
+
+      {quizHistory && quizHistory.length > 0 && (
         <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-4 sm:p-5 space-y-2.5">
           <h3 className="font-bold text-slate-900 dark:text-white text-xs uppercase tracking-wider">
             Recent Quiz & Exam History
