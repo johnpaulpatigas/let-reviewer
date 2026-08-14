@@ -1,14 +1,10 @@
 import React from 'react';
 import {
-  Flame,
-  BrainCircuit,
   ArrowRight,
-  CheckCircle2,
   BookmarkCheck,
-  Zap,
-  BookOpen,
 } from 'lucide-react';
 import { Button } from '../components/ui/Button';
+import { CategoryBadge } from '../components/ui/Badge';
 import { SUBJECTS } from '../data/subjects';
 import { ALL_QUESTIONS } from '../data/questions';
 import type { QuizConfig, SubjectCategory, NavigationTab } from '../types';
@@ -54,189 +50,155 @@ export const HomePage: React.FC<HomePageProps> = ({
   };
 
   return (
-    <div className="space-y-4 animate-fade-in">
-      {/* Hero Welcome Card */}
-      <div className="bg-slate-900 text-white rounded-xl p-5 sm:p-6 border border-slate-800 shadow-sm">
-        <div className="max-w-xl">
-          <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md bg-slate-800 text-indigo-300 text-xs font-semibold mb-2.5 border border-slate-700">
-            PRC LET Board Exam Prep
-          </div>
-          <h2 className="text-lg sm:text-xl font-bold text-white leading-snug">
-            General & Professional Education Reviewer
-          </h2>
-          <p className="text-xs sm:text-sm text-slate-300 mt-1 leading-relaxed">
-            Practice board-exam competencies with comprehensive rationales, topic drills, and timed mock simulations.
+    <div className="space-y-5 animate-fade-in">
+      {/* Overview & Heading */}
+      <section className="space-y-3">
+        <div>
+          <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
+            Licensure Examination for Teachers
+          </h1>
+          <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-1 leading-relaxed">
+            Curriculum-aligned reviewer for General and Professional Education board competencies.
           </p>
-
-          {/* Primary Action Buttons with High Visual Contrast & Tactile Feedback */}
-          <div className="mt-4 flex flex-col sm:flex-row gap-2.5">
-            <button
-              type="button"
-              onClick={handleStartQuickMix}
-              className="h-11 px-4 rounded-lg bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-700 active:scale-[0.985] text-white font-bold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-sm shadow-indigo-950/50 transition-all duration-150 will-change-transform tap-target cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900"
-            >
-              <Zap className="w-4 h-4 text-amber-300 fill-amber-300 shrink-0" />
-              <span>Quick Practice (10 Items)</span>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => onNavigateTab('materials')}
-              className="h-11 px-4 rounded-lg bg-slate-800 hover:bg-slate-700 active:bg-slate-800 active:scale-[0.985] text-white font-bold text-xs sm:text-sm flex items-center justify-center gap-2 border border-slate-600 hover:border-indigo-400 shadow-sm shadow-slate-950/30 transition-all duration-150 will-change-transform tap-target cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900"
-            >
-              <BookOpen className="w-4 h-4 text-indigo-400 shrink-0" />
-              <span>Study Guides & Notes</span>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => onNavigateTab('practice')}
-              className="h-11 px-4 rounded-lg bg-slate-800 hover:bg-slate-700 active:bg-slate-800 active:scale-[0.985] text-white font-bold text-xs sm:text-sm flex items-center justify-center gap-2 border border-slate-600 hover:border-sky-400 shadow-sm shadow-slate-950/30 transition-all duration-150 will-change-transform tap-target cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900"
-            >
-              <BrainCircuit className="w-4 h-4 text-sky-400 shrink-0" />
-              <span>Practice & Mock Exam</span>
-            </button>
-          </div>
-        </div>
-      </div>
-
-      {/* Accuracy & Progress Metrics */}
-      <div className="grid grid-cols-3 gap-2.5">
-        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-3 sm:p-3.5 transition-all duration-150 hover:shadow-xs">
-          <div className="flex items-center justify-between">
-            <span className="text-[11px] font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider">
-              Accuracy
-            </span>
-            <CheckCircle2 className="w-4 h-4 text-emerald-500" />
-          </div>
-          <div className="mt-1.5">
-            <div className="text-lg sm:text-xl font-bold text-slate-900 dark:text-white">
-              {overallAccuracy}%
-            </div>
-            <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
-              {totalCorrect}/{totalAnswered} correct
-            </p>
-          </div>
         </div>
 
-        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-3 sm:p-3.5 transition-all duration-150 hover:shadow-xs">
-          <div className="flex items-center justify-between">
-            <span className="text-[11px] font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider">
-              Streak
-            </span>
-            <Flame className="w-4 h-4 text-amber-500 fill-current" />
-          </div>
-          <div className="mt-1.5">
-            <div className="text-lg sm:text-xl font-bold text-slate-900 dark:text-white">
-              {streakDays} <span className="text-xs font-normal text-slate-500">days</span>
-            </div>
-            <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
-              Daily study
-            </p>
-          </div>
+        {/* Primary Action Buttons */}
+        <div className="flex flex-col sm:flex-row gap-2 pt-1">
+          <Button
+            variant="primary"
+            size="md"
+            onClick={handleStartQuickMix}
+            className="flex-1"
+          >
+            Start Quick Practice (10 Items)
+          </Button>
+
+          <Button
+            variant="secondary"
+            size="md"
+            onClick={() => onNavigateTab('materials')}
+            className="flex-1"
+          >
+            Study Guides & Notes
+          </Button>
+
+          <Button
+            variant="outline"
+            size="md"
+            onClick={() => onNavigateTab('practice')}
+            className="flex-1"
+          >
+            Mock Exam & Practice
+          </Button>
         </div>
 
-        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-3 sm:p-3.5 transition-all duration-150 hover:shadow-xs">
-          <div className="flex items-center justify-between">
-            <span className="text-[11px] font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider">
-              Bank
-            </span>
-            <BookOpen className="w-4 h-4 text-indigo-500" />
+        {/* Study Metrics Summary Strip */}
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-1 py-2 px-3 bg-slate-100 dark:bg-slate-900 rounded-md text-xs text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-800">
+          <div>
+            <span className="font-semibold text-slate-900 dark:text-white font-mono">{ALL_QUESTIONS.length}</span> questions in bank
           </div>
-          <div className="mt-1.5">
-            <div className="text-lg sm:text-xl font-bold text-slate-900 dark:text-white">
-              {ALL_QUESTIONS.length}
-            </div>
-            <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
-              Questions
-            </p>
+          <span className="text-slate-300 dark:text-slate-700">•</span>
+          <div>
+            <span className="font-semibold text-slate-900 dark:text-white font-mono">{totalAnswered}</span> solved ({overallAccuracy}% accuracy)
+          </div>
+          <span className="text-slate-300 dark:text-slate-700">•</span>
+          <div>
+            <span className="font-semibold text-slate-900 dark:text-white font-mono">{streakDays}</span> day streak
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* Review by Domain */}
-      <div>
-        <div className="flex items-center justify-between mb-2">
-          <h3 className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">
-            Review by Major Domain
-          </h3>
+      {/* Curriculum Tracks */}
+      <section className="space-y-3 pt-1">
+        <div className="flex items-center justify-between">
+          <h2 className="text-xs font-bold text-slate-900 dark:text-slate-100 uppercase tracking-wider">
+            Curriculum Domains
+          </h2>
           <button
             type="button"
             onClick={() => onNavigateTab('subjects')}
-            className="text-xs font-semibold text-indigo-600 dark:text-indigo-400 flex items-center gap-1 hover:underline tap-target group"
+            className="text-xs font-semibold text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white flex items-center gap-1 hover:underline cursor-pointer"
           >
             <span>All {SUBJECTS.length} subjects</span>
-            <ArrowRight className="w-3.5 h-3.5 transition-transform duration-150 group-hover:translate-x-0.5" />
+            <ArrowRight className="w-3.5 h-3.5" />
           </button>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-          <button
-            type="button"
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          {/* General Education */}
+          <div
             onClick={() => handleStartCategoryPractice('gen_ed')}
-            className="text-left bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 rounded-xl p-4 transition-all duration-150 active:scale-[0.99] hover:shadow-xs will-change-transform flex items-center justify-between tap-target group"
+            className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-slate-400 dark:hover:border-slate-600 rounded-lg p-4 transition-all duration-150 active:scale-[0.99] cursor-pointer group flex flex-col justify-between space-y-3"
           >
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-sky-50 dark:bg-sky-950/60 text-sky-700 dark:text-sky-300 border border-sky-200 dark:border-sky-800 flex items-center justify-center font-bold text-sm transition-transform duration-150 group-hover:scale-105">
-                GE
+            <div className="space-y-1.5">
+              <div className="flex items-center justify-between">
+                <CategoryBadge category="gen_ed" size="sm" />
+                <span className="text-xs text-slate-500 font-medium">6 Subjects</span>
               </div>
-              <div>
-                <h4 className="font-bold text-slate-900 dark:text-white text-sm group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
-                  General Education
-                </h4>
-                <p className="text-xs text-slate-600 dark:text-slate-400">
-                  English, Filipino, Math, Science, SocSci, ICT
-                </p>
-              </div>
+              <h3 className="font-bold text-slate-900 dark:text-white text-sm sm:text-base group-hover:text-sky-700 dark:group-hover:text-sky-300 transition-colors">
+                General Education
+              </h3>
+              <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+                English, Filipino, Mathematics, Natural Science, Social Sciences, and ICT Literacy.
+              </p>
             </div>
-            <ArrowRight className="w-4 h-4 text-slate-400 group-hover:text-indigo-600 group-hover:translate-x-0.5 transition-all" />
-          </button>
+            <div className="pt-2 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs text-slate-500">
+              <span>Practice 10 random items</span>
+              <span className="font-semibold text-slate-800 dark:text-slate-200 group-hover:underline flex items-center gap-1">
+                Start drill <ArrowRight className="w-3.5 h-3.5" />
+              </span>
+            </div>
+          </div>
 
-          <button
-            type="button"
+          {/* Professional Education */}
+          <div
             onClick={() => handleStartCategoryPractice('prof_ed')}
-            className="text-left bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 rounded-xl p-4 transition-all duration-150 active:scale-[0.99] hover:shadow-xs will-change-transform flex items-center justify-between tap-target group"
+            className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-slate-400 dark:hover:border-slate-600 rounded-lg p-4 transition-all duration-150 active:scale-[0.99] cursor-pointer group flex flex-col justify-between space-y-3"
           >
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800 flex items-center justify-center font-bold text-sm transition-transform duration-150 group-hover:scale-105">
-                PE
+            <div className="space-y-1.5">
+              <div className="flex items-center justify-between">
+                <CategoryBadge category="prof_ed" size="sm" />
+                <span className="text-xs text-slate-500 font-medium">7 Subjects</span>
               </div>
-              <div>
-                <h4 className="font-bold text-slate-900 dark:text-white text-sm group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
-                  Professional Education
-                </h4>
-                <p className="text-xs text-slate-600 dark:text-slate-400">
-                  Foundations, Pedagogy, Assessment, Ethics, Tech
-                </p>
-              </div>
+              <h3 className="font-bold text-slate-900 dark:text-white text-sm sm:text-base group-hover:text-slate-700 dark:group-hover:text-slate-200 transition-colors">
+                Professional Education
+              </h3>
+              <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+                Foundations, Child Development, Teaching Principles, Curriculum, Assessment, EdTech, and Ethics.
+              </p>
             </div>
-            <ArrowRight className="w-4 h-4 text-slate-400 group-hover:text-indigo-600 group-hover:translate-x-0.5 transition-all" />
-          </button>
+            <div className="pt-2 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs text-slate-500">
+              <span>Practice 10 random items</span>
+              <span className="font-semibold text-slate-800 dark:text-slate-200 group-hover:underline flex items-center gap-1">
+                Start drill <ArrowRight className="w-3.5 h-3.5" />
+              </span>
+            </div>
+          </div>
         </div>
-      </div>
+      </section>
 
-      {/* Targeted Remediation Bank */}
+      {/* Targeted Remediation (Conditional) */}
       {(bookmarkedCount > 0 || missedCount > 0) && (
-        <div className="bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-900/50 rounded-xl p-4">
-          <div className="flex items-center justify-between mb-1.5">
+        <section className="bg-amber-50/70 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-900/50 rounded-lg p-4 space-y-2.5">
+          <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <BookmarkCheck className="w-4 h-4 text-amber-700 dark:text-amber-400" />
-              <h4 className="font-bold text-slate-900 dark:text-white text-sm">
-                Targeted Remediation Bank
-              </h4>
+              <h3 className="font-bold text-slate-900 dark:text-white text-xs uppercase tracking-wider">
+                Targeted Remediation
+              </h3>
             </div>
             <button
               type="button"
               onClick={() => onNavigateTab('bank')}
-              className="text-xs font-semibold text-amber-800 dark:text-amber-400 hover:underline"
+              className="text-xs font-semibold text-amber-800 dark:text-amber-300 hover:underline cursor-pointer"
             >
-              Open Bank
+              Open Study Bank →
             </button>
           </div>
-          <p className="text-xs text-slate-700 dark:text-slate-300 mb-3 leading-relaxed">
-            Review {bookmarkedCount} saved question{bookmarkedCount === 1 ? '' : 's'} and drill {missedCount} missed item{missedCount === 1 ? '' : 's'} from previous sessions.
+          <p className="text-xs text-slate-700 dark:text-slate-300 leading-relaxed">
+            You have {bookmarkedCount} saved question{bookmarkedCount === 1 ? '' : 's'} and {missedCount} missed item{missedCount === 1 ? '' : 's'} recorded for targeted review.
           </p>
-          <div className="flex gap-2">
+          <div className="flex flex-wrap gap-2 pt-0.5">
             {bookmarkedCount > 0 && (
               <Button
                 variant="secondary"
@@ -250,7 +212,7 @@ export const HomePage: React.FC<HomePageProps> = ({
                   })
                 }
               >
-                Review Bookmarks ({bookmarkedCount})
+                Review Saved ({bookmarkedCount})
               </Button>
             )}
             {missedCount > 0 && (
@@ -270,19 +232,18 @@ export const HomePage: React.FC<HomePageProps> = ({
               </Button>
             )}
           </div>
-        </div>
+        </section>
       )}
 
-      {/* High Yield LET Tip */}
-      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-4">
-        <div className="flex items-center gap-2 text-slate-700 dark:text-slate-300 font-bold text-xs uppercase tracking-wider mb-1.5">
-          <BrainCircuit className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
-          <span>High-Yield LET Tip</span>
-        </div>
-        <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-          <strong>Item Analysis Rationale:</strong> In Assessment of Learning, an item with a high difficulty index (e.g. 0.85+) is very easy; one with negative discrimination (-0.20) indicates that lower-performing students scored better than upper-performing students due to ambiguous phrasing, and the item must be rejected.
+      {/* Board Exam Item Analysis Note */}
+      <section className="border-t border-slate-200 dark:border-slate-800 pt-4 text-xs text-slate-600 dark:text-slate-400 leading-relaxed space-y-1">
+        <span className="font-semibold text-slate-800 dark:text-slate-200 uppercase tracking-wider block text-[11px]">
+          Examination Structure Note
+        </span>
+        <p>
+          Under Republic Act No. 7836 and PRC Board for Professional Teachers standards, the LET comprises General Education (20% for Elementary / 20% for Secondary), Professional Education (40% for Elementary / 40% for Secondary), and Major/Specialization. A general weighted average of at least 75.00% with no rating below 50.00% in any subject is required to pass.
         </p>
-      </div>
+      </section>
     </div>
   );
 };
