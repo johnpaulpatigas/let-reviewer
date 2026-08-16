@@ -1,5 +1,5 @@
 import React from 'react';
-import { Home, BookOpen, Layers, BrainCircuit, BarChart3 } from 'lucide-react';
+import { Home, BookOpen, Layers, BrainCircuit, Settings } from 'lucide-react';
 import type { NavigationTab } from '../../types';
 
 interface BottomNavProps {
@@ -18,11 +18,11 @@ export const BottomNav: React.FC<BottomNavProps> = ({
     icon: React.ComponentType<{ className?: string }>;
     badge?: number;
   }[] = [
-    { id: 'home', label: 'Home', icon: Home },
-    { id: 'materials', label: 'Guides', icon: BookOpen },
+    { id: 'home', label: 'Overview', icon: Home },
     { id: 'practice', label: 'Practice', icon: BrainCircuit },
+    { id: 'materials', label: 'Guides', icon: BookOpen },
     { id: 'subjects', label: 'Subjects', icon: Layers },
-    { id: 'progress', label: 'Progress', icon: BarChart3 },
+    { id: 'settings', label: 'Settings', icon: Settings },
   ];
 
   return (

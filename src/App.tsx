@@ -9,8 +9,9 @@ import { PracticeReviewPage } from './pages/PracticeReviewPage';
 import { QuizExamSessionPage } from './pages/QuizExamSessionPage';
 import { QuizResultPage } from './pages/QuizResultPage';
 import { StudyBankPage } from './pages/StudyBankPage';
-import { ProgressPage } from './pages/ProgressPage';
+import { SettingsPage } from './pages/SettingsPage';
 import { useStudyStats } from './hooks/useStudyStats';
+import { useUserSettings } from './hooks/useUserSettings';
 import { buildQuizQuestions, ALL_QUESTIONS } from './data/questions';
 import {
   findStudyMaterialForTopic,
@@ -32,6 +33,8 @@ export default function App() {
     clearMissedQuestions,
     clearStats,
   } = useStudyStats();
+
+  const { settings, updateSetting, resetSettings } = useUserSettings();
 
   // Active quiz session states
   const [activeSession, setActiveSession] = useState<{
@@ -236,14 +239,11 @@ export default function App() {
       ) : (
         /* Primary Navigation Destinations */
         <>
-          {currentTab === 'home' && (
+          {(currentTab === 'home' || currentTab === 'progress') && (
             <HomePage
+              stats={stats}
               onStartQuiz={handleStartQuiz}
               onNavigateTab={(tab) => setCurrentTab(tab)}
-              totalAnswered={stats.totalAnswered}
-              totalCorrect={stats.totalCorrect}
-              bookmarkedCount={stats.bookmarkedQuestionIds.length}
-              missedCount={stats.missedQuestionIds.length}
             />
           )}
 
@@ -272,11 +272,13 @@ export default function App() {
             />
           )}
 
-          {currentTab === 'progress' && (
-            <ProgressPage
+          {currentTab === 'settings' && (
+            <SettingsPage
+              settings={settings}
               stats={stats}
+              onUpdateSetting={updateSetting}
               onClearStats={clearStats}
-              onOpenStudyBank={() => setCurrentTab('bank')}
+              onResetSettings={resetSettings}
             />
           )}
 
