@@ -1,224 +1,621 @@
 import React from 'react';
 import {
+  TrendingUp,
   ArrowRight,
-  BookmarkCheck,
   BookOpen,
   GraduationCap,
+  Play,
+  AlertCircle,
 } from 'lucide-react';
 import { Button } from '../components/ui/Button';
+import { ProgressBar } from '../components/ui/ProgressBar';
 import { CategoryBadge } from '../components/ui/Badge';
 import { SUBJECTS } from '../data/subjects';
 import { ALL_QUESTIONS } from '../data/questions';
-import type { QuizConfig, SubjectCategory, NavigationTab } from '../types';
+import { ALL_STUDY_MATERIALS } from '../data/study-materials';
+import type { UserStudyStats, QuizConfig, NavigationTab } from '../types';
 
 interface HomePageProps {
+  stats: UserStudyStats;
   onStartQuiz: (config: QuizConfig) => void;
   onNavigateTab: (tab: NavigationTab) => void;
-  totalAnswered?: number;
-  totalCorrect?: number;
-  bookmarkedCount?: number;
-  missedCount?: number;
 }
 
 export const HomePage: React.FC<HomePageProps> = ({
+  stats,
   onStartQuiz,
   onNavigateTab,
-  totalAnswered = 0,
-  totalCorrect = 0,
-  bookmarkedCount = 0,
-  missedCount = 0,
 }) => {
+  const {
+    totalAnswered = 0,
+    totalCorrect = 0,
+    subjectMastery = {},
+    bookmarkedQuestionIds = [],
+    missedQuestionIds = [],
+    quizHistory = [],
+    completedMaterialIds = [],
+  } = stats;
+
+  const isNewUser = totalAnswered === 0 && quizHistory.length === 0 && completedMaterialIds.length === 0;
+
   const overallAccuracy =
     totalAnswered > 0 ? Math.round((totalCorrect / totalAnswered) * 100) : 0;
+  const isPassing = overallAccuracy >= 75;
 
-  const handleStartCategoryPractice = (category: SubjectCategory) => {
-    onStartQuiz({
-      mode: 'practice',
-      subjectIds: [],
-      category,
-      questionCount: 10,
+  const genEdSubjects = SUBJECTS.filter((s) => s.category === 'gen_ed');
+  const profEdSubjects = SUBJECTS.filter((s) => s.category === 'prof_ed');
+
+  const computeDomainStats = (subjects: typeof SUBJECTS) => {
+    let answered = 0;
+    let correct = 0;
+    subjects.forEach((s) => {
+      const sub = subjectMastery[s.id];
+      if (sub) {
+        answered += sub.answered;
+        correct += sub.correct;
+      }
     });
+    return {
+      answered,
+      correct,
+      percentage: answered > 0 ? Math.round((correct / answered) * 100) : 0,
+    };
   };
 
-  return (
-    <div className="space-y-5 animate-fade-in">
-      {/* Overview & Heading */}
-      <section className="space-y-3">
+  const genEdStats = computeDomainStats(genEdSubjects);
+  const profEdStats = computeDomainStats(profEdSubjects);
+
+  const subjectsWithActivity = SUBJECTS.filter(
+    (s) => subjectMastery[s.id] && subjectMastery[s.id].answered > 0
+  );
+
+  // Identify weak areas (answered >= 3 and accuracy < 75%)
+  const weakSubjects = SUBJECTS.map((sub) => {
+    const stat = subjectMastery[sub.id];
+    const answered = stat ? stat.answered : 0;
+    const correct = stat ? stat.correct : 0;
+    const percentage = answered > 0 ? Math.round((correct / answered) * 100) : null;
+    return {
+      subject: sub,
+      answered,
+      correct,
+      percentage,
+    };
+  })
+    .filter((item) => item.percentage !== null && item.answered >= 3 && item.percentage < 75)
+    .sort((a, b) => (a.percentage ?? 0) - (b.percentage ?? 0));
+
+  // Determine smart "Continue Studying" recommendation
+  const getContinueAction = () => {
+    if (missedQuestionIds.length > 0) {
+      return {
+        type: 'missed',
+        title: 'Remediate Missed Items',
+        subtitle: `You have ${missedQuestionIds.length} missed question${missedQuestionIds.length === 1 ? '' : 's'} to drill.`,
+        actionLabel: `Drill Missed (${missedQuestionIds.length})`,
+        action: () =>
+          onStartQuiz({
+            mode: 'practice',
+            subjectIds: [],
+            includeOnlyIncorrect: true,
+            questionCount: Math.min(missedQuestionIds.length, 15),
+          }),
+      };
+    }
+
+    if (weakSubjects.length > 0) {
+      const weakest = weakSubjects[0];
+      return {
+        type: 'weak_subject',
+        title: `Strengthen ${weakest.subject.name}`,
+        subtitle: `Current accuracy is ${weakest.percentage}%. Drill core competencies to reach 75%.`,
+        actionLabel: `Practice ${weakest.subject.name}`,
+        action: () =>
+          onStartQuiz({
+            mode: 'practice',
+            subjectIds: [weakest.subject.id],
+            questionCount: 10,
+          }),
+      };
+    }
+
+    if (bookmarkedQuestionIds.length > 0) {
+      return {
+        type: 'bookmarked',
+        title: 'Review Saved Bookmarks',
+        subtitle: `You have ${bookmarkedQuestionIds.length} flagged bookmark${bookmarkedQuestionIds.length === 1 ? '' : 's'} in your bank.`,
+        actionLabel: `Review Saved (${bookmarkedQuestionIds.length})`,
+        action: () =>
+          onStartQuiz({
+            mode: 'practice',
+            subjectIds: [],
+            includeOnlyBookmarked: true,
+            questionCount: Math.min(bookmarkedQuestionIds.length, 15),
+          }),
+      };
+    }
+
+    // Default next recommendation
+    return {
+      type: 'mock',
+      title: 'Full LET Simulation Practice',
+      subtitle: 'Complete a timed mock battery to measure your current readiness across all domains.',
+      actionLabel: 'Configure Mock Exam',
+      action: () => onNavigateTab('practice'),
+    };
+  };
+
+  const nextAction = getContinueAction();
+
+  // Onboarding view for brand new users
+  if (isNewUser) {
+    return (
+      <div className="space-y-6 animate-fade-in">
+        {/* Clean Onboarding Header */}
         <div>
           <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
             Licensure Examination for Teachers
           </h1>
           <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-1 leading-relaxed">
-            Curriculum-aligned reviewer for General and Professional Education board competencies.
+            Curriculum-aligned reviewer for General Education and Professional Education.
           </p>
         </div>
 
-        {/* Primary Action Buttons */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-1">
-          <Button
-            variant="primary"
-            size="lg"
-            leftIcon={<BookOpen className="w-4 h-4 stroke-[2.25] shrink-0" />}
-            onClick={() => onNavigateTab('materials')}
-            className="w-full text-center justify-center font-semibold"
-          >
-            Study Guides & Notes
-          </Button>
-
-          <Button
-            variant="primary"
-            size="lg"
-            leftIcon={<GraduationCap className="w-4 h-4 stroke-[2.25] shrink-0" />}
-            onClick={() => onNavigateTab('practice')}
-            className="w-full text-center justify-center font-semibold"
-          >
-            Mock Exam & Practice
-          </Button>
-        </div>
-
-        {/* Study Metrics Summary Strip */}
-        <div className="flex flex-wrap items-center gap-x-3 gap-y-1 py-2 px-3 bg-slate-100 dark:bg-slate-900 rounded-md text-xs text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-800">
-          <div>
-            <span className="font-semibold text-slate-900 dark:text-white font-mono">{ALL_QUESTIONS.length}</span> questions in bank
+        {/* Start Your Review Hero */}
+        <section className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg p-5 sm:p-6 space-y-4">
+          <div className="space-y-1.5">
+            <h2 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white">
+              Start Your Review
+            </h2>
+            <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-relaxed max-w-lg">
+              Begin with a self-paced practice drill or explore the study guides to start tracking your competency progress.
+            </p>
           </div>
-          <span className="text-slate-300 dark:text-slate-700">•</span>
-          <div>
-            <span className="font-semibold text-slate-900 dark:text-white font-mono">{totalAnswered}</span> solved ({overallAccuracy}% accuracy)
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-1">
+            <Button
+              variant="primary"
+              size="lg"
+              leftIcon={<GraduationCap className="w-4 h-4 stroke-[2.25] shrink-0" />}
+              onClick={() => onNavigateTab('practice')}
+              className="w-full justify-center font-semibold"
+            >
+              Start Practice Drill
+            </Button>
+
+            <Button
+              variant="secondary"
+              size="lg"
+              leftIcon={<BookOpen className="w-4 h-4 stroke-[2.25] shrink-0" />}
+              onClick={() => onNavigateTab('materials')}
+              className="w-full justify-center font-semibold"
+            >
+              Explore Study Guides
+            </Button>
           </div>
-          {totalCorrect > 0 && (
-            <>
-              <span className="text-slate-300 dark:text-slate-700">•</span>
-              <div>
-                <span className="font-semibold text-emerald-700 dark:text-emerald-400 font-mono">{totalCorrect}</span> correct
-              </div>
-            </>
-          )}
-        </div>
-      </section>
+        </section>
 
-      {/* Curriculum Tracks */}
-      <section className="space-y-3 pt-1">
-        <div className="flex items-center justify-between">
-          <h2 className="text-xs font-bold text-slate-900 dark:text-slate-100 uppercase tracking-wider">
-            Curriculum Domains
-          </h2>
-          <button
-            type="button"
-            onClick={() => onNavigateTab('subjects')}
-            className="text-xs font-semibold text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white flex items-center gap-1 hover:underline cursor-pointer"
-          >
-            <span>All {SUBJECTS.length} subjects</span>
-            <ArrowRight className="w-3.5 h-3.5" />
-          </button>
-        </div>
+        {/* Curriculum Tracks Quick Overview */}
+        <section className="space-y-3 pt-1">
+          <div className="flex items-center justify-between">
+            <h3 className="text-xs font-bold text-slate-900 dark:text-slate-100 uppercase tracking-wider">
+              Curriculum Domains
+            </h3>
+            <button
+              type="button"
+              onClick={() => onNavigateTab('subjects')}
+              className="text-xs font-semibold text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white flex items-center gap-1 hover:underline cursor-pointer"
+            >
+              <span>Browse {SUBJECTS.length} subjects</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </button>
+          </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          {/* General Education */}
-          <div
-            onClick={() => handleStartCategoryPractice('gen_ed')}
-            className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-sky-300 dark:hover:border-sky-800 rounded-lg p-4 transition-all duration-150 active:scale-[0.99] cursor-pointer group flex flex-col justify-between space-y-3"
-          >
-            <div className="space-y-1.5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div
+              onClick={() =>
+                onStartQuiz({
+                  mode: 'practice',
+                  subjectIds: [],
+                  category: 'gen_ed',
+                  questionCount: 10,
+                })
+              }
+              className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-sky-300 dark:hover:border-sky-800 rounded-lg p-4 transition-all duration-150 active:scale-[0.99] cursor-pointer group space-y-2.5"
+            >
               <div className="flex items-center justify-between">
                 <CategoryBadge category="gen_ed" size="sm" />
                 <span className="text-xs text-slate-500 font-medium">6 Subjects</span>
               </div>
-              <h3 className="font-bold text-slate-900 dark:text-white text-sm sm:text-base group-hover:text-sky-700 dark:group-hover:text-sky-300 transition-colors">
-                General Education
-              </h3>
-              <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-                English, Filipino, Mathematics, Natural Science, Social Sciences, and ICT Literacy.
-              </p>
+              <div>
+                <h4 className="font-bold text-slate-900 dark:text-white text-sm group-hover:text-sky-700 dark:group-hover:text-sky-300 transition-colors">
+                  General Education
+                </h4>
+                <p className="text-xs text-slate-600 dark:text-slate-400 mt-0.5 leading-relaxed">
+                  English, Filipino, Mathematics, Natural Science, Social Sciences, and ICT Literacy.
+                </p>
+              </div>
+              <div className="pt-2 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs text-slate-500">
+                <span>10-item quick drill</span>
+                <span className="font-semibold text-sky-700 dark:text-sky-400 group-hover:underline flex items-center gap-1">
+                  Start drill <ArrowRight className="w-3.5 h-3.5" />
+                </span>
+              </div>
             </div>
-            <div className="pt-2 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs text-slate-500">
-              <span>Practice 10 random items</span>
-              <span className="font-semibold text-sky-700 dark:text-sky-400 group-hover:underline flex items-center gap-1">
-                Start drill <ArrowRight className="w-3.5 h-3.5" />
-              </span>
-            </div>
-          </div>
 
-          {/* Professional Education */}
-          <div
-            onClick={() => handleStartCategoryPractice('prof_ed')}
-            className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-amber-300 dark:hover:border-amber-800 rounded-lg p-4 transition-all duration-150 active:scale-[0.99] cursor-pointer group flex flex-col justify-between space-y-3"
-          >
-            <div className="space-y-1.5">
+            <div
+              onClick={() =>
+                onStartQuiz({
+                  mode: 'practice',
+                  subjectIds: [],
+                  category: 'prof_ed',
+                  questionCount: 10,
+                })
+              }
+              className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-amber-300 dark:hover:border-amber-800 rounded-lg p-4 transition-all duration-150 active:scale-[0.99] cursor-pointer group space-y-2.5"
+            >
               <div className="flex items-center justify-between">
                 <CategoryBadge category="prof_ed" size="sm" />
                 <span className="text-xs text-slate-500 font-medium">7 Subjects</span>
               </div>
-              <h3 className="font-bold text-slate-900 dark:text-white text-sm sm:text-base group-hover:text-amber-700 dark:group-hover:text-amber-300 transition-colors">
-                Professional Education
-              </h3>
-              <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-                Foundations, Child Development, Teaching Principles, Curriculum, Assessment, EdTech, and Ethics.
-              </p>
+              <div>
+                <h4 className="font-bold text-slate-900 dark:text-white text-sm group-hover:text-amber-700 dark:group-hover:text-amber-300 transition-colors">
+                  Professional Education
+                </h4>
+                <p className="text-xs text-slate-600 dark:text-slate-400 mt-0.5 leading-relaxed">
+                  Foundations, Child Development, Teaching Principles, Curriculum, Assessment, EdTech, and Ethics.
+                </p>
+              </div>
+              <div className="pt-2 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs text-slate-500">
+                <span>10-item quick drill</span>
+                <span className="font-semibold text-amber-700 dark:text-amber-400 group-hover:underline flex items-center gap-1">
+                  Start drill <ArrowRight className="w-3.5 h-3.5" />
+                </span>
+              </div>
             </div>
-            <div className="pt-2 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs text-slate-500">
-              <span>Practice 10 random items</span>
-              <span className="font-semibold text-amber-700 dark:text-amber-400 group-hover:underline flex items-center gap-1">
-                Start drill <ArrowRight className="w-3.5 h-3.5" />
-              </span>
+          </div>
+        </section>
+      </div>
+    );
+  }
+
+  // Progress-Centric Home Screen for Active Learners
+  return (
+    <div className="space-y-5 animate-fade-in">
+      {/* Header & Overall Summary Metrics */}
+      <section className="space-y-3">
+        <div>
+          <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
+            Study Progress Overview
+          </h1>
+          <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-1 leading-relaxed">
+            Performance analytics, curriculum mastery, and recommended study actions.
+          </p>
+        </div>
+
+        {/* Primary Metric Strip */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-0.5">
+          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg p-3">
+            <span className="text-[10px] text-slate-500 uppercase tracking-wider block font-semibold">
+              Questions Solved
+            </span>
+            <div className="text-lg sm:text-xl font-bold text-slate-900 dark:text-white font-mono mt-0.5">
+              {totalAnswered}
+              <span className="text-xs text-slate-400 font-normal ml-1">/ {ALL_QUESTIONS.length}</span>
+            </div>
+          </div>
+
+          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg p-3">
+            <span className="text-[10px] text-slate-500 uppercase tracking-wider block font-semibold">
+              Accuracy
+            </span>
+            <div className={`text-lg sm:text-xl font-bold font-mono mt-0.5 ${overallAccuracy >= 75 ? 'text-emerald-700 dark:text-emerald-400' : 'text-slate-900 dark:text-white'}`}>
+              {overallAccuracy}%
+              <span className="text-[10px] text-slate-400 font-normal ml-1">(≥75% pass)</span>
+            </div>
+          </div>
+
+          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg p-3">
+            <span className="text-[10px] text-slate-500 uppercase tracking-wider block font-semibold">
+              Subjects Studied
+            </span>
+            <div className="text-lg sm:text-xl font-bold text-slate-900 dark:text-white font-mono mt-0.5">
+              {subjectsWithActivity.length}
+              <span className="text-xs text-slate-400 font-normal ml-1">/ {SUBJECTS.length}</span>
+            </div>
+          </div>
+
+          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg p-3">
+            <span className="text-[10px] text-slate-500 uppercase tracking-wider block font-semibold">
+              Guides Read
+            </span>
+            <div className="text-lg sm:text-xl font-bold text-slate-900 dark:text-white font-mono mt-0.5">
+              {completedMaterialIds.length}
+              <span className="text-xs text-slate-400 font-normal ml-1">/ {ALL_STUDY_MATERIALS.length}</span>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Targeted Remediation (Conditional) */}
-      {(bookmarkedCount > 0 || missedCount > 0) && (
-        <section className="bg-amber-50/70 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-900/50 rounded-lg p-4 space-y-2.5">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <BookmarkCheck className="w-4 h-4 text-amber-700 dark:text-amber-400" />
-              <h3 className="font-bold text-slate-900 dark:text-white text-xs uppercase tracking-wider">
-                Targeted Remediation
-              </h3>
+      {/* Continue Studying (Smart Next Action) */}
+      <section className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg p-4 sm:p-5 space-y-3">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <div className="p-1 rounded bg-slate-900 text-white dark:bg-white dark:text-slate-900">
+              <Play className="w-3.5 h-3.5 fill-current" />
             </div>
+            <h2 className="text-xs font-bold uppercase tracking-wider text-slate-900 dark:text-white">
+              Continue Studying
+            </h2>
+          </div>
+          <span className="text-[11px] text-slate-500 font-medium">Recommended Next Action</span>
+        </div>
+
+        <div className="space-y-1">
+          <h3 className="text-sm sm:text-base font-bold text-slate-900 dark:text-white">
+            {nextAction.title}
+          </h3>
+          <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+            {nextAction.subtitle}
+          </p>
+        </div>
+
+        <div className="pt-1">
+          <Button
+            variant="primary"
+            size="md"
+            onClick={nextAction.action}
+            className="font-bold"
+          >
+            {nextAction.actionLabel} →
+          </Button>
+        </div>
+      </section>
+
+      {/* Performance Overview & Estimated Readiness */}
+      <section className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg p-4 sm:p-5 space-y-3.5">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-1.5 text-slate-700 dark:text-slate-300">
+            <TrendingUp className="w-4 h-4" />
+            <h2 className="font-bold text-xs uppercase tracking-wider text-slate-900 dark:text-white">
+              Estimated Passing Readiness
+            </h2>
+          </div>
+          <span
+            className={`text-xs font-bold px-2 py-0.5 rounded ${
+              isPassing && totalAnswered >= 10
+                ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300'
+                : 'bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300'
+            }`}
+          >
+            {totalAnswered < 10
+              ? 'Collecting baseline'
+              : isPassing
+              ? 'On track (≥ 75%)'
+              : 'Needs practice (< 75%)'}
+          </span>
+        </div>
+
+        <div className="space-y-1">
+          <div className="flex justify-between items-baseline">
+            <span className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white font-mono">
+              {overallAccuracy}%
+            </span>
+            <span className="text-xs text-slate-500">
+              Passing Benchmark: 75.00%
+            </span>
+          </div>
+          <ProgressBar
+            value={overallAccuracy}
+            max={100}
+            colorVariant={overallAccuracy >= 75 ? 'emerald' : 'amber'}
+          />
+        </div>
+
+        {/* Domain Comparison */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-2 border-t border-slate-100 dark:border-slate-800">
+          <div className="p-3 bg-slate-50 dark:bg-slate-800/50 rounded-md border border-slate-200 dark:border-slate-700 space-y-1">
+            <div className="flex justify-between text-xs font-semibold">
+              <span className="text-sky-800 dark:text-sky-300">General Education</span>
+              <span className="font-mono text-slate-900 dark:text-white">{genEdStats.percentage}%</span>
+            </div>
+            <ProgressBar value={genEdStats.percentage} max={100} colorVariant="sky" />
+            <p className="text-[10px] text-slate-500 pt-0.5">
+              {genEdStats.correct} of {genEdStats.answered} questions correct
+            </p>
+          </div>
+
+          <div className="p-3 bg-slate-50 dark:bg-slate-800/50 rounded-md border border-slate-200 dark:border-slate-700 space-y-1">
+            <div className="flex justify-between text-xs font-semibold">
+              <span className="text-amber-800 dark:text-amber-300">Professional Education</span>
+              <span className="font-mono text-slate-900 dark:text-white">{profEdStats.percentage}%</span>
+            </div>
+            <ProgressBar value={profEdStats.percentage} max={100} colorVariant="amber" />
+            <p className="text-[10px] text-slate-500 pt-0.5">
+              {profEdStats.correct} of {profEdStats.answered} questions correct
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Areas to Review (Weak Competencies Queue) */}
+      <section className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg p-4 space-y-3">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-1.5">
+            <AlertCircle className="w-4 h-4 text-amber-600 dark:text-amber-400" />
+            <h2 className="font-bold text-xs uppercase tracking-wider text-slate-900 dark:text-white">
+              Areas to Review
+            </h2>
+          </div>
+          {(bookmarkedQuestionIds.length > 0 || missedQuestionIds.length > 0) && (
             <button
               type="button"
               onClick={() => onNavigateTab('bank')}
-              className="text-xs font-semibold text-amber-800 dark:text-amber-300 hover:underline cursor-pointer"
+              className="text-xs font-semibold text-slate-700 dark:text-slate-300 hover:underline cursor-pointer"
             >
               Open Study Bank →
             </button>
+          )}
+        </div>
+
+        {weakSubjects.length > 0 ? (
+          <div className="space-y-2">
+            {weakSubjects.map((item) => (
+              <div
+                key={item.subject.id}
+                className="p-3 rounded-md bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 flex items-center justify-between gap-3 text-xs"
+              >
+                <div>
+                  <span className="font-bold text-slate-900 dark:text-white block">
+                    {item.subject.name}
+                  </span>
+                  <span className="text-[11px] text-rose-600 dark:text-rose-400 font-medium">
+                    {item.percentage}% accuracy • {item.answered} questions attempted
+                  </span>
+                </div>
+
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  onClick={() =>
+                    onStartQuiz({
+                      mode: 'practice',
+                      subjectIds: [item.subject.id],
+                      questionCount: 10,
+                    })
+                  }
+                >
+                  Drill Subject
+                </Button>
+              </div>
+            ))}
           </div>
-          <p className="text-xs text-slate-700 dark:text-slate-300 leading-relaxed">
-            You have {bookmarkedCount} saved question{bookmarkedCount === 1 ? '' : 's'} and {missedCount} missed item{missedCount === 1 ? '' : 's'} recorded for targeted review.
-          </p>
-          <div className="flex flex-wrap gap-2 pt-0.5">
-            {bookmarkedCount > 0 && (
-              <Button
-                variant="secondary"
-                size="sm"
-                onClick={() =>
-                  onStartQuiz({
-                    mode: 'practice',
-                    subjectIds: [],
-                    includeOnlyBookmarked: true,
-                    questionCount: bookmarkedCount,
-                  })
-                }
-              >
-                Review Saved ({bookmarkedCount})
-              </Button>
-            )}
-            {missedCount > 0 && (
-              <Button
-                variant="secondary"
-                size="sm"
-                onClick={() =>
-                  onStartQuiz({
-                    mode: 'practice',
-                    subjectIds: [],
-                    includeOnlyIncorrect: true,
-                    questionCount: missedCount,
-                  })
-                }
-              >
-                Drill Missed ({missedCount})
-              </Button>
-            )}
+        ) : (
+          <div className="p-3 rounded-md bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-800 text-center text-xs text-slate-500">
+            {totalAnswered < 10
+              ? 'Complete more practice items across subjects to identify specific weak areas.'
+              : 'Great work! All tested subjects are performing at or above the 75% passing benchmark.'}
+          </div>
+        )}
+      </section>
+
+      {/* Subject-by-Subject Mastery Breakdown */}
+      <section className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg p-4 space-y-3">
+        <div className="flex items-center justify-between">
+          <h2 className="font-bold text-slate-900 dark:text-white text-xs uppercase tracking-wider">
+            Subject Performance Breakdown
+          </h2>
+          <button
+            type="button"
+            onClick={() => onNavigateTab('subjects')}
+            className="text-xs font-semibold text-slate-700 dark:text-slate-300 hover:underline cursor-pointer"
+          >
+            All Subjects →
+          </button>
+        </div>
+
+        <div className="space-y-2.5">
+          {SUBJECTS.map((sub) => {
+            const stat = subjectMastery[sub.id];
+            const answered = stat ? stat.answered : 0;
+            const correct = stat ? stat.correct : 0;
+            const percentage = answered > 0 ? Math.round((correct / answered) * 100) : 0;
+
+            return (
+              <div key={sub.id} className="space-y-1">
+                <div className="flex justify-between items-center text-xs">
+                  <div className="flex items-center gap-1.5 min-w-0">
+                    <span className="font-medium text-slate-800 dark:text-slate-200 truncate">
+                      {sub.name}
+                    </span>
+                    <span className="text-[10px] text-slate-400 shrink-0">
+                      ({sub.category === 'gen_ed' ? 'GenEd' : 'ProfEd'})
+                    </span>
+                  </div>
+                  <span className="text-slate-500 font-mono shrink-0 ml-2">
+                    {answered > 0 ? `${correct}/${answered} (${percentage}%)` : 'Unattempted'}
+                  </span>
+                </div>
+                <ProgressBar
+                  value={percentage}
+                  max={100}
+                  colorVariant={
+                    answered === 0
+                      ? 'primary'
+                      : percentage >= 75
+                      ? 'emerald'
+                      : percentage >= 50
+                      ? 'amber'
+                      : 'rose'
+                  }
+                />
+              </div>
+            );
+          })}
+        </div>
+      </section>
+
+      {/* Recent Examination Activity */}
+      {quizHistory.length > 0 && (
+        <section className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg p-4 space-y-3">
+          <div className="flex items-center justify-between">
+            <h2 className="font-bold text-slate-900 dark:text-white text-xs uppercase tracking-wider">
+              Recent Activity & Sessions
+            </h2>
+            <span className="text-xs text-slate-500 font-mono font-medium">
+              {quizHistory.length} total logged
+            </span>
+          </div>
+
+          <div className="space-y-2">
+            {quizHistory.slice(0, 4).map((session) => {
+              const dateStr = new Date(session.timestamp).toLocaleDateString(undefined, {
+                month: 'short',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+              });
+
+              return (
+                <div
+                  key={session.sessionId}
+                  className="p-3 rounded-md border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900 flex items-center justify-between gap-3 text-xs"
+                >
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center gap-2">
+                      <span className="font-bold text-slate-900 dark:text-white font-mono text-sm">
+                        {session.scorePercentage}%
+                      </span>
+                      <span
+                        className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${
+                          session.isPassed
+                            ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300'
+                            : 'bg-rose-100 text-rose-800 dark:bg-rose-950 dark:text-rose-300'
+                        }`}
+                      >
+                        {session.isPassed ? 'Passed' : 'Needs Review'}
+                      </span>
+                      <span className="text-[11px] text-slate-500 truncate">
+                        {session.config.title || (session.config.mode === 'exam' ? 'Mock Exam' : 'Practice Drill')}
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-2 mt-0.5 text-[11px] text-slate-500">
+                      <span>{dateStr}</span>
+                      <span>•</span>
+                      <span>{session.correctCount} of {session.totalQuestions} items</span>
+                    </div>
+                  </div>
+
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    onClick={() => onStartQuiz(session.config)}
+                  >
+                    Retake
+                  </Button>
+                </div>
+              );
+            })}
           </div>
         </section>
       )}

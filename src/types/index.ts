@@ -145,5 +145,17 @@ export interface UserStudyStats {
   bookmarkedMaterialIds?: string[];
 }
 
-export type NavigationTab = 'home' | 'materials' | 'practice' | 'subjects' | 'progress' | 'bank';
+export type ThemeMode = 'system' | 'light' | 'dark';
+export type FontSizePreference = 'small' | 'default' | 'large' | 'extra-large';
+export type MotionPreference = 'system' | 'on' | 'off';
+
+export interface UserSettings {
+  theme: ThemeMode;
+  fontSize: FontSizePreference;
+  reduceMotion: MotionPreference;
+  defaultQuestionCount: number;
+  instantRationales: boolean;
+}
+
+export type NavigationTab = 'home' | 'materials' | 'practice' | 'subjects' | 'settings' | 'bank' | 'progress';
 
