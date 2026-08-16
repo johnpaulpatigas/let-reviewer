@@ -27,7 +27,7 @@ export const BottomNav: React.FC<BottomNavProps> = ({
   return (
     <nav
       aria-label="Bottom Navigation"
-      className="fixed bottom-0 left-0 right-0 z-40 bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 safe-bottom transition-colors"
+      className="fixed bottom-0 left-0 right-0 z-40 bg-white dark:bg-neutral-900 border-t border-slate-200 dark:border-neutral-800 safe-bottom transition-colors"
     >
       <div className="max-w-2xl mx-auto px-2 h-14 flex items-center justify-around">
         {tabs.map((tab) => {
@@ -42,13 +42,13 @@ export const BottomNav: React.FC<BottomNavProps> = ({
               className={`flex-1 flex flex-col items-center justify-center h-full pt-1 pb-1 transition-colors tap-target relative cursor-pointer active:scale-95 duration-150 ${
                 isActive
                   ? 'text-slate-900 dark:text-white font-bold'
-                  : 'text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200 font-medium'
+                  : 'text-slate-500 hover:text-slate-800 dark:text-neutral-400 dark:hover:text-neutral-200 font-medium'
               }`}
             >
               <div className="relative">
                 <Icon className={`w-4 h-4 sm:w-5 sm:h-5 transition-transform duration-200 ${isActive ? 'scale-110' : 'scale-100'}`} />
                 {Boolean(tab.badge && tab.badge > 0) && (
-                  <span className="absolute -top-1 -right-2 min-w-[15px] h-3.5 px-1 rounded-full bg-rose-600 text-white text-[9px] font-bold flex items-center justify-center ring-2 ring-white dark:ring-slate-900">
+                  <span className="absolute -top-1 -right-2 min-w-[15px] h-3.5 px-1 rounded-full bg-rose-600 text-white text-[9px] font-bold flex items-center justify-center ring-2 ring-white dark:ring-neutral-900">
                     {tab.badge! > 99 ? '99+' : tab.badge}
                   </span>
                 )}

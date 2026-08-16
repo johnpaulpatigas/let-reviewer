@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Button } from '../components/ui/Button';
 import { ProgressBar } from '../components/ui/ProgressBar';
+import { FormattedText } from '../components/ui/FormattedText';
 import {
   Clock,
   Flag,
@@ -241,7 +242,7 @@ export const QuizExamSessionPage: React.FC<QuizExamSessionPageProps> = ({
   if (!currentQuestion) {
     return (
       <div className="text-center py-12 space-y-3">
-        <p className="text-slate-500">No questions available in this session.</p>
+        <p className="text-slate-500 dark:text-neutral-400">No questions available in this session.</p>
         <Button variant="secondary" onClick={onExit}>
           Exit Examination
         </Button>
@@ -322,16 +323,16 @@ export const QuizExamSessionPage: React.FC<QuizExamSessionPageProps> = ({
   return (
     <div className="space-y-4 animate-fade-in">
       {/* Examination Title & Session Bar */}
-      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg p-3 sm:p-3.5 flex items-center justify-between gap-2.5">
+      <div className="bg-white dark:bg-neutral-900 border border-slate-200 dark:border-neutral-800 rounded-lg p-3 sm:p-3.5 flex items-center justify-between gap-2.5">
         <div className="flex items-center gap-2 min-w-0">
-          <div className="p-1.5 rounded-md bg-slate-900 text-white dark:bg-white dark:text-slate-900 shrink-0">
+          <div className="p-1.5 rounded-md bg-slate-900 text-white dark:bg-white dark:text-neutral-900 shrink-0">
             <Scale className="w-3.5 h-3.5" />
           </div>
           <div className="min-w-0">
             <h2 className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white truncate">
               {config.title || 'LET Examination Simulation'}
             </h2>
-            <span className="text-[10px] text-slate-500 block truncate">
+            <span className="text-[10px] text-slate-500 dark:text-neutral-400 block truncate">
               {currentQuestion.category === 'gen_ed' ? 'General Education' : 'Professional Education'} • Item {currentIndex + 1} of {questions.length}
             </span>
           </div>
@@ -344,7 +345,7 @@ export const QuizExamSessionPage: React.FC<QuizExamSessionPageProps> = ({
               className={`flex items-center gap-1.5 px-2.5 py-1 rounded-md font-mono text-xs font-bold border ${
                 secondsRemaining < 300
                   ? 'bg-rose-50 text-rose-700 dark:bg-rose-950/60 dark:text-rose-300 border-rose-300 dark:border-rose-800'
-                  : 'bg-slate-100 text-slate-900 dark:bg-slate-800 dark:text-slate-100 border-slate-200 dark:border-slate-700'
+                  : 'bg-slate-100 text-slate-900 dark:bg-neutral-800 dark:text-neutral-100 border-slate-200 dark:border-neutral-700'
               }`}
             >
               <Clock className="w-3.5 h-3.5 shrink-0" />
@@ -356,7 +357,7 @@ export const QuizExamSessionPage: React.FC<QuizExamSessionPageProps> = ({
             type="button"
             onClick={() => setIsGridOpen(true)}
             aria-label="Open question navigator"
-            className="flex items-center gap-1 px-2.5 py-1 rounded-md bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs font-semibold transition-colors tap-target cursor-pointer border border-slate-200 dark:border-slate-700"
+            className="flex items-center gap-1 px-2.5 py-1 rounded-md bg-slate-100 dark:bg-neutral-800 hover:bg-slate-200 dark:hover:bg-neutral-700 text-slate-700 dark:text-neutral-300 text-xs font-semibold transition-colors tap-target cursor-pointer border border-slate-200 dark:border-neutral-700"
           >
             <Grid className="w-3.5 h-3.5" />
             <span className="font-mono">{answeredCount}/{questions.length}</span>
@@ -375,7 +376,7 @@ export const QuizExamSessionPage: React.FC<QuizExamSessionPageProps> = ({
       {/* Main Examination Item Card */}
       <div
         key={currentQuestion.id}
-        className={`bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg p-4 sm:p-6 space-y-4 shadow-xs ${
+        className={`bg-white dark:bg-neutral-900 border border-slate-200 dark:border-neutral-800 rounded-lg p-4 sm:p-6 space-y-4 shadow-xs ${
           direction === 'next'
             ? 'animate-slide-left'
             : direction === 'prev'
@@ -384,24 +385,25 @@ export const QuizExamSessionPage: React.FC<QuizExamSessionPageProps> = ({
         }`}
       >
         {/* Topic & Metadata */}
-        <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-2.5">
+        <div className="flex items-center justify-between border-b border-slate-100 dark:border-neutral-800 pb-2.5">
           <div className="space-y-0.5">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-neutral-400">
               {currentQuestion.subjectName}
             </span>
-            <div className="text-xs font-semibold text-slate-800 dark:text-slate-200">
+            <div className="text-xs font-semibold text-slate-800 dark:text-neutral-200">
               {currentQuestion.topic}
             </div>
           </div>
-          <span className="px-2 py-0.5 bg-slate-100 dark:bg-slate-800 rounded text-xs font-mono font-bold text-slate-700 dark:text-slate-300">
+          <span className="px-2 py-0.5 bg-slate-100 dark:bg-neutral-800 rounded text-xs font-mono font-bold text-slate-700 dark:text-neutral-300">
             #{currentIndex + 1}
           </span>
         </div>
 
         {/* Question Stem */}
-        <div className="text-slate-900 dark:text-slate-100 text-sm sm:text-base font-medium leading-relaxed">
-          {currentQuestion.question}
-        </div>
+        <FormattedText
+          text={currentQuestion.question}
+          className="text-slate-900 dark:text-neutral-100 text-sm sm:text-base font-medium leading-relaxed"
+        />
 
         {/* Examination Answer Choices */}
         <div className="space-y-2.5 pt-1" role="radiogroup" aria-label="Exam choices">
@@ -417,22 +419,22 @@ export const QuizExamSessionPage: React.FC<QuizExamSessionPageProps> = ({
                 onClick={() => handleSelectChoice(index)}
                 className={`w-full text-left p-3.5 rounded-lg border transition-all duration-150 ease-out active:scale-[0.985] flex items-center justify-between gap-3 tap-target cursor-pointer ${
                   isSelected
-                    ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 border-slate-900 dark:border-white font-semibold ring-2 ring-slate-900/20 dark:ring-white/20'
-                    : 'bg-slate-50/70 dark:bg-slate-800/40 text-slate-800 dark:text-slate-200 border-slate-200 dark:border-slate-800 hover:border-slate-400 dark:hover:border-slate-600'
+                    ? 'bg-slate-900 text-white dark:bg-white dark:text-neutral-900 border-slate-900 dark:border-white font-semibold ring-2 ring-slate-900/20 dark:ring-white/20'
+                    : 'bg-slate-50/70 dark:bg-neutral-800/40 text-slate-800 dark:text-neutral-200 border-slate-200 dark:border-neutral-800 hover:border-slate-400 dark:hover:border-neutral-600'
                 }`}
               >
                 <div className="flex items-center gap-3 flex-1 min-w-0">
                   <span
                     className={`w-6 h-6 rounded-md border flex items-center justify-center font-bold text-xs shrink-0 font-mono transition-colors ${
                       isSelected
-                        ? 'bg-white text-slate-900 dark:bg-slate-900 dark:text-white border-transparent'
-                        : 'bg-white dark:bg-slate-700 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-600'
+                        ? 'bg-white text-slate-900 dark:bg-neutral-900 dark:text-white border-transparent'
+                        : 'bg-white dark:bg-neutral-700 text-slate-700 dark:text-neutral-300 border-slate-300 dark:border-neutral-600'
                     }`}
                   >
                     {CHOICE_LETTERS[index]}
                   </span>
                   <span className="text-xs sm:text-sm leading-snug break-words">
-                    {choiceText}
+                    <FormattedText text={choiceText} inline />
                   </span>
                 </div>
               </button>
@@ -451,10 +453,10 @@ export const QuizExamSessionPage: React.FC<QuizExamSessionPageProps> = ({
           className={`inline-flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-xs font-semibold transition-all duration-150 active:scale-[0.98] tap-target cursor-pointer border ${
             isCurrentFlagged
               ? 'bg-amber-50 text-amber-900 dark:bg-amber-950 dark:text-amber-300 border-amber-300 dark:border-amber-700 font-bold shadow-xs'
-              : 'bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 hover:border-slate-300 dark:hover:border-slate-700 shadow-2xs'
+              : 'bg-white dark:bg-neutral-900 text-slate-700 dark:text-neutral-300 border-slate-200 dark:border-neutral-800 hover:bg-slate-50 dark:hover:bg-neutral-800 hover:border-slate-300 dark:hover:border-neutral-700 shadow-2xs'
           }`}
         >
-          <Flag className={`w-3.5 h-3.5 shrink-0 transition-transform duration-150 ${isCurrentFlagged ? 'fill-current text-amber-600 dark:text-amber-400 scale-110' : 'text-slate-400 dark:text-slate-500 scale-100'}`} />
+          <Flag className={`w-3.5 h-3.5 shrink-0 transition-transform duration-150 ${isCurrentFlagged ? 'fill-current text-amber-600 dark:text-amber-400 scale-110' : 'text-slate-400 dark:text-neutral-500 scale-100'}`} />
           <span>{isCurrentFlagged ? 'Question Flagged' : 'Flag Question for Review'}</span>
         </button>
       </div>
@@ -506,7 +508,7 @@ export const QuizExamSessionPage: React.FC<QuizExamSessionPageProps> = ({
       </div>
 
       {/* Quick Finish Button on Footer Bar */}
-      <div className="flex items-center justify-between pt-2 border-t border-slate-200 dark:border-slate-800 text-xs text-slate-500">
+      <div className="flex items-center justify-between pt-2 border-t border-slate-200 dark:border-neutral-800 text-xs text-slate-500 dark:text-neutral-400">
         <button
           type="button"
           onClick={() => setIsExitConfirmOpen(true)}
@@ -517,7 +519,7 @@ export const QuizExamSessionPage: React.FC<QuizExamSessionPageProps> = ({
         <button
           type="button"
           onClick={() => setIsSubmitConfirmOpen(true)}
-          className="font-bold text-slate-800 dark:text-slate-200 hover:underline cursor-pointer"
+          className="font-bold text-slate-800 dark:text-neutral-200 hover:underline cursor-pointer"
         >
           Finish & Grade Exam →
         </button>
@@ -526,34 +528,34 @@ export const QuizExamSessionPage: React.FC<QuizExamSessionPageProps> = ({
       {/* Question Navigator Drawer / Modal */}
       {isGridOpen && (
         <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-end sm:items-center justify-center p-0 sm:p-4 animate-fade-in">
-          <div className="bg-white dark:bg-slate-900 w-full sm:max-w-md rounded-t-xl sm:rounded-xl p-5 shadow-2xl max-h-[85vh] flex flex-col space-y-3 animate-scale-in">
-            <div className="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800">
+          <div className="bg-white dark:bg-neutral-900 w-full sm:max-w-md rounded-t-xl sm:rounded-xl p-5 shadow-2xl max-h-[85vh] flex flex-col space-y-3 animate-scale-in">
+            <div className="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-neutral-800">
               <div>
                 <h3 className="font-bold text-slate-900 dark:text-white text-sm">
                   Question Navigator
                 </h3>
-                <p className="text-xs text-slate-500">
+                <p className="text-xs text-slate-500 dark:text-neutral-400">
                   {answeredCount} of {questions.length} answered ({unansweredCount} remaining)
                 </p>
               </div>
               <button
                 type="button"
                 onClick={() => setIsGridOpen(false)}
-                className="w-7 h-7 rounded-md bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-500 cursor-pointer"
+                className="w-7 h-7 rounded-md bg-slate-100 dark:bg-neutral-800 flex items-center justify-center text-slate-500 dark:text-neutral-400 cursor-pointer"
               >
                 <X className="w-4 h-4" />
               </button>
             </div>
 
             {/* Filter Pills */}
-            <div className="flex gap-1 p-1 bg-slate-100 dark:bg-slate-800 rounded-md text-xs font-medium">
+            <div className="flex gap-1 p-1 bg-slate-100 dark:bg-neutral-800 rounded-md text-xs font-medium">
               <button
                 type="button"
                 onClick={() => setGridFilter('all')}
                 className={`flex-1 py-1 rounded transition-colors cursor-pointer ${
                   gridFilter === 'all'
-                    ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white font-bold shadow-xs'
-                    : 'text-slate-600 dark:text-slate-400'
+                    ? 'bg-white dark:bg-neutral-700 text-slate-900 dark:text-white font-bold shadow-xs'
+                    : 'text-slate-600 dark:text-neutral-400'
                 }`}
               >
                 All ({questions.length})
@@ -563,8 +565,8 @@ export const QuizExamSessionPage: React.FC<QuizExamSessionPageProps> = ({
                 onClick={() => setGridFilter('unanswered')}
                 className={`flex-1 py-1 rounded transition-colors cursor-pointer ${
                   gridFilter === 'unanswered'
-                    ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white font-bold shadow-xs'
-                    : 'text-slate-600 dark:text-slate-400'
+                    ? 'bg-white dark:bg-neutral-700 text-slate-900 dark:text-white font-bold shadow-xs'
+                    : 'text-slate-600 dark:text-neutral-400'
                 }`}
               >
                 Unanswered ({unansweredCount})
@@ -574,8 +576,8 @@ export const QuizExamSessionPage: React.FC<QuizExamSessionPageProps> = ({
                 onClick={() => setGridFilter('flagged')}
                 className={`flex-1 py-1 rounded transition-colors cursor-pointer ${
                   gridFilter === 'flagged'
-                    ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white font-bold shadow-xs'
-                    : 'text-slate-600 dark:text-slate-400'
+                    ? 'bg-white dark:bg-neutral-700 text-slate-900 dark:text-white font-bold shadow-xs'
+                    : 'text-slate-600 dark:text-neutral-400'
                 }`}
               >
                 Flagged ({flaggedIds.size})
@@ -591,10 +593,10 @@ export const QuizExamSessionPage: React.FC<QuizExamSessionPageProps> = ({
                 const isCurrent = originalIdx === currentIndex;
 
                 let btnStyle =
-                  'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700';
+                  'bg-slate-100 dark:bg-neutral-800 text-slate-700 dark:text-neutral-300 border-slate-200 dark:border-neutral-700';
                 if (isAnswered) {
                   btnStyle =
-                    'bg-slate-900 text-white font-bold border-slate-900 dark:bg-white dark:text-slate-900 dark:border-white';
+                    'bg-slate-900 text-white font-bold border-slate-900 dark:bg-white dark:text-neutral-900 dark:border-white';
                 }
                 if (isCurrent) {
                   btnStyle += ' ring-2 ring-slate-900 dark:ring-white ring-offset-1';
@@ -620,7 +622,7 @@ export const QuizExamSessionPage: React.FC<QuizExamSessionPageProps> = ({
             </div>
 
             {/* Footer Buttons */}
-            <div className="pt-2 border-t border-slate-100 dark:border-slate-800 flex gap-2">
+            <div className="pt-2 border-t border-slate-100 dark:border-neutral-800 flex gap-2">
               <Button
                 variant="secondary"
                 size="md"
@@ -648,7 +650,7 @@ export const QuizExamSessionPage: React.FC<QuizExamSessionPageProps> = ({
       {/* Submission Confirmation Modal */}
       {isSubmitConfirmOpen && (
         <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 animate-fade-in">
-          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 w-full max-w-sm rounded-xl p-5 text-center space-y-3.5 shadow-2xl animate-scale-in">
+          <div className="bg-white dark:bg-neutral-900 border border-slate-200 dark:border-neutral-800 w-full max-w-sm rounded-xl p-5 text-center space-y-3.5 shadow-2xl animate-scale-in">
             <div className="w-10 h-10 rounded-full bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300 flex items-center justify-center mx-auto">
               <AlertTriangle className="w-5 h-5" />
             </div>
@@ -657,12 +659,12 @@ export const QuizExamSessionPage: React.FC<QuizExamSessionPageProps> = ({
               <h3 className="text-base font-bold text-slate-900 dark:text-white">
                 Submit Examination?
               </h3>
-              <p className="text-xs text-slate-500 mt-0.5">
+              <p className="text-xs text-slate-500 dark:text-neutral-400 mt-0.5">
                 Please verify your responses before final grading.
               </p>
             </div>
 
-            <div className="bg-slate-50 dark:bg-slate-800/60 rounded-lg p-3 text-xs text-slate-700 dark:text-slate-300 space-y-1.5 border border-slate-200 dark:border-slate-700 text-left">
+            <div className="bg-slate-50 dark:bg-neutral-800/60 rounded-lg p-3 text-xs text-slate-700 dark:text-neutral-300 space-y-1.5 border border-slate-200 dark:border-neutral-700 text-left">
               <div className="flex justify-between items-center">
                 <span>Total Items Answered:</span>
                 <span className="font-bold text-slate-900 dark:text-white font-mono">
@@ -671,7 +673,7 @@ export const QuizExamSessionPage: React.FC<QuizExamSessionPageProps> = ({
               </div>
               <div className="flex justify-between items-center">
                 <span>Unanswered Items:</span>
-                <span className={`font-bold font-mono ${unansweredCount > 0 ? 'text-rose-600 dark:text-rose-400' : 'text-slate-500'}`}>
+                <span className={`font-bold font-mono ${unansweredCount > 0 ? 'text-rose-600 dark:text-rose-400' : 'text-slate-500 dark:text-neutral-400'}`}>
                   {unansweredCount}
                 </span>
               </div>
@@ -705,7 +707,7 @@ export const QuizExamSessionPage: React.FC<QuizExamSessionPageProps> = ({
               </button>
             )}
 
-            <p className="text-[11px] text-slate-500 leading-snug">
+            <p className="text-[11px] text-slate-500 dark:text-neutral-400 leading-snug">
               Once submitted, your examination answers will be locked and graded against the 75.00% passing mark.
             </p>
 
@@ -738,8 +740,8 @@ export const QuizExamSessionPage: React.FC<QuizExamSessionPageProps> = ({
       {/* Accidental Exit Modal */}
       {isExitConfirmOpen && (
         <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 animate-fade-in">
-          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 w-full max-w-sm rounded-xl p-5 text-center space-y-3 shadow-2xl animate-scale-in">
-            <div className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 flex items-center justify-center mx-auto">
+          <div className="bg-white dark:bg-neutral-900 border border-slate-200 dark:border-neutral-800 w-full max-w-sm rounded-xl p-5 text-center space-y-3 shadow-2xl animate-scale-in">
+            <div className="w-10 h-10 rounded-full bg-slate-100 dark:bg-neutral-800 text-slate-700 dark:text-neutral-300 flex items-center justify-center mx-auto">
               <RotateCcw className="w-5 h-5" />
             </div>
 
@@ -747,7 +749,7 @@ export const QuizExamSessionPage: React.FC<QuizExamSessionPageProps> = ({
               <h3 className="text-base font-bold text-slate-900 dark:text-white">
                 Leave Active Examination?
               </h3>
-              <p className="text-xs text-slate-500 mt-1 leading-relaxed">
+              <p className="text-xs text-slate-500 dark:text-neutral-400 mt-1 leading-relaxed">
                 Your current responses and remaining time are saved in this browser. You can return to resume this exam session.
               </p>
             </div>

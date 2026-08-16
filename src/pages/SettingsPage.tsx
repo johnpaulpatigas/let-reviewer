@@ -52,7 +52,7 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
         <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
           Settings & Preferences
         </h1>
-        <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-1 leading-relaxed">
+        <p className="text-xs sm:text-sm text-slate-600 dark:text-neutral-400 mt-1 leading-relaxed">
           Customize your display, typography scale, motion, and study preferences.
         </p>
       </div>
@@ -66,11 +66,11 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
 
       {/* 1. Appearance Settings */}
       <section className="space-y-3">
-        <h2 className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+        <h2 className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-neutral-400">
           Appearance
         </h2>
 
-        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg divide-y divide-slate-100 dark:divide-slate-800">
+        <div className="bg-white dark:bg-neutral-900 border border-slate-200 dark:border-neutral-800 rounded-lg divide-y divide-slate-100 dark:divide-neutral-800">
           {/* Theme Selector */}
           <div className="p-3.5 sm:p-4 space-y-2.5">
             <div className="flex items-center justify-between">
@@ -78,7 +78,7 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
                 <span className="text-xs sm:text-sm font-semibold text-slate-900 dark:text-white block">
                   Interface Theme
                 </span>
-                <span className="text-[11px] text-slate-500">
+                <span className="text-[11px] text-slate-500 dark:text-neutral-400">
                   {settings.theme === 'system'
                     ? 'Sync with operating system preference'
                     : settings.theme === 'dark'
@@ -103,8 +103,8 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
                     onClick={() => onUpdateSetting('theme', item.id as ThemeMode)}
                     className={`py-2 px-2.5 rounded-md border text-xs font-semibold flex items-center justify-center gap-1.5 transition-all duration-150 active:scale-[0.98] tap-target cursor-pointer ${
                       isSelected
-                        ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 border-slate-900 dark:border-white shadow-xs'
-                        : 'bg-slate-50 dark:bg-slate-800/60 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800'
+                        ? 'bg-slate-900 text-white dark:bg-white dark:text-neutral-900 border-slate-900 dark:border-white shadow-xs'
+                        : 'bg-slate-50 dark:bg-neutral-800/60 text-slate-700 dark:text-neutral-300 border-slate-200 dark:border-neutral-700 hover:bg-slate-100 dark:hover:bg-neutral-800'
                     }`}
                   >
                     <Icon className="w-3.5 h-3.5 shrink-0" />
@@ -120,10 +120,10 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
             <div className="flex items-center justify-between">
               <div>
                 <span className="text-xs sm:text-sm font-semibold text-slate-900 dark:text-white flex items-center gap-1.5">
-                  <Type className="w-4 h-4 text-slate-500" />
+                  <Type className="w-4 h-4 text-slate-500 dark:text-neutral-400" />
                   <span>Typography Scale</span>
                 </span>
-                <span className="text-[11px] text-slate-500">
+                <span className="text-[11px] text-slate-500 dark:text-neutral-400">
                   Adjust global font size across all reviewer screens.
                 </span>
               </div>
@@ -144,12 +144,12 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
                     onClick={() => onUpdateSetting('fontSize', size.id as FontSizePreference)}
                     className={`p-2 rounded-md border text-center transition-all duration-150 active:scale-[0.98] cursor-pointer ${
                       isSelected
-                        ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 border-slate-900 dark:border-white font-bold'
-                        : 'bg-slate-50 dark:bg-slate-800/60 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:bg-slate-100'
+                        ? 'bg-slate-900 text-white dark:bg-white dark:text-neutral-900 border-slate-900 dark:border-white font-bold'
+                        : 'bg-slate-50 dark:bg-neutral-800/60 text-slate-700 dark:text-neutral-300 border-slate-200 dark:border-neutral-700 hover:bg-slate-100'
                     }`}
                   >
                     <div className="text-xs font-semibold">{size.label}</div>
-                    <div className={`text-[10px] mt-0.5 ${isSelected ? 'text-slate-300 dark:text-slate-600' : 'text-slate-400'}`}>
+                    <div className={`text-[10px] mt-0.5 ${isSelected ? 'text-slate-300 dark:text-neutral-700' : 'text-slate-400 dark:text-neutral-500'}`}>
                       {size.note}
                     </div>
                   </button>
@@ -163,10 +163,10 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
             <div className="flex items-center justify-between">
               <div>
                 <span className="text-xs sm:text-sm font-semibold text-slate-900 dark:text-white flex items-center gap-1.5">
-                  <Eye className="w-4 h-4 text-slate-500" />
+                  <Eye className="w-4 h-4 text-slate-500 dark:text-neutral-400" />
                   <span>Motion</span>
                 </span>
-                <span className="text-[11px] text-slate-500">
+                <span className="text-[11px] text-slate-500 dark:text-neutral-400">
                   Control interface transitions and interactive animation effects.
                 </span>
               </div>
@@ -193,23 +193,23 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
                     onClick={() => onUpdateSetting('reduceMotion', motion.id as MotionPreference)}
                     className={`p-2.5 rounded-lg border text-left transition-all duration-150 active:scale-[0.98] cursor-pointer flex flex-col justify-between ${
                       isSelected
-                        ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 border-slate-900 dark:border-white font-bold shadow-xs'
-                        : 'bg-slate-50 dark:bg-slate-800/60 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800'
+                        ? 'bg-slate-900 text-white dark:bg-white dark:text-neutral-900 border-slate-900 dark:border-white font-bold shadow-xs'
+                        : 'bg-slate-50 dark:bg-neutral-800/60 text-slate-700 dark:text-neutral-300 border-slate-200 dark:border-neutral-700 hover:bg-slate-100 dark:hover:bg-neutral-800'
                     }`}
                   >
                     <div className="flex items-center justify-between w-full">
                       <span className="text-xs font-semibold">{motion.label}</span>
                       <span className={`w-3.5 h-3.5 rounded-full border flex items-center justify-center ${
                         isSelected
-                          ? 'border-white dark:border-slate-900 bg-white dark:bg-slate-900'
-                          : 'border-slate-300 dark:border-slate-600'
+                          ? 'border-white dark:border-neutral-900 bg-white dark:bg-neutral-900'
+                          : 'border-slate-300 dark:border-neutral-600'
                       }`}>
                         {isSelected && (
                           <span className="w-1.5 h-1.5 rounded-full bg-slate-900 dark:bg-white animate-pop" />
                         )}
                       </span>
                     </div>
-                    <span className={`text-[10px] mt-1 leading-tight ${isSelected ? 'text-slate-300 dark:text-slate-600' : 'text-slate-500 dark:text-slate-400'}`}>
+                    <span className={`text-[10px] mt-1 leading-tight ${isSelected ? 'text-slate-300 dark:text-neutral-700' : 'text-slate-500 dark:text-neutral-400'}`}>
                       {motion.desc}
                     </span>
                   </button>
@@ -222,20 +222,20 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
 
       {/* 2. Study Preferences */}
       <section className="space-y-3">
-        <h2 className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+        <h2 className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-neutral-400">
           Study & Practice Preferences
         </h2>
 
-        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg divide-y divide-slate-100 dark:divide-slate-800">
+        <div className="bg-white dark:bg-neutral-900 border border-slate-200 dark:border-neutral-800 rounded-lg divide-y divide-slate-100 dark:divide-neutral-800">
           {/* Default Question Count */}
           <div className="p-3.5 sm:p-4 space-y-2">
             <div className="flex items-center justify-between">
               <div>
                 <span className="text-xs sm:text-sm font-semibold text-slate-900 dark:text-white flex items-center gap-1.5">
-                  <Sliders className="w-4 h-4 text-slate-500" />
+                  <Sliders className="w-4 h-4 text-slate-500 dark:text-neutral-400" />
                   <span>Default Practice Item Count</span>
                 </span>
-                <span className="text-[11px] text-slate-500">
+                <span className="text-[11px] text-slate-500 dark:text-neutral-400">
                   Number of items loaded by default for quick drills.
                 </span>
               </div>
@@ -251,8 +251,8 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
                     onClick={() => onUpdateSetting('defaultQuestionCount', count)}
                     className={`flex-1 py-1.5 rounded-md text-xs font-semibold border transition-colors cursor-pointer ${
                       isSelected
-                        ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 border-slate-900 dark:border-white'
-                        : 'bg-slate-50 dark:bg-slate-800/60 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:bg-slate-100'
+                        ? 'bg-slate-900 text-white dark:bg-white dark:text-neutral-900 border-slate-900 dark:border-white'
+                        : 'bg-slate-50 dark:bg-neutral-800/60 text-slate-700 dark:text-neutral-300 border-slate-200 dark:border-neutral-700 hover:bg-slate-100'
                     }`}
                   >
                     {count} items
@@ -268,7 +268,7 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
               <span className="text-xs sm:text-sm font-semibold text-slate-900 dark:text-white block">
                 Instant Explanations in Practice
               </span>
-              <span className="text-[11px] text-slate-500">
+              <span className="text-[11px] text-slate-500 dark:text-neutral-400">
                 Show rationale immediately upon checking an answer during self-paced drills.
               </span>
             </div>
@@ -279,11 +279,11 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
               aria-checked={settings.instantRationales}
               onClick={() => onUpdateSetting('instantRationales', !settings.instantRationales)}
               className={`w-11 h-6 rounded-full transition-colors relative cursor-pointer shrink-0 ${
-                settings.instantRationales ? 'bg-slate-900 dark:bg-white' : 'bg-slate-200 dark:bg-slate-700'
+                settings.instantRationales ? 'bg-slate-900 dark:bg-white' : 'bg-slate-200 dark:bg-neutral-700'
               }`}
             >
               <span
-                className={`w-4 h-4 rounded-full bg-white dark:bg-slate-900 absolute top-1 transition-transform ${
+                className={`w-4 h-4 rounded-full bg-white dark:bg-neutral-900 absolute top-1 transition-transform ${
                   settings.instantRationales ? 'left-6' : 'left-1'
                 }`}
               />
@@ -294,21 +294,21 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
 
       {/* 3. Data & Storage */}
       <section className="space-y-3">
-        <h2 className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+        <h2 className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-neutral-400">
           Data & Local Storage
         </h2>
 
-        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg p-4 space-y-3">
-          <div className="space-y-1 text-xs text-slate-600 dark:text-slate-400">
-            <div className="flex justify-between py-1 border-b border-slate-100 dark:border-slate-800">
+        <div className="bg-white dark:bg-neutral-900 border border-slate-200 dark:border-neutral-800 rounded-lg p-4 space-y-3">
+          <div className="space-y-1 text-xs text-slate-600 dark:text-neutral-400">
+            <div className="flex justify-between py-1 border-b border-slate-100 dark:border-neutral-800">
               <span>Questions Solved:</span>
               <span className="font-semibold text-slate-900 dark:text-white font-mono">{stats.totalAnswered}</span>
             </div>
-            <div className="flex justify-between py-1 border-b border-slate-100 dark:border-slate-800">
+            <div className="flex justify-between py-1 border-b border-slate-100 dark:border-neutral-800">
               <span>Completed Exam Sessions:</span>
               <span className="font-semibold text-slate-900 dark:text-white font-mono">{stats.quizHistory.length}</span>
             </div>
-            <div className="flex justify-between py-1 border-b border-slate-100 dark:border-slate-800">
+            <div className="flex justify-between py-1 border-b border-slate-100 dark:border-neutral-800">
               <span>Saved Bookmarks:</span>
               <span className="font-semibold text-slate-900 dark:text-white font-mono">{stats.bookmarkedQuestionIds.length}</span>
             </div>
@@ -367,22 +367,22 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
 
       {/* 4. About & Version */}
       <section className="space-y-3">
-        <h2 className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+        <h2 className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-neutral-400">
           About
         </h2>
 
-        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg p-4 space-y-2 text-xs">
+        <div className="bg-white dark:bg-neutral-900 border border-slate-200 dark:border-neutral-800 rounded-lg p-4 space-y-2 text-xs">
           <div className="flex items-center justify-between">
             <span className="font-semibold text-slate-900 dark:text-white">Application</span>
-            <span className="text-slate-600 dark:text-slate-400">LET Reviewer</span>
+            <span className="text-slate-600 dark:text-neutral-400">LET Reviewer</span>
           </div>
           <div className="flex items-center justify-between">
             <span className="font-semibold text-slate-900 dark:text-white">Curriculum Scope</span>
-            <span className="text-slate-600 dark:text-slate-400">General & Professional Education</span>
+            <span className="text-slate-600 dark:text-neutral-400">General & Professional Education</span>
           </div>
           <div className="flex items-center justify-between">
             <span className="font-semibold text-slate-900 dark:text-white">Version</span>
-            <span className="font-mono text-slate-600 dark:text-slate-400">v1.2.0</span>
+            <span className="font-mono text-slate-600 dark:text-neutral-400">v1.2.0</span>
           </div>
           <div className="flex items-center justify-between">
             <span className="font-semibold text-slate-900 dark:text-white">Status</span>

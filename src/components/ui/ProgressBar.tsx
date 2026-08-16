@@ -20,7 +20,7 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
   const percentage = Math.min(Math.max(Math.round((value / max) * 100), 0), 100);
 
   const colors = {
-    primary: 'bg-slate-800 dark:bg-slate-200',
+    primary: 'bg-slate-800 dark:bg-neutral-200',
     emerald: 'bg-emerald-600 dark:bg-emerald-500',
     amber: 'bg-amber-600 dark:bg-amber-500',
     rose: 'bg-rose-600 dark:bg-rose-500',
@@ -30,13 +30,13 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
   return (
     <div className={`w-full ${className}`}>
       {(label || showPercentage) && (
-        <div className="flex justify-between items-center text-xs text-slate-600 dark:text-slate-400 mb-1">
+        <div className="flex justify-between items-center text-xs text-slate-600 dark:text-neutral-400 mb-1">
           {label && <span className="font-medium">{label}</span>}
           {showPercentage && <span className="font-mono font-semibold">{percentage}%</span>}
         </div>
       )}
       <div
-        className="w-full bg-slate-200 dark:bg-slate-800 rounded-full h-2 overflow-hidden"
+        className="w-full bg-slate-200 dark:bg-neutral-800 rounded-full h-2 overflow-hidden"
         role="progressbar"
         aria-valuenow={value}
         aria-valuemin={0}

@@ -96,7 +96,7 @@ export const QuizResultPage: React.FC<QuizResultPageProps> = ({
             : 'bg-rose-50/70 dark:bg-rose-950/20 border-rose-200 dark:border-rose-900/60'
         }`}
       >
-        <div className="inline-flex p-2.5 rounded-full bg-white dark:bg-slate-900 mb-1 border border-slate-200 dark:border-slate-800">
+        <div className="inline-flex p-2.5 rounded-full bg-white dark:bg-neutral-900 mb-1 border border-slate-200 dark:border-neutral-800">
           <Award
             className={`w-7 h-7 ${
               isPassed
@@ -119,15 +119,15 @@ export const QuizResultPage: React.FC<QuizResultPageProps> = ({
           <h1 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white font-mono">
             {scorePercentage}%
           </h1>
-          <p className="text-xs text-slate-600 dark:text-slate-400 mt-0.5">
+          <p className="text-xs text-slate-600 dark:text-neutral-400 mt-0.5">
             Passing Benchmark: 75.00%
           </p>
         </div>
 
         {/* Detailed Stats Row */}
-        <div className="grid grid-cols-4 gap-2 pt-3 border-t border-slate-200/60 dark:border-slate-800 text-center">
+        <div className="grid grid-cols-4 gap-2 pt-3 border-t border-slate-200/60 dark:border-neutral-800 text-center">
           <div>
-            <span className="text-[10px] text-slate-500 uppercase tracking-wider block font-semibold">Total</span>
+            <span className="text-[10px] text-slate-500 dark:text-neutral-400 uppercase tracking-wider block font-semibold">Total</span>
             <span className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white font-mono">
               {totalQuestions}
             </span>
@@ -145,7 +145,7 @@ export const QuizResultPage: React.FC<QuizResultPageProps> = ({
             </span>
           </div>
           <div>
-            <span className="text-[10px] text-slate-500 uppercase tracking-wider block font-semibold">Time</span>
+            <span className="text-[10px] text-slate-500 dark:text-neutral-400 uppercase tracking-wider block font-semibold">Time</span>
             <span className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white font-mono">
               {formatTime(timeSpentSeconds)}
             </span>
@@ -188,14 +188,14 @@ export const QuizResultPage: React.FC<QuizResultPageProps> = ({
 
       {/* Subject Performance Breakdown */}
       {subjectBreakdown.length > 0 && (
-        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg p-4 space-y-3">
+        <div className="bg-white dark:bg-neutral-900 border border-slate-200 dark:border-neutral-800 rounded-lg p-4 space-y-3">
           <h2 className="font-bold text-slate-900 dark:text-white text-xs uppercase tracking-wider">
             Subject Performance Breakdown
           </h2>
           <div className="space-y-3">
             {subjectBreakdown.map((sb) => (
               <div key={sb.subjectId} className="space-y-1">
-                <div className="flex justify-between text-xs font-semibold text-slate-700 dark:text-slate-300">
+                <div className="flex justify-between text-xs font-semibold text-slate-700 dark:text-neutral-300">
                   <span className="truncate pr-2">{sb.subjectName}</span>
                   <span
                     className={
@@ -219,25 +219,25 @@ export const QuizResultPage: React.FC<QuizResultPageProps> = ({
       )}
 
       {/* Item-by-Item Review & Rationale */}
-      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg p-4 space-y-3">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2 border-b border-slate-100 dark:border-slate-800">
+      <div className="bg-white dark:bg-neutral-900 border border-slate-200 dark:border-neutral-800 rounded-lg p-4 space-y-3">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2 border-b border-slate-100 dark:border-neutral-800">
           <div>
             <h2 className="font-bold text-slate-900 dark:text-white text-sm sm:text-base">
               Item-by-Item Review & Rationales
             </h2>
-            <p className="text-xs text-slate-500">
+            <p className="text-xs text-slate-500 dark:text-neutral-400">
               Review correct answers, explanations, and corresponding study materials.
             </p>
           </div>
 
-          <div className="flex gap-1 p-1 bg-slate-100 dark:bg-slate-800 rounded-md self-start sm:self-auto">
+          <div className="flex gap-1 p-1 bg-slate-100 dark:bg-neutral-800 rounded-md self-start sm:self-auto">
             <button
               type="button"
               onClick={() => setFilterMode('all')}
               className={`px-2.5 py-1 text-xs font-medium rounded transition-colors cursor-pointer ${
                 filterMode === 'all'
-                  ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 font-bold'
-                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900'
+                  ? 'bg-slate-900 text-white dark:bg-white dark:text-neutral-900 font-bold'
+                  : 'text-slate-600 dark:text-neutral-400 hover:text-slate-900'
               }`}
             >
               All ({questions.length})
@@ -247,8 +247,8 @@ export const QuizResultPage: React.FC<QuizResultPageProps> = ({
               onClick={() => setFilterMode('incorrect')}
               className={`px-2.5 py-1 text-xs font-medium rounded transition-colors cursor-pointer ${
                 filterMode === 'incorrect'
-                  ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 font-bold'
-                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900'
+                  ? 'bg-slate-900 text-white dark:bg-white dark:text-neutral-900 font-bold'
+                  : 'text-slate-600 dark:text-neutral-400 hover:text-slate-900'
               }`}
             >
               Missed ({incorrectCount + unansweredCount})
@@ -258,8 +258,8 @@ export const QuizResultPage: React.FC<QuizResultPageProps> = ({
               onClick={() => setFilterMode('correct')}
               className={`px-2.5 py-1 text-xs font-medium rounded transition-colors cursor-pointer ${
                 filterMode === 'correct'
-                  ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 font-bold'
-                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900'
+                  ? 'bg-slate-900 text-white dark:bg-white dark:text-neutral-900 font-bold'
+                  : 'text-slate-600 dark:text-neutral-400 hover:text-slate-900'
               }`}
             >
               Correct ({correctCount})
@@ -279,7 +279,7 @@ export const QuizResultPage: React.FC<QuizResultPageProps> = ({
             return (
               <div
                 key={q.id}
-                className="border border-slate-200 dark:border-slate-800 rounded-md p-3.5 space-y-2.5 transition-colors bg-slate-50/40 dark:bg-slate-900"
+                className="border border-slate-200 dark:border-neutral-800 rounded-md p-3.5 space-y-2.5 transition-colors bg-slate-50/40 dark:bg-neutral-900"
               >
                 <div
                   onClick={() => toggleQuestionExpand(q.id)}
@@ -302,12 +302,12 @@ export const QuizResultPage: React.FC<QuizResultPageProps> = ({
 
                     <div className="min-w-0">
                       <div className="flex flex-wrap items-center gap-1.5 mb-1">
-                        <span className="text-xs font-mono font-bold text-slate-700 dark:text-slate-300">
+                        <span className="text-xs font-mono font-bold text-slate-700 dark:text-neutral-300">
                           #{originalIndex + 1}
                         </span>
                         <CategoryBadge category={q.category} size="sm" />
                         <DifficultyBadge difficulty={q.difficulty} size="sm" />
-                        <span className="text-[11px] font-semibold text-slate-600 dark:text-slate-400">
+                        <span className="text-[11px] font-semibold text-slate-600 dark:text-neutral-400">
                           {q.subjectName}
                         </span>
                       </div>
@@ -329,7 +329,7 @@ export const QuizResultPage: React.FC<QuizResultPageProps> = ({
                         className={`p-1.5 rounded transition-colors ${
                           bookmarkedIds.includes(q.id)
                             ? 'text-amber-600 bg-amber-50 dark:bg-amber-950'
-                            : 'text-slate-400 hover:text-slate-600'
+                            : 'text-slate-400 dark:text-neutral-400 hover:text-slate-600 dark:hover:text-neutral-200'
                         }`}
                       >
                         <Bookmark
@@ -341,7 +341,7 @@ export const QuizResultPage: React.FC<QuizResultPageProps> = ({
                     )}
 
                     <ChevronDown
-                      className={`w-4 h-4 text-slate-400 transition-transform duration-200 ${
+                      className={`w-4 h-4 text-slate-400 dark:text-neutral-400 transition-transform duration-200 ${
                         isExpanded ? 'rotate-180' : ''
                       }`}
                     />
@@ -350,14 +350,14 @@ export const QuizResultPage: React.FC<QuizResultPageProps> = ({
 
                 {/* Expanded Details */}
                 {isExpanded && (
-                  <div className="space-y-3 pt-2 border-t border-slate-200/80 dark:border-slate-800 animate-expand text-xs">
+                  <div className="space-y-3 pt-2 border-t border-slate-200/80 dark:border-neutral-800 animate-expand text-xs">
                     {/* Choices Breakdown */}
                     <div className="space-y-1.5">
                       {q.choices.map((choice, cIdx) => {
                         const isThisCorrect = q.answer === cIdx;
                         const isThisUserSelection = ans && ans.selectedAnswer === cIdx;
 
-                        let rowStyle = 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300';
+                        let rowStyle = 'bg-white dark:bg-neutral-800 border-slate-200 dark:border-neutral-700 text-slate-700 dark:text-neutral-300';
                         if (isThisCorrect) {
                           rowStyle = 'bg-emerald-50 dark:bg-emerald-950/40 border-emerald-600 text-emerald-950 dark:text-emerald-100 font-semibold';
                         } else if (isThisUserSelection && !isThisCorrect) {
@@ -398,7 +398,7 @@ export const QuizResultPage: React.FC<QuizResultPageProps> = ({
                     )}
 
                     {/* Explanation */}
-                    <div className="p-3.5 rounded-lg bg-slate-100 dark:bg-slate-850 border border-slate-200 dark:border-slate-750 space-y-1.5">
+                    <div className="p-3.5 rounded-lg bg-slate-100 dark:bg-neutral-800/80 border border-slate-200 dark:border-neutral-700 space-y-1.5">
                       <div className="flex items-center justify-between">
                         <span className="font-bold text-slate-900 dark:text-white uppercase tracking-wider text-[10px]">
                           Explanation & Rationale
@@ -407,15 +407,15 @@ export const QuizResultPage: React.FC<QuizResultPageProps> = ({
                           Correct: {CHOICE_LETTERS[q.answer]}
                         </span>
                       </div>
-                      <p className="text-slate-700 dark:text-slate-300 leading-relaxed text-xs sm:text-sm">
+                      <p className="text-slate-700 dark:text-neutral-300 leading-relaxed text-xs sm:text-sm">
                         {q.explanation}
                       </p>
                       {onStudyTopic && (
-                        <div className="pt-2 border-t border-slate-200/60 dark:border-slate-700 flex justify-end">
+                        <div className="pt-2 border-t border-slate-200/60 dark:border-neutral-700 flex justify-end">
                           <button
                             type="button"
                             onClick={() => onStudyTopic(q.topic, q.subjectId)}
-                            className="text-xs font-semibold text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:underline inline-flex items-center gap-1.5 cursor-pointer"
+                            className="text-xs font-semibold text-slate-600 dark:text-neutral-400 hover:text-slate-900 dark:hover:text-white hover:underline inline-flex items-center gap-1.5 cursor-pointer"
                           >
                             <BookOpen className="w-3.5 h-3.5" />
                             <span>Related Study Guide: {q.topic} →</span>

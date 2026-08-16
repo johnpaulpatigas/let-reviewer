@@ -87,19 +87,19 @@ export const StudyBankPage: React.FC<StudyBankPageProps> = ({
         <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
           Targeted Remediation Bank
         </h1>
-        <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-1 leading-relaxed">
+        <p className="text-xs sm:text-sm text-slate-600 dark:text-neutral-400 mt-1 leading-relaxed">
           Review saved bookmarks and drill items missed in past sessions.
         </p>
       </div>
 
-      <div className="flex gap-1 p-1 bg-slate-100 dark:bg-slate-900 rounded-md">
+      <div className="flex gap-1 p-1 bg-slate-100 dark:bg-neutral-900 rounded-md">
         <button
           type="button"
           onClick={() => setActiveTab('bookmarks')}
           className={`flex-1 py-1.5 px-3 text-xs font-medium rounded transition-colors flex items-center justify-center gap-1.5 tap-target cursor-pointer ${
             activeTab === 'bookmarks'
-              ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 font-bold'
-              : 'text-slate-600 dark:text-slate-400 hover:text-slate-900'
+              ? 'bg-slate-900 text-white dark:bg-white dark:text-neutral-900 font-bold'
+              : 'text-slate-600 dark:text-neutral-400 hover:text-slate-900'
           }`}
         >
           <Bookmark className="w-3.5 h-3.5 fill-current" />
@@ -111,8 +111,8 @@ export const StudyBankPage: React.FC<StudyBankPageProps> = ({
           onClick={() => setActiveTab('missed')}
           className={`flex-1 py-1.5 px-3 text-xs font-medium rounded transition-colors flex items-center justify-center gap-1.5 tap-target cursor-pointer ${
             activeTab === 'missed'
-              ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 font-bold'
-              : 'text-slate-600 dark:text-slate-400 hover:text-slate-900'
+              ? 'bg-slate-900 text-white dark:bg-white dark:text-neutral-900 font-bold'
+              : 'text-slate-600 dark:text-neutral-400 hover:text-slate-900'
           }`}
         >
           <AlertTriangle className="w-3.5 h-3.5" />
@@ -122,19 +122,19 @@ export const StudyBankPage: React.FC<StudyBankPageProps> = ({
 
       <div className="space-y-2">
         <div className="relative">
-          <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+          <Search className="w-4 h-4 text-slate-400 dark:text-neutral-400 absolute left-3 top-1/2 -translate-y-1/2" />
           <input
             type="search"
             placeholder={`Search ${activeTab === 'bookmarks' ? 'bookmarked' : 'missed'} questions...`}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full h-9 pl-9 pr-9 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-md text-xs sm:text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:border-slate-500 transition-colors"
+            className="w-full h-9 pl-9 pr-9 bg-white dark:bg-neutral-900 border border-slate-200 dark:border-neutral-800 rounded-md text-xs sm:text-sm text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-neutral-500 focus:outline-none focus:border-slate-500 transition-colors"
           />
           {searchQuery && (
             <button
               type="button"
               onClick={() => setSearchQuery('')}
-              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-1 cursor-pointer"
+              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 dark:text-neutral-400 hover:text-slate-600 dark:hover:text-neutral-200 p-1 cursor-pointer"
             >
               <X className="w-3.5 h-3.5" />
             </button>
@@ -175,7 +175,7 @@ export const StudyBankPage: React.FC<StudyBankPageProps> = ({
           return (
             <div
               key={q.id}
-              className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg p-3.5 space-y-2.5"
+              className="bg-white dark:bg-neutral-900 border border-slate-200 dark:border-neutral-800 rounded-lg p-3.5 space-y-2.5"
             >
               <div
                 onClick={() => toggleExpand(q.id)}
@@ -183,12 +183,12 @@ export const StudyBankPage: React.FC<StudyBankPageProps> = ({
               >
                 <div className="space-y-1 flex-1 min-w-0">
                   <div className="flex flex-wrap items-center gap-1.5">
-                    <span className="text-xs font-mono font-bold text-slate-700 dark:text-slate-300">
+                    <span className="text-xs font-mono font-bold text-slate-700 dark:text-neutral-300">
                       #{idx + 1}
                     </span>
                     <CategoryBadge category={q.category} size="sm" />
                     <DifficultyBadge difficulty={q.difficulty} size="sm" />
-                    <span className="text-[11px] font-semibold text-slate-500 truncate">
+                    <span className="text-[11px] font-semibold text-slate-500 dark:text-neutral-400 truncate">
                       {q.subjectName}
                     </span>
                   </div>
@@ -207,7 +207,7 @@ export const StudyBankPage: React.FC<StudyBankPageProps> = ({
                     className={`p-1.5 rounded transition-colors ${
                       bookmarkedIds.includes(q.id)
                         ? 'text-amber-600 bg-amber-50 dark:bg-amber-950'
-                        : 'text-slate-400 hover:text-slate-600'
+                        : 'text-slate-400 dark:text-neutral-400 hover:text-slate-600 dark:hover:text-neutral-200'
                     }`}
                   >
                     <Bookmark
@@ -218,7 +218,7 @@ export const StudyBankPage: React.FC<StudyBankPageProps> = ({
                   </button>
 
                   <ChevronDown
-                    className={`w-4 h-4 text-slate-400 transition-transform duration-200 ${
+                    className={`w-4 h-4 text-slate-400 dark:text-neutral-400 transition-transform duration-200 ${
                       isExpanded ? 'rotate-180' : ''
                     }`}
                   />
@@ -226,9 +226,9 @@ export const StudyBankPage: React.FC<StudyBankPageProps> = ({
               </div>
 
               {isExpanded && (
-                <div className="pt-2.5 border-t border-slate-100 dark:border-slate-800 space-y-2 text-xs animate-expand">
+                <div className="pt-2.5 border-t border-slate-100 dark:border-neutral-800 space-y-2 text-xs animate-expand">
                   <div className="space-y-1">
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 block">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-neutral-400 block">
                       Choices & Key:
                     </span>
                     {q.choices.map((choice, cIdx) => (
@@ -237,7 +237,7 @@ export const StudyBankPage: React.FC<StudyBankPageProps> = ({
                         className={`p-2 rounded border flex items-center justify-between gap-2 ${
                           cIdx === q.answer
                             ? 'bg-emerald-50 dark:bg-emerald-950/40 border-emerald-500 text-emerald-950 dark:text-emerald-100 font-semibold'
-                            : 'border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300'
+                            : 'border-slate-200 dark:border-neutral-700 text-slate-700 dark:text-neutral-300'
                         }`}
                       >
                         <span className="flex-1">
@@ -252,21 +252,21 @@ export const StudyBankPage: React.FC<StudyBankPageProps> = ({
                     ))}
                   </div>
 
-                  <div className="p-3.5 rounded-lg bg-slate-50 dark:bg-slate-850 border border-slate-200 dark:border-slate-750 space-y-1.5">
+                  <div className="p-3.5 rounded-lg bg-slate-50 dark:bg-neutral-800/80 border border-slate-200 dark:border-neutral-700 space-y-1.5">
                     <div className="flex items-center justify-between">
                       <span className="font-bold text-slate-900 dark:text-white uppercase tracking-wider text-[10px]">
                         Pedagogical Rationale
                       </span>
                     </div>
-                    <p className="text-slate-700 dark:text-slate-300 leading-relaxed text-xs sm:text-sm">
+                    <p className="text-slate-700 dark:text-neutral-300 leading-relaxed text-xs sm:text-sm">
                       {q.explanation}
                     </p>
                     {onStudyTopic && (
-                      <div className="pt-2 border-t border-slate-200/60 dark:border-slate-700 flex justify-end">
+                      <div className="pt-2 border-t border-slate-200/60 dark:border-neutral-700 flex justify-end">
                         <button
                           type="button"
                           onClick={() => onStudyTopic(q.topic, q.subjectId)}
-                          className="text-xs font-semibold text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:underline inline-flex items-center gap-1.5 cursor-pointer"
+                          className="text-xs font-semibold text-slate-600 dark:text-neutral-400 hover:text-slate-900 dark:hover:text-white hover:underline inline-flex items-center gap-1.5 cursor-pointer"
                         >
                           <BookOpen className="w-3.5 h-3.5" />
                           <span>Related Study Guide: {q.topic} →</span>
@@ -282,8 +282,8 @@ export const StudyBankPage: React.FC<StudyBankPageProps> = ({
       </div>
 
       {filteredQuestions.length === 0 && (
-        <div className="text-center py-10 bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-800 p-5 space-y-1.5">
-          <p className="text-xs text-slate-500">
+        <div className="text-center py-10 bg-white dark:bg-neutral-900 rounded-lg border border-slate-200 dark:border-neutral-800 p-5 space-y-1.5">
+          <p className="text-xs text-slate-500 dark:text-neutral-400">
             {activeTab === 'bookmarks'
               ? 'No bookmarked questions found. You can bookmark any question during practice to save it for targeted review.'
               : 'No missed questions recorded yet. Any incorrectly answered questions during practice will appear here.'}

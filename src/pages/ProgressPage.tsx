@@ -45,15 +45,15 @@ export const ProgressPage: React.FC<ProgressPageProps> = ({
         <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
           Detailed Progress & Analytics
         </h1>
-        <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-1 leading-relaxed">
+        <p className="text-xs sm:text-sm text-slate-600 dark:text-neutral-400 mt-1 leading-relaxed">
           Comprehensive curriculum mastery records, domain performance, and examination logs.
         </p>
       </div>
 
       {/* Overall Performance Benchmark */}
-      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg p-5 space-y-3 shadow-xs">
+      <div className="bg-white dark:bg-neutral-900 border border-slate-200 dark:border-neutral-800 rounded-lg p-5 space-y-3 shadow-xs">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-1.5 text-slate-700 dark:text-slate-300">
+          <div className="flex items-center gap-1.5 text-slate-700 dark:text-neutral-300">
             <TrendingUp className="w-4 h-4" />
             <h2 className="font-bold text-xs uppercase tracking-wider text-slate-900 dark:text-white">
               Benchmark Passing Readiness
@@ -79,7 +79,7 @@ export const ProgressPage: React.FC<ProgressPageProps> = ({
             <span className="text-3xl font-black text-slate-900 dark:text-white font-mono">
               {overallAccuracy}%
             </span>
-            <span className="text-xs text-slate-500">
+            <span className="text-xs text-slate-500 dark:text-neutral-400">
               Passing Benchmark: 75.00%
             </span>
           </div>
@@ -90,7 +90,7 @@ export const ProgressPage: React.FC<ProgressPageProps> = ({
           />
         </div>
 
-        <div className="pt-2 border-t border-slate-100 dark:border-slate-800 flex justify-between text-xs text-slate-500">
+        <div className="pt-2 border-t border-slate-100 dark:border-neutral-800 flex justify-between text-xs text-slate-500 dark:text-neutral-400">
           <span>
             Total Items Solved:{' '}
             <strong className="text-slate-900 dark:text-white font-mono">
@@ -110,7 +110,7 @@ export const ProgressPage: React.FC<ProgressPageProps> = ({
       {/* Domain Comparison */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         {/* Gen Ed */}
-        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg p-4 space-y-2">
+        <div className="bg-white dark:bg-neutral-900 border border-slate-200 dark:border-neutral-800 rounded-lg p-4 space-y-2">
           <div className="flex justify-between items-center text-xs font-bold">
             <span className="text-sky-800 dark:text-sky-300 uppercase tracking-wider">
               General Education
@@ -124,13 +124,13 @@ export const ProgressPage: React.FC<ProgressPageProps> = ({
             max={100}
             colorVariant="sky"
           />
-          <p className="text-[11px] text-slate-500">
+          <p className="text-[11px] text-slate-500 dark:text-neutral-400">
             {genEdStats.correct} of {genEdStats.answered} questions answered correctly
           </p>
         </div>
 
         {/* Prof Ed */}
-        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg p-4 space-y-2">
+        <div className="bg-white dark:bg-neutral-900 border border-slate-200 dark:border-neutral-800 rounded-lg p-4 space-y-2">
           <div className="flex justify-between items-center text-xs font-bold">
             <span className="text-amber-800 dark:text-amber-300 uppercase tracking-wider">
               Professional Education
@@ -144,7 +144,7 @@ export const ProgressPage: React.FC<ProgressPageProps> = ({
             max={100}
             colorVariant="amber"
           />
-          <p className="text-[11px] text-slate-500">
+          <p className="text-[11px] text-slate-500 dark:text-neutral-400">
             {profEdStats.correct} of {profEdStats.answered} questions answered correctly
           </p>
         </div>
@@ -152,12 +152,12 @@ export const ProgressPage: React.FC<ProgressPageProps> = ({
 
       {/* Targeted Study Bank Status */}
       {(bookmarkedQuestionIds.length > 0 || missedQuestionIds.length > 0) && (
-        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg p-4 flex items-center justify-between gap-3">
+        <div className="bg-white dark:bg-neutral-900 border border-slate-200 dark:border-neutral-800 rounded-lg p-4 flex items-center justify-between gap-3">
           <div className="space-y-0.5">
             <h3 className="font-bold text-xs uppercase tracking-wider text-slate-900 dark:text-white">
               Targeted Remediation Queue
             </h3>
-            <p className="text-xs text-slate-500">
+            <p className="text-xs text-slate-500 dark:text-neutral-400">
               {bookmarkedQuestionIds.length} saved bookmarks • {missedQuestionIds.length} missed items
             </p>
           </div>
@@ -170,7 +170,7 @@ export const ProgressPage: React.FC<ProgressPageProps> = ({
       )}
 
       {/* Subject-by-Subject Mastery */}
-      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg p-4 space-y-3">
+      <div className="bg-white dark:bg-neutral-900 border border-slate-200 dark:border-neutral-800 rounded-lg p-4 space-y-3">
         <h2 className="font-bold text-slate-900 dark:text-white text-xs uppercase tracking-wider">
           Subject-Level Mastery
         </h2>
@@ -178,10 +178,10 @@ export const ProgressPage: React.FC<ProgressPageProps> = ({
           {subjectMasteryList.map((item) => (
             <div key={item.subject.id} className="space-y-1">
               <div className="flex justify-between items-center text-xs">
-                <span className="font-medium text-slate-800 dark:text-slate-200 truncate pr-2">
+                <span className="font-medium text-slate-800 dark:text-neutral-200 truncate pr-2">
                   {item.subject.name}
                 </span>
-                <span className="text-slate-500 font-mono shrink-0">
+                <span className="text-slate-500 dark:text-neutral-400 font-mono shrink-0">
                   {item.answered > 0 ? `${item.correct}/${item.answered} (${item.percentage}%)` : 'Unattempted'}
                 </span>
               </div>
@@ -196,7 +196,7 @@ export const ProgressPage: React.FC<ProgressPageProps> = ({
       </div>
 
       {/* Exam Simulation History */}
-      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg p-4 space-y-3">
+      <div className="bg-white dark:bg-neutral-900 border border-slate-200 dark:border-neutral-800 rounded-lg p-4 space-y-3">
         <div className="flex items-center justify-between">
           <h2 className="font-bold text-slate-900 dark:text-white text-xs uppercase tracking-wider">
             Exam & Drill Log ({quizHistory.length})
@@ -217,7 +217,7 @@ export const ProgressPage: React.FC<ProgressPageProps> = ({
               return (
                 <div
                   key={exam.sessionId}
-                  className="border border-slate-200 dark:border-slate-800 rounded-md p-3 space-y-2 bg-slate-50/40 dark:bg-slate-900"
+                  className="border border-slate-200 dark:border-neutral-800 rounded-md p-3 space-y-2 bg-slate-50/40 dark:bg-neutral-900"
                 >
                   <div
                     onClick={() =>
@@ -240,27 +240,27 @@ export const ProgressPage: React.FC<ProgressPageProps> = ({
                           {exam.isPassed ? 'Passed' : 'Failed'}
                         </span>
                       </div>
-                      <p className="text-[11px] text-slate-500 mt-0.5">
+                      <p className="text-[11px] text-slate-500 dark:text-neutral-400 mt-0.5">
                         {dateStr} • {exam.correctCount}/{exam.totalQuestions} correct
                       </p>
                     </div>
 
                     <ChevronDown
-                      className={`w-4 h-4 text-slate-400 transition-transform duration-200 ${
+                      className={`w-4 h-4 text-slate-400 dark:text-neutral-400 transition-transform duration-200 ${
                         isExpanded ? 'rotate-180' : ''
                       }`}
                     />
                   </div>
 
                   {isExpanded && exam.subjectBreakdown && (
-                    <div className="pt-2 border-t border-slate-200 dark:border-slate-800 space-y-1.5 animate-fade-in">
-                      <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 block">
+                    <div className="pt-2 border-t border-slate-200 dark:border-neutral-800 space-y-1.5 animate-fade-in">
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-neutral-400 block">
                         Subject Breakdown
                       </span>
                       {exam.subjectBreakdown.map((sb: SubjectScoreBreakdown) => (
                         <div
                           key={sb.subjectId}
-                          className="flex justify-between text-xs text-slate-600 dark:text-slate-400"
+                          className="flex justify-between text-xs text-slate-600 dark:text-neutral-400"
                         >
                           <span className="truncate pr-2">{sb.subjectName}</span>
                           <span className="font-mono font-medium">
@@ -275,7 +275,7 @@ export const ProgressPage: React.FC<ProgressPageProps> = ({
             })}
           </div>
         ) : (
-          <p className="text-xs text-slate-500 text-center py-4">
+          <p className="text-xs text-slate-500 dark:text-neutral-400 text-center py-4">
             No completed mock exams recorded yet. Practice sessions and mock exam scores will appear here.
           </p>
         )}
@@ -287,7 +287,7 @@ export const ProgressPage: React.FC<ProgressPageProps> = ({
           <button
             type="button"
             onClick={() => setIsResetConfirmOpen(true)}
-            className="text-xs text-slate-500 hover:text-rose-600 dark:hover:text-rose-400 transition-colors inline-flex items-center gap-1 cursor-pointer"
+            className="text-xs text-slate-500 dark:text-neutral-400 hover:text-rose-600 dark:hover:text-rose-400 transition-colors inline-flex items-center gap-1 cursor-pointer"
           >
             <RotateCcw className="w-3.5 h-3.5" />
             <span>Reset All Progress & Scores</span>

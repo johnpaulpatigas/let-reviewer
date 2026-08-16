@@ -40,14 +40,14 @@ export const StudyMaterialReader: React.FC<StudyMaterialReaderProps> = ({
   return (
     <article className="space-y-5 animate-page-enter">
       {/* Top Reading Action & Meta Bar */}
-      <div className="flex items-center justify-between gap-3 border-b border-slate-200 dark:border-slate-800 pb-3">
+      <div className="flex items-center justify-between gap-3 border-b border-slate-200 dark:border-neutral-800 pb-3">
         <div className="flex flex-wrap items-center gap-2 min-w-0">
           <CategoryBadge category={material.category} size="sm" />
-          <span className="text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider truncate">
+          <span className="text-xs font-semibold text-slate-600 dark:text-neutral-400 uppercase tracking-wider truncate">
             {material.subjectName}
           </span>
-          <span className="text-slate-300 dark:text-slate-700">•</span>
-          <span className="inline-flex items-center gap-1 text-xs text-slate-500 shrink-0">
+          <span className="text-slate-300 dark:text-neutral-700">•</span>
+          <span className="inline-flex items-center gap-1 text-xs text-slate-500 dark:text-neutral-400 shrink-0">
             <Clock className="w-3 h-3" />
             {material.readTimeMinutes} min read
           </span>
@@ -61,7 +61,7 @@ export const StudyMaterialReader: React.FC<StudyMaterialReaderProps> = ({
             className={`w-7 h-7 rounded-md flex items-center justify-center transition-colors tap-target cursor-pointer ${
               isBookmarked
                 ? 'bg-amber-100 dark:bg-amber-950 text-amber-700 dark:text-amber-400'
-                : 'bg-slate-100 dark:bg-slate-800 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200'
+                : 'bg-slate-100 dark:bg-neutral-800 text-slate-400 dark:text-neutral-400 hover:text-slate-600 dark:hover:text-neutral-200'
             }`}
           >
             <Bookmark className={`w-3.5 h-3.5 ${isBookmarked ? 'fill-current' : ''}`} />
@@ -73,7 +73,7 @@ export const StudyMaterialReader: React.FC<StudyMaterialReaderProps> = ({
             className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-medium transition-colors tap-target cursor-pointer ${
               isCompleted
                 ? 'bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300'
-                : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200'
+                : 'bg-slate-100 dark:bg-neutral-800 text-slate-700 dark:text-neutral-300 hover:bg-slate-200'
             }`}
           >
             <CheckCircle2 className={`w-3.5 h-3.5 ${isCompleted ? 'fill-emerald-600 text-white' : ''}`} />
@@ -88,7 +88,7 @@ export const StudyMaterialReader: React.FC<StudyMaterialReaderProps> = ({
           {material.title}
         </h1>
 
-        <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-relaxed pt-1">
+        <p className="text-xs sm:text-sm text-slate-600 dark:text-neutral-400 leading-relaxed pt-1">
           {material.overview}
         </p>
       </header>
@@ -98,7 +98,7 @@ export const StudyMaterialReader: React.FC<StudyMaterialReaderProps> = ({
         {material.sections.map((section, sIdx) => (
           <section key={sIdx} className="space-y-3">
             {section.heading && (
-              <h2 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white border-b border-slate-100 dark:border-slate-800 pb-1.5">
+              <h2 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white border-b border-slate-100 dark:border-neutral-800 pb-1.5">
                 {section.heading}
               </h2>
             )}
@@ -106,14 +106,14 @@ export const StudyMaterialReader: React.FC<StudyMaterialReaderProps> = ({
             {section.paragraphs.map((para, pIdx) => (
               <p
                 key={pIdx}
-                className="text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed"
+                className="text-xs sm:text-sm text-slate-700 dark:text-neutral-300 leading-relaxed"
               >
                 {para}
               </p>
             ))}
 
             {section.bulletPoints && section.bulletPoints.length > 0 && (
-              <ul className="space-y-1.5 pl-4 list-disc text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
+              <ul className="space-y-1.5 pl-4 list-disc text-xs sm:text-sm text-slate-700 dark:text-neutral-300 leading-relaxed">
                 {section.bulletPoints.map((point, bIdx) => (
                   <li key={bIdx}>{point}</li>
                 ))}
@@ -126,7 +126,7 @@ export const StudyMaterialReader: React.FC<StudyMaterialReaderProps> = ({
                   <Lightbulb className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
                   <span>Key Concept</span>
                 </div>
-                <p className="text-xs sm:text-sm text-slate-800 dark:text-slate-200 leading-relaxed">
+                <p className="text-xs sm:text-sm text-slate-800 dark:text-neutral-200 leading-relaxed">
                   {section.keyConcept}
                 </p>
               </div>
@@ -137,10 +137,10 @@ export const StudyMaterialReader: React.FC<StudyMaterialReaderProps> = ({
                 <span className="font-bold text-sky-900 dark:text-sky-300 block text-xs uppercase tracking-wider">
                   Classroom Scenario
                 </span>
-                <p className="text-slate-700 dark:text-slate-300 italic">
+                <p className="text-slate-700 dark:text-neutral-300 italic">
                   "{section.example.scenario}"
                 </p>
-                <div className="pt-1.5 border-t border-sky-200/60 dark:border-sky-900/40 text-slate-800 dark:text-slate-200">
+                <div className="pt-1.5 border-t border-sky-200/60 dark:border-sky-900/40 text-slate-800 dark:text-neutral-200">
                   <strong className="text-slate-900 dark:text-white">Analysis: </strong>
                   {section.example.analysis}
                 </div>
@@ -148,22 +148,22 @@ export const StudyMaterialReader: React.FC<StudyMaterialReaderProps> = ({
             )}
 
             {section.comparisonTable && (
-              <div className="overflow-x-auto my-3 border border-slate-200 dark:border-slate-800 rounded-md">
+              <div className="overflow-x-auto my-3 border border-slate-200 dark:border-neutral-800 rounded-md">
                 <table className="w-full text-left text-xs border-collapse">
                   <thead>
-                    <tr className="bg-slate-100 dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700">
+                    <tr className="bg-slate-100 dark:bg-neutral-800 border-b border-slate-200 dark:border-neutral-700">
                       {section.comparisonTable.headers.map((header, hIdx) => (
-                        <th key={hIdx} className="p-2.5 font-bold text-slate-800 dark:text-slate-200">
+                        <th key={hIdx} className="p-2.5 font-bold text-slate-800 dark:text-neutral-200">
                           {header}
                         </th>
                       ))}
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-200 dark:divide-slate-800">
+                  <tbody className="divide-y divide-slate-200 dark:divide-neutral-800">
                     {section.comparisonTable.rows.map((row, rIdx) => (
-                      <tr key={rIdx} className="hover:bg-slate-50/60 dark:hover:bg-slate-800/30">
+                      <tr key={rIdx} className="hover:bg-slate-50/60 dark:hover:bg-neutral-800/30">
                         {row.map((cell, cIdx) => (
-                          <td key={cIdx} className="p-2.5 text-slate-700 dark:text-slate-300 align-top">
+                          <td key={cIdx} className="p-2.5 text-slate-700 dark:text-neutral-300 align-top">
                             {cell}
                           </td>
                         ))}
@@ -179,7 +179,7 @@ export const StudyMaterialReader: React.FC<StudyMaterialReaderProps> = ({
 
       {/* Key Terms */}
       {material.keyTerms && material.keyTerms.length > 0 && (
-        <section className="space-y-2.5 pt-4 border-t border-slate-200 dark:border-slate-800">
+        <section className="space-y-2.5 pt-4 border-t border-slate-200 dark:border-neutral-800">
           <div className="flex items-center gap-1.5 text-slate-900 dark:text-white font-bold text-sm">
             <BookOpen className="w-4 h-4 text-sky-700 dark:text-sky-300" />
             <span>High-Yield Vocabulary & Definitions</span>
@@ -188,12 +188,12 @@ export const StudyMaterialReader: React.FC<StudyMaterialReaderProps> = ({
             {material.keyTerms.map((kt, i) => (
               <div
                 key={i}
-                className="p-3 rounded-md bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-800 text-xs"
+                className="p-3 rounded-md bg-slate-50 dark:bg-neutral-800/60 border border-slate-200 dark:border-neutral-800 text-xs"
               >
                 <strong className="text-slate-900 dark:text-white block mb-0.5">
                   {kt.term}
                 </strong>
-                <span className="text-slate-600 dark:text-slate-300">
+                <span className="text-slate-600 dark:text-neutral-300">
                   {kt.definition}
                 </span>
               </div>
@@ -209,7 +209,7 @@ export const StudyMaterialReader: React.FC<StudyMaterialReaderProps> = ({
             <Lightbulb className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
             <span>LET Board Exam Tips</span>
           </div>
-          <ul className="space-y-1.5 pl-4 list-disc text-xs text-slate-700 dark:text-slate-300 leading-relaxed">
+          <ul className="space-y-1.5 pl-4 list-disc text-xs text-slate-700 dark:text-neutral-300 leading-relaxed">
             {material.letTips.map((tip, i) => (
               <li key={i}>{tip}</li>
             ))}
@@ -224,7 +224,7 @@ export const StudyMaterialReader: React.FC<StudyMaterialReaderProps> = ({
             <AlertTriangle className="w-3.5 h-3.5 text-rose-600 dark:text-rose-400" />
             <span>Common Exam Traps & Misconceptions</span>
           </div>
-          <ul className="space-y-1.5 pl-4 list-disc text-xs text-slate-700 dark:text-slate-300 leading-relaxed">
+          <ul className="space-y-1.5 pl-4 list-disc text-xs text-slate-700 dark:text-neutral-300 leading-relaxed">
             {material.commonMistakes.map((mistake, i) => (
               <li key={i}>{mistake}</li>
             ))}
@@ -235,10 +235,10 @@ export const StudyMaterialReader: React.FC<StudyMaterialReaderProps> = ({
       {/* Summary Points */}
       {material.summaryPoints && material.summaryPoints.length > 0 && (
         <section className="space-y-2 pt-2">
-          <h3 className="font-bold text-xs uppercase tracking-wider text-slate-600 dark:text-slate-400">
+          <h3 className="font-bold text-xs uppercase tracking-wider text-slate-600 dark:text-neutral-400">
             Quick Review Summary
           </h3>
-          <ul className="space-y-1 pl-4 list-disc text-xs text-slate-700 dark:text-slate-300">
+          <ul className="space-y-1 pl-4 list-disc text-xs text-slate-700 dark:text-neutral-300">
             {material.summaryPoints.map((pt, i) => (
               <li key={i}>{pt}</li>
             ))}
@@ -247,12 +247,12 @@ export const StudyMaterialReader: React.FC<StudyMaterialReaderProps> = ({
       )}
 
       {/* Practice Connection Footer Action */}
-      <div className="p-4 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-3 mt-6">
+      <div className="p-4 rounded-lg bg-white dark:bg-neutral-900 border border-slate-200 dark:border-neutral-800 space-y-3 mt-6">
         <div>
           <h3 className="font-bold text-sm text-slate-900 dark:text-white">
             Reinforce this Topic with Practice Questions
           </h3>
-          <p className="text-xs text-slate-600 dark:text-slate-400 mt-0.5">
+          <p className="text-xs text-slate-600 dark:text-neutral-400 mt-0.5">
             {relatedQuestionCount > 0 ? (
               <>
                 Test your mastery with {relatedQuestionCount} authentic practice questions on{' '}

@@ -49,7 +49,7 @@ export const PracticeReviewPage: React.FC<PracticeReviewPageProps> = ({
   if (!currentQuestion) {
     return (
       <div className="text-center py-12">
-        <p className="text-slate-500">No questions available for this selection.</p>
+        <p className="text-slate-500 dark:text-neutral-400">No questions available for this selection.</p>
         <Button variant="secondary" onClick={onExit} className="mt-4">
           Return to Subjects
         </Button>

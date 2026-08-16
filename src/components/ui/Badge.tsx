@@ -23,9 +23,9 @@ export const Badge: React.FC<BadgeProps> = ({
 
   const variantClasses = {
     primary:
-      'bg-slate-100 text-slate-800 dark:bg-slate-800 dark:text-slate-200 border border-slate-300 dark:border-slate-700',
+      'bg-slate-100 text-slate-800 dark:bg-neutral-800 dark:text-neutral-200 border border-slate-300 dark:border-neutral-700',
     secondary:
-      'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300 border border-slate-200 dark:border-slate-700',
+      'bg-slate-100 text-slate-700 dark:bg-neutral-800 dark:text-neutral-300 border border-slate-200 dark:border-neutral-700',
     success:
       'bg-emerald-50 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800/60',
     danger:
@@ -35,7 +35,7 @@ export const Badge: React.FC<BadgeProps> = ({
     info:
       'bg-sky-50 text-sky-800 dark:bg-sky-950/60 dark:text-sky-300 border border-sky-200 dark:border-sky-800/60',
     outline:
-      'bg-transparent text-slate-600 dark:text-slate-400 border border-slate-300 dark:border-slate-700',
+      'bg-transparent text-slate-600 dark:text-neutral-400 border border-slate-300 dark:border-neutral-700',
   };
 
   return (
