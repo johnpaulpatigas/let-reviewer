@@ -27,6 +27,20 @@
     scrollbar-gutter: stable;
     scrollbar-width: thin;
     scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+    font-size: 16px;
+  }
+
+  html[data-font-size="small"] {
+    font-size: 14.5px;
+  }
+  html[data-font-size="default"] {
+    font-size: 16px;
+  }
+  html[data-font-size="large"] {
+    font-size: 17.5px;
+  }
+  html[data-font-size="extra-large"] {
+    font-size: 19px;
   }
 
   body {
@@ -37,6 +51,15 @@
     min-height: 100dvh;
     overflow-x: hidden;
   }
+}
+
+html[data-reduce-motion="on"] *,
+html[data-reduce-motion="on"] *::before,
+html[data-reduce-motion="on"] *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+  scroll-behavior: auto !important;
 }
 
 /* Purposeful Motion Keyframes */
