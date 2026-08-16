@@ -37,6 +37,7 @@ export const PracticeReviewPage: React.FC<PracticeReviewPageProps> = ({
   onExit,
 }) => {
   const [currentIndex, setCurrentIndex] = useState(() => Math.min(Math.max(0, initialIndex), Math.max(0, questions.length - 1)));
+  const [direction, setDirection] = useState<'next' | 'prev' | undefined>();
   const [answers, setAnswers] = useState<Record<string, UserAnswer>>(() => initialAnswers);
   const [submittedQuestions, setSubmittedQuestions] = useState<Set<string>>(() => new Set(initialSubmittedQuestionIds));
   const [sessionStartTime] = useState<number>(() => startTime || Date.now());
@@ -88,6 +89,7 @@ export const PracticeReviewPage: React.FC<PracticeReviewPageProps> = ({
 
   const handleNext = () => {
     if (!isLastQuestion) {
+      setDirection('next');
       const nextIdx = currentIndex + 1;
       setCurrentIndex(nextIdx);
       if (onUpdateIndex) {
@@ -100,6 +102,7 @@ export const PracticeReviewPage: React.FC<PracticeReviewPageProps> = ({
 
   const handlePrevious = () => {
     if (!isFirstQuestion) {
+      setDirection('prev');
       const prevIdx = currentIndex - 1;
       setCurrentIndex(prevIdx);
       if (onUpdateIndex) {
@@ -187,6 +190,7 @@ export const PracticeReviewPage: React.FC<PracticeReviewPageProps> = ({
         userAnswer={currentUserAnswer}
         isAnswerSubmitted={isCurrentSubmitted}
         isBookmarked={bookmarkedIds.includes(currentQuestion.id)}
+        transitionDirection={direction}
         onSelectChoice={handleSelectChoice}
         onToggleBookmark={onToggleBookmark}
         mode={config.mode}

@@ -87,7 +87,7 @@ export const QuizResultPage: React.FC<QuizResultPageProps> = ({
   };
 
   return (
-    <div className="space-y-4 animate-fade-in">
+    <div className="space-y-4 animate-page-enter">
       {/* Score Summary Card */}
       <div
         className={`rounded-lg p-5 sm:p-6 text-center border space-y-3 ${
@@ -350,7 +350,7 @@ export const QuizResultPage: React.FC<QuizResultPageProps> = ({
 
                 {/* Expanded Details */}
                 {isExpanded && (
-                  <div className="space-y-3 pt-2 border-t border-slate-200/80 dark:border-slate-800 animate-fade-in text-xs">
+                  <div className="space-y-3 pt-2 border-t border-slate-200/80 dark:border-slate-800 animate-expand text-xs">
                     {/* Choices Breakdown */}
                     <div className="space-y-1.5">
                       {q.choices.map((choice, cIdx) => {

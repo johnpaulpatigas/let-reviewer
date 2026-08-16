@@ -46,7 +46,7 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
   };
 
   return (
-    <div className="space-y-6 animate-fade-in">
+    <div className="space-y-6 animate-page-enter">
       {/* Header */}
       <div>
         <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
@@ -58,7 +58,7 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
       </div>
 
       {dataResetSuccess && (
-        <div className="p-3 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-900/60 rounded-lg text-xs font-semibold text-emerald-800 dark:text-emerald-300 flex items-center gap-2 animate-fade-in">
+        <div className="p-3 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-900/60 rounded-lg text-xs font-semibold text-emerald-800 dark:text-emerald-300 flex items-center gap-2 animate-expand">
           <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
           <span>All study progress, sessions, and mastery history have been reset.</span>
         </div>
@@ -101,7 +101,7 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
                     key={item.id}
                     type="button"
                     onClick={() => onUpdateSetting('theme', item.id as ThemeMode)}
-                    className={`py-2 px-2.5 rounded-md border text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors tap-target cursor-pointer ${
+                    className={`py-2 px-2.5 rounded-md border text-xs font-semibold flex items-center justify-center gap-1.5 transition-all duration-150 active:scale-[0.98] tap-target cursor-pointer ${
                       isSelected
                         ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 border-slate-900 dark:border-white shadow-xs'
                         : 'bg-slate-50 dark:bg-slate-800/60 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800'
@@ -142,7 +142,7 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
                     key={size.id}
                     type="button"
                     onClick={() => onUpdateSetting('fontSize', size.id as FontSizePreference)}
-                    className={`p-2 rounded-md border text-center transition-colors cursor-pointer ${
+                    className={`p-2 rounded-md border text-center transition-all duration-150 active:scale-[0.98] cursor-pointer ${
                       isSelected
                         ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 border-slate-900 dark:border-white font-bold'
                         : 'bg-slate-50 dark:bg-slate-800/60 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:bg-slate-100'
@@ -177,12 +177,12 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
                 {
                   id: 'standard',
                   label: 'Standard',
-                  desc: 'Subtle, consistent interaction feedback',
+                  desc: 'Expressive, tactile micro-interactions and transitions',
                 },
                 {
                   id: 'reduced',
                   label: 'Reduced',
-                  desc: 'Minimal motion for accessibility and speed',
+                  desc: 'Minimal motion with instant state transitions',
                 },
               ].map((motion) => {
                 const isSelected = settings.reduceMotion === motion.id;
@@ -191,7 +191,7 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
                     key={motion.id}
                     type="button"
                     onClick={() => onUpdateSetting('reduceMotion', motion.id as MotionPreference)}
-                    className={`p-2.5 rounded-lg border text-left transition-colors cursor-pointer flex flex-col justify-between ${
+                    className={`p-2.5 rounded-lg border text-left transition-all duration-150 active:scale-[0.98] cursor-pointer flex flex-col justify-between ${
                       isSelected
                         ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 border-slate-900 dark:border-white font-bold shadow-xs'
                         : 'bg-slate-50 dark:bg-slate-800/60 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800'
@@ -205,7 +205,7 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
                           : 'border-slate-300 dark:border-slate-600'
                       }`}>
                         {isSelected && (
-                          <span className="w-1.5 h-1.5 rounded-full bg-slate-900 dark:bg-white" />
+                          <span className="w-1.5 h-1.5 rounded-full bg-slate-900 dark:bg-white animate-pop" />
                         )}
                       </span>
                     </div>

@@ -22,13 +22,13 @@ export const SubjectCard: React.FC<SubjectCardProps> = ({
   return (
     <div
       onClick={() => onSelect(subject)}
-      className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg p-4 flex flex-col justify-between hover:border-slate-400 dark:hover:border-slate-600 transition-all duration-150 active:scale-[0.99] cursor-pointer group select-none"
+      className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg p-4 flex flex-col justify-between hover:border-slate-400 dark:hover:border-slate-600 hover:-translate-y-0.5 hover:shadow-xs transition-all duration-200 ease-out active:scale-[0.985] cursor-pointer group select-none"
     >
       <div>
         <div className="flex items-start justify-between gap-3 mb-2">
           <div className="flex items-center gap-2.5">
             <div
-              className={`w-8 h-8 rounded-md flex items-center justify-center ${subject.colorScheme.bg} ${subject.colorScheme.text} border ${subject.colorScheme.border}`}
+              className={`w-8 h-8 rounded-md flex items-center justify-center ${subject.colorScheme.bg} ${subject.colorScheme.text} border ${subject.colorScheme.border} group-hover:scale-105 transition-transform duration-200`}
             >
               <IconHelper name={subject.iconName} className="w-4 h-4" />
             </div>
@@ -40,7 +40,7 @@ export const SubjectCard: React.FC<SubjectCardProps> = ({
             </div>
           </div>
 
-          <div className="w-6 h-6 rounded-md flex items-center justify-center text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white group-hover:translate-x-0.5 transition-all">
+          <div className="w-6 h-6 rounded-md flex items-center justify-center text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white group-hover:translate-x-1 transition-all duration-150">
             <ChevronRight className="w-4 h-4" />
           </div>
         </div>

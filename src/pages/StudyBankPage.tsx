@@ -82,7 +82,7 @@ export const StudyBankPage: React.FC<StudyBankPageProps> = ({
   };
 
   return (
-    <div className="space-y-4 animate-fade-in">
+    <div className="space-y-4 animate-page-enter">
       <div>
         <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
           Targeted Remediation Bank
@@ -226,7 +226,7 @@ export const StudyBankPage: React.FC<StudyBankPageProps> = ({
               </div>
 
               {isExpanded && (
-                <div className="pt-2.5 border-t border-slate-100 dark:border-slate-800 space-y-2 text-xs animate-fade-in">
+                <div className="pt-2.5 border-t border-slate-100 dark:border-slate-800 space-y-2 text-xs animate-expand">
                   <div className="space-y-1">
                     <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 block">
                       Choices & Key:

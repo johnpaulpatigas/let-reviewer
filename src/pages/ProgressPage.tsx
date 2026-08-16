@@ -40,7 +40,7 @@ export const ProgressPage: React.FC<ProgressPageProps> = ({
   } = stats;
 
   return (
-    <div className="space-y-5 animate-fade-in">
+    <div className="space-y-5 animate-page-enter">
       <div>
         <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
           Detailed Progress & Analytics

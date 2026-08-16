@@ -278,8 +278,8 @@ export const HomePage: React.FC<HomePageProps> = ({
         /* Real Progress Data View */
         <>
           {/* Primary Progress Metric Strip */}
-          <section className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-            <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg p-3">
+          <section className="grid grid-cols-2 sm:grid-cols-4 gap-2 animate-page-enter stagger-1">
+            <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg p-3 shadow-2xs">
               <span className="text-[10px] text-slate-500 uppercase tracking-wider block font-semibold">
                 Questions Answered
               </span>
@@ -289,7 +289,7 @@ export const HomePage: React.FC<HomePageProps> = ({
               </div>
             </div>
 
-            <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg p-3">
+            <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg p-3 shadow-2xs">
               <span className="text-[10px] text-slate-500 uppercase tracking-wider block font-semibold">
                 Accuracy
               </span>
@@ -305,7 +305,7 @@ export const HomePage: React.FC<HomePageProps> = ({
               </div>
             </div>
 
-            <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg p-3">
+            <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg p-3 shadow-2xs">
               <span className="text-[10px] text-slate-500 uppercase tracking-wider block font-semibold">
                 Subjects Studied
               </span>
@@ -315,7 +315,7 @@ export const HomePage: React.FC<HomePageProps> = ({
               </div>
             </div>
 
-            <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg p-3">
+            <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg p-3 shadow-2xs">
               <span className="text-[10px] text-slate-500 uppercase tracking-wider block font-semibold">
                 Guides Read
               </span>
@@ -327,7 +327,7 @@ export const HomePage: React.FC<HomePageProps> = ({
           </section>
 
           {/* Continue Studying (Smart Next Action) */}
-          <section className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg p-4 sm:p-5 space-y-3">
+          <section className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg p-4 sm:p-5 space-y-3 shadow-xs animate-page-enter stagger-2">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <div className="p-1 rounded bg-slate-900 text-white dark:bg-white dark:text-slate-900">
@@ -371,7 +371,7 @@ export const HomePage: React.FC<HomePageProps> = ({
           </section>
 
           {/* Performance Overview & Domain Comparison */}
-          <section className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg p-4 sm:p-5 space-y-3.5">
+          <section className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg p-4 sm:p-5 space-y-3.5 shadow-xs animate-page-enter stagger-3">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-1.5 text-slate-700 dark:text-slate-300">
                 <TrendingUp className="w-4 h-4" />
@@ -441,7 +441,7 @@ export const HomePage: React.FC<HomePageProps> = ({
           </section>
 
           {/* Areas to Review (Weak Competencies Queue) */}
-          <section className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg p-4 space-y-3">
+          <section className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg p-4 space-y-3 shadow-xs animate-page-enter stagger-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-1.5">
                 <AlertCircle className="w-4 h-4 text-amber-600 dark:text-amber-400" />
@@ -502,7 +502,7 @@ export const HomePage: React.FC<HomePageProps> = ({
           </section>
 
           {/* Subject Performance Breakdown */}
-          <section className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg p-4 space-y-3">
+          <section className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg p-4 space-y-3 shadow-xs animate-page-enter stagger-4">
             <div className="flex items-center justify-between">
               <h2 className="font-bold text-slate-900 dark:text-white text-xs uppercase tracking-wider">
                 Subject Performance Breakdown
@@ -554,7 +554,7 @@ export const HomePage: React.FC<HomePageProps> = ({
 
           {/* Recent Examination Activity */}
           {quizHistory.length > 0 && (
-            <section className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg p-4 space-y-3">
+            <section className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg p-4 space-y-3 shadow-xs animate-page-enter stagger-5">
               <div className="flex items-center justify-between">
                 <h2 className="font-bold text-slate-900 dark:text-white text-xs uppercase tracking-wider">
                   Recent Activity & Sessions
@@ -657,7 +657,7 @@ export const HomePage: React.FC<HomePageProps> = ({
                       </div>
 
                       {isExpanded && hasBreakdown && (
-                        <div className="pt-2 border-t border-slate-200 dark:border-slate-800 space-y-1.5 animate-fade-in">
+                        <div className="pt-2 border-t border-slate-200 dark:border-slate-800 space-y-1.5 animate-expand">
                           <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 block">
                             Subject Score Breakdown
                           </span>

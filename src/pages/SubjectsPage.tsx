@@ -137,7 +137,7 @@ export const SubjectsPage: React.FC<SubjectsPageProps> = ({
         : 0;
 
     return (
-      <div className="space-y-4 animate-fade-in">
+      <div className="space-y-4 animate-page-enter">
         {/* Hub Back Navigation */}
         <div className="flex items-center justify-between">
           <button
@@ -264,7 +264,7 @@ export const SubjectsPage: React.FC<SubjectsPageProps> = ({
 
   // Primary Subjects Directory View
   return (
-    <div className="space-y-4 animate-fade-in">
+    <div className="space-y-4 animate-page-enter">
       <div>
         <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
           Subject Directory

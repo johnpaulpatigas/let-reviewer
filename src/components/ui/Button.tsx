@@ -20,7 +20,7 @@ export const Button: React.FC<ButtonProps> = ({
   ...props
 }) => {
   const baseClasses =
-    'inline-flex items-center justify-center font-medium rounded-md transition-all duration-150 active:scale-[0.985] will-change-transform disabled:opacity-50 disabled:pointer-events-none disabled:active:scale-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-900 dark:focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-slate-50 dark:focus-visible:ring-offset-slate-950 tap-target select-none cursor-pointer';
+    'inline-flex items-center justify-center font-medium rounded-md transition-all duration-150 ease-out active:scale-[0.98] will-change-transform disabled:opacity-50 disabled:pointer-events-none disabled:active:scale-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-900 dark:focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-slate-50 dark:focus-visible:ring-offset-slate-950 tap-target select-none cursor-pointer shadow-2xs hover:shadow-xs';
 
   const sizeClasses = {
     sm: 'h-8 px-3 text-xs gap-1.5',

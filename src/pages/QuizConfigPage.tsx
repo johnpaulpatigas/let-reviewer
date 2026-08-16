@@ -86,7 +86,7 @@ export const QuizConfigPage: React.FC<QuizConfigPageProps> = ({
   };
 
   return (
-    <div className="space-y-6 animate-fade-in">
+    <div className="space-y-6 animate-page-enter">
       {/* Header */}
       <div>
         <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
@@ -99,7 +99,7 @@ export const QuizConfigPage: React.FC<QuizConfigPageProps> = ({
 
       {/* Active In-Progress Session Resume Banner */}
       {activeSession && (
-        <section className="bg-amber-50/70 dark:bg-amber-950/30 border border-amber-300 dark:border-amber-700/80 rounded-lg p-4 sm:p-5 space-y-3 animate-fade-in">
+        <section className="bg-amber-50/70 dark:bg-amber-950/30 border border-amber-300 dark:border-amber-700/80 rounded-lg p-4 sm:p-5 space-y-3 animate-expand">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <span className="p-1 rounded bg-amber-600 text-white dark:bg-amber-500 dark:text-slate-900">

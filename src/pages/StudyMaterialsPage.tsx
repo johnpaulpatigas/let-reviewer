@@ -133,7 +133,7 @@ export const StudyMaterialsPage: React.FC<StudyMaterialsPageProps> = ({
   const progressPercent = Math.round((completedCount / totalCount) * 100);
 
   return (
-    <div className="space-y-4 animate-fade-in">
+    <div className="space-y-4 animate-page-enter">
       {/* Header */}
       <div>
         <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900 dark:text-white">

@@ -8,10 +8,18 @@
     --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
     --scrollbar-thumb: #cbd5e1;
     --scrollbar-track: transparent;
+    
+    /* Premium Motion Tokens */
+    --motion-instant: 100ms;
     --motion-fast: 150ms;
-    --motion-standard: 200ms;
-    --motion-slow: 300ms;
-    --ease-standard: cubic-bezier(0.16, 1, 0.3, 1);
+    --motion-standard: 220ms;
+    --motion-medium: 300ms;
+    --motion-page: 260ms;
+    
+    /* Sophisticated spring & smooth deceleration curves */
+    --ease-spring: cubic-bezier(0.175, 0.885, 0.32, 1.15);
+    --ease-smooth: cubic-bezier(0.16, 1, 0.3, 1);
+    --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .dark {
@@ -53,7 +61,7 @@
   }
 }
 
-/* Reduced Motion Override */
+/* Strict Reduced Motion Override - Completely eliminates all motion when active */
 html[data-reduce-motion="reduced"] *,
 html[data-reduce-motion="reduced"] *::before,
 html[data-reduce-motion="reduced"] *::after,
@@ -62,33 +70,54 @@ html[data-reduce-motion="on"] *::before,
 html[data-reduce-motion="on"] *::after {
   animation-duration: 0.001ms !important;
   animation-iteration-count: 1 !important;
+  animation-delay: 0ms !important;
   transition-duration: 0.001ms !important;
+  transition-delay: 0ms !important;
   scroll-behavior: auto !important;
   transform: none !important;
 }
 
-/* Purposeful Motion Keyframes */
-@keyframes fadeIn {
+/* =========================================================================
+   Sophisticated, Expressive Motion Keyframes (Standard Mode)
+   ========================================================================= */
+
+/* Coordinated Page & View Entrance */
+@keyframes pageEnter {
   from {
     opacity: 0;
+    transform: translateY(6px);
   }
   to {
     opacity: 1;
+    transform: translateY(0);
   }
 }
 
+/* Directional Question Transitions */
+@keyframes slideLeft {
+  from {
+    opacity: 0;
+    transform: translateX(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideRight {
+  from {
+    opacity: 0;
+    transform: translateX(-12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Subtle Modal & Card Scale Entrance */
 @keyframes scaleIn {
-  from {
-    opacity: 0;
-    transform: scale(0.98);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-@keyframes revealStatus {
   from {
     opacity: 0;
     transform: scale(0.96);
@@ -99,36 +128,102 @@ html[data-reduce-motion="on"] *::after {
   }
 }
 
-/* Purposeful Motion Utility Classes */
+/* Tactile Micro-interaction Pop (Badges, Flag, Checkmarks) */
+@keyframes popFeedback {
+  0% {
+    opacity: 0;
+    transform: scale(0.85);
+  }
+  70% {
+    opacity: 1;
+    transform: scale(1.06);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Smooth Accordion / Rationale Expansion */
+@keyframes expandDisclosure {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Fade in for backgrounds and simple elements */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Utility Animation Classes */
+.animate-page-enter {
+  animation: pageEnter var(--motion-page) var(--ease-smooth) both;
+}
+
+.animate-slide-left {
+  animation: slideLeft var(--motion-standard) var(--ease-smooth) both;
+}
+
+.animate-slide-right {
+  animation: slideRight var(--motion-standard) var(--ease-smooth) both;
+}
+
 .animate-fade-in {
-  animation: fadeIn var(--motion-standard) var(--ease-standard) forwards;
+  animation: fadeIn var(--motion-standard) var(--ease-smooth) both;
 }
 
 .animate-scale-in {
-  animation: scaleIn var(--motion-standard) var(--ease-standard) forwards;
+  animation: scaleIn var(--motion-standard) var(--ease-smooth) both;
 }
 
-.animate-reveal {
-  animation: revealStatus var(--motion-fast) var(--ease-standard) forwards;
+.animate-reveal,
+.animate-pop {
+  animation: popFeedback var(--motion-fast) var(--ease-spring) both;
 }
+
+.animate-expand {
+  animation: expandDisclosure var(--motion-standard) var(--ease-smooth) both;
+}
+
+/* Fast Stagger Classes for Home and Section Lists */
+.stagger-1 { animation-delay: 0ms; }
+.stagger-2 { animation-delay: 35ms; }
+.stagger-3 { animation-delay: 70ms; }
+.stagger-4 { animation-delay: 105ms; }
+.stagger-5 { animation-delay: 140ms; }
 
 /* Microinteraction helper for tactile buttons and cards */
 .pressable {
-  transition: transform 120ms ease, opacity 120ms ease;
+  transition: transform 120ms var(--ease-spring), opacity 120ms ease;
   will-change: transform;
 }
 
 .pressable:active:not(:disabled) {
-  transform: scale(0.985);
+  transform: scale(0.98);
 }
 
 .interactive-card {
-  transition: transform 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
+  transition: transform 180ms var(--ease-smooth), border-color 180ms ease, box-shadow 180ms ease;
   will-change: transform;
 }
 
+.interactive-card:hover {
+  transform: translateY(-2px);
+}
+
 .interactive-card:active {
-  transform: scale(0.992);
+  transform: scale(0.99);
 }
 
 /* Touch friendly minimum tap targets for buttons and interactive controls */
@@ -164,19 +259,17 @@ html[data-reduce-motion="on"] *::after {
   }
 }
 
-/* Full Accessibility Support for Reduced Motion */
+/* Full Accessibility Support for OS prefers-reduced-motion fallback */
 @media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
+  :root:not([data-reduce-motion="standard"]) *,
+  :root:not([data-reduce-motion="standard"]) *::before,
+  :root:not([data-reduce-motion="standard"]) *::after {
+    animation-duration: 0.001ms !important;
     animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
+    animation-delay: 0ms !important;
+    transition-duration: 0.001ms !important;
+    transition-delay: 0ms !important;
     scroll-behavior: auto !important;
-  }
-
-  .pressable:active:not(:disabled),
-  .interactive-card:active {
     transform: none !important;
   }
 }
