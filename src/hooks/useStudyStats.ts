@@ -115,16 +115,25 @@ export function useStudyStats() {
       // Update missed questions list
       result.questions.forEach((q) => {
         const ans = result.answers[q.id];
-        if (!ans || !ans.isCorrect) {
+        if (ans) {
+          if (!ans.isCorrect) {
+            newMissed.add(q.id);
+          } else {
+            newMissed.delete(q.id);
+          }
+        } else if (result.config.mode === 'exam') {
           newMissed.add(q.id);
-        } else {
-          newMissed.delete(q.id);
         }
       });
 
+      const answeredInSession =
+        result.config.mode === 'exam'
+          ? result.totalQuestions
+          : Object.keys(result.answers).length || result.totalQuestions;
+
       return {
         ...prev,
-        totalAnswered: prev.totalAnswered + result.totalQuestions,
+        totalAnswered: prev.totalAnswered + answeredInSession,
         totalCorrect: prev.totalCorrect + result.correctCount,
         subjectMastery: newSubjectMastery,
         missedQuestionIds: Array.from(newMissed),

@@ -10,6 +10,7 @@ import { QuizExamSessionPage } from './pages/QuizExamSessionPage';
 import { QuizResultPage } from './pages/QuizResultPage';
 import { StudyBankPage } from './pages/StudyBankPage';
 import { SettingsPage } from './pages/SettingsPage';
+import { ProgressPage } from './pages/ProgressPage';
 import { useStudyStats } from './hooks/useStudyStats';
 import { useUserSettings } from './hooks/useUserSettings';
 import { buildQuizQuestions, ALL_QUESTIONS } from './data/questions';
@@ -252,11 +253,19 @@ export default function App() {
       ) : (
         /* Primary Navigation Destinations */
         <>
-          {(currentTab === 'home' || currentTab === 'progress') && (
+          {currentTab === 'home' && (
             <HomePage
               stats={stats}
               onStartQuiz={handleStartQuiz}
               onNavigateTab={(tab) => setCurrentTab(tab)}
+            />
+          )}
+
+          {currentTab === 'progress' && (
+            <ProgressPage
+              stats={stats}
+              onClearStats={clearStats}
+              onOpenStudyBank={() => setCurrentTab('bank')}
             />
           )}
 
