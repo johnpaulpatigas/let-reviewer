@@ -316,21 +316,8 @@ export const QuizExamSessionPage: React.FC<QuizExamSessionPageProps> = ({
 
           <button
             type="button"
-            onClick={() => toggleFlag(currentQuestion.id)}
-            title={isCurrentFlagged ? 'Unflag question' : 'Flag question for review'}
-            className={`flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-semibold transition-colors tap-target cursor-pointer border ${
-              isCurrentFlagged
-                ? 'bg-amber-50 text-amber-900 dark:bg-amber-950 dark:text-amber-300 border-amber-300 dark:border-amber-700 font-bold'
-                : 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400 border-slate-200 dark:border-slate-700 hover:bg-slate-200'
-            }`}
-          >
-            <Flag className={`w-3.5 h-3.5 ${isCurrentFlagged ? 'fill-current' : ''}`} />
-            <span className="hidden xs:inline">{isCurrentFlagged ? 'Flagged' : 'Flag'}</span>
-          </button>
-
-          <button
-            type="button"
             onClick={() => setIsGridOpen(true)}
+            aria-label="Open question navigator"
             className="flex items-center gap-1 px-2.5 py-1 rounded-md bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs font-semibold transition-colors tap-target cursor-pointer border border-slate-200 dark:border-slate-700"
           >
             <Grid className="w-3.5 h-3.5" />
@@ -405,6 +392,24 @@ export const QuizExamSessionPage: React.FC<QuizExamSessionPageProps> = ({
             );
           })}
         </div>
+      </div>
+
+      {/* Flag Question for Review Control */}
+      <div className="flex justify-center py-0.5">
+        <button
+          type="button"
+          onClick={() => toggleFlag(currentQuestion.id)}
+          aria-pressed={isCurrentFlagged}
+          aria-label={isCurrentFlagged ? 'Question flagged for review. Click to unflag.' : 'Flag question for review'}
+          className={`inline-flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-xs font-semibold transition-all duration-150 active:scale-[0.99] tap-target cursor-pointer border ${
+            isCurrentFlagged
+              ? 'bg-amber-50 text-amber-900 dark:bg-amber-950 dark:text-amber-300 border-amber-300 dark:border-amber-700 font-bold shadow-xs'
+              : 'bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 hover:border-slate-300 dark:hover:border-slate-700 shadow-2xs'
+          }`}
+        >
+          <Flag className={`w-3.5 h-3.5 shrink-0 ${isCurrentFlagged ? 'fill-current text-amber-600 dark:text-amber-400' : 'text-slate-400 dark:text-slate-500'}`} />
+          <span>{isCurrentFlagged ? 'Question Flagged' : 'Flag Question for Review'}</span>
+        </button>
       </div>
 
       {/* Navigation Controls */}
