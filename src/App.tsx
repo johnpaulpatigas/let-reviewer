@@ -167,6 +167,18 @@ export default function App() {
     return 'Interactive Practice';
   };
 
+  const [previousTab, setPreviousTab] = useState<NavigationTab>('home');
+
+  const handleOpenSettings = () => {
+    handleExitSession();
+    setPreviousTab(currentTab !== 'settings' ? currentTab : 'home');
+    setCurrentTab('settings');
+  };
+
+  const handleBackFromSettings = () => {
+    setCurrentTab(previousTab);
+  };
+
   const inSession = Boolean(activeSession || activeResult || activeMaterial);
   const hideNav = inSession;
 
@@ -180,7 +192,8 @@ export default function App() {
       inSession={inSession}
       sessionTitle={getSessionTitle()}
       sessionSubtitle={getSessionSubtitle()}
-      onBack={handleExitSession}
+      onBack={currentTab === 'settings' ? handleBackFromSettings : handleExitSession}
+      onOpenSettings={handleOpenSettings}
       totalAnswered={stats.totalAnswered}
       bankCount={stats.bookmarkedQuestionIds.length}
       hideNav={hideNav}

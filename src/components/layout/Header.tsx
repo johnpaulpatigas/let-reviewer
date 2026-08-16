@@ -1,5 +1,5 @@
 import React from 'react';
-import { ChevronLeft, Award } from 'lucide-react';
+import { ChevronLeft, Award, Settings } from 'lucide-react';
 import type { NavigationTab } from '../../types';
 
 interface HeaderProps {
@@ -8,20 +8,25 @@ interface HeaderProps {
   sessionTitle?: string;
   sessionSubtitle?: string;
   onBack?: () => void;
+  onOpenSettings?: () => void;
   totalAnswered?: number;
 }
 
 export const Header: React.FC<HeaderProps> = ({
+  currentTab,
   inSession = false,
   sessionTitle,
   sessionSubtitle,
   onBack,
+  onOpenSettings,
   totalAnswered = 0,
 }) => {
+  const isSettingsTab = currentTab === 'settings';
+
   return (
     <header className="sticky top-0 z-30 w-full bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 transition-colors">
       <div className="max-w-2xl mx-auto px-4 h-14 flex items-center justify-between">
-        {inSession ? (
+        {inSession || isSettingsTab ? (
           <div className="flex items-center gap-2.5 w-full">
             {onBack && (
               <button
@@ -35,10 +40,12 @@ export const Header: React.FC<HeaderProps> = ({
             )}
             <div className="flex-1 min-w-0">
               <h1 className="text-sm font-bold text-slate-900 dark:text-white truncate">
-                {sessionTitle || 'Review Session'}
+                {isSettingsTab ? 'Settings & Preferences' : sessionTitle || 'Review Session'}
               </h1>
               <p className="text-[11px] text-slate-500 dark:text-slate-400 truncate">
-                {sessionSubtitle || 'LET Board Exam Reviewer'}
+                {isSettingsTab
+                  ? 'Display, typography & study preferences'
+                  : sessionSubtitle || 'LET Board Exam Reviewer'}
               </p>
             </div>
           </div>
@@ -58,12 +65,27 @@ export const Header: React.FC<HeaderProps> = ({
               </div>
             </div>
 
-            {/* Questions Solved Progress */}
-            {totalAnswered > 0 && (
-              <div className="flex items-center gap-1 px-2.5 py-1 bg-slate-100 dark:bg-slate-800 rounded text-slate-700 dark:text-slate-300 text-xs font-medium border border-slate-200 dark:border-slate-700">
-                <span className="font-mono font-bold text-slate-900 dark:text-white">{totalAnswered}</span> solved
-              </div>
-            )}
+            <div className="flex items-center gap-2">
+              {/* Questions Solved Progress */}
+              {totalAnswered > 0 && (
+                <div className="hidden xs:flex items-center gap-1 px-2.5 py-1 bg-slate-100 dark:bg-slate-800 rounded text-slate-700 dark:text-slate-300 text-xs font-medium border border-slate-200 dark:border-slate-700">
+                  <span className="font-mono font-bold text-slate-900 dark:text-white">{totalAnswered}</span> solved
+                </div>
+              )}
+
+              {/* Secondary Settings Icon */}
+              {onOpenSettings && (
+                <button
+                  type="button"
+                  onClick={onOpenSettings}
+                  aria-label="Open Settings"
+                  title="Settings & Preferences"
+                  className="inline-flex items-center justify-center w-8 h-8 rounded-md text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 tap-target transition-colors cursor-pointer"
+                >
+                  <Settings className="w-4 h-4" />
+                </button>
+              )}
+            </div>
           </>
         )}
       </div>

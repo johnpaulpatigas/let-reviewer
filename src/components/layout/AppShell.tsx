@@ -11,6 +11,7 @@ interface AppShellProps {
   sessionTitle?: string;
   sessionSubtitle?: string;
   onBack?: () => void;
+  onOpenSettings?: () => void;
   totalAnswered?: number;
   bankCount?: number;
   hideNav?: boolean;
@@ -24,6 +25,7 @@ export const AppShell: React.FC<AppShellProps> = ({
   sessionTitle,
   sessionSubtitle,
   onBack,
+  onOpenSettings,
   totalAnswered = 0,
   bankCount = 0,
   hideNav = false,
@@ -33,6 +35,8 @@ export const AppShell: React.FC<AppShellProps> = ({
     window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
   }, [currentTab, inSession, sessionTitle]);
 
+  const shouldHideNav = hideNav || currentTab === 'settings';
+
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex flex-col selection:bg-slate-200 selection:text-slate-900 dark:selection:bg-slate-800 dark:selection:text-slate-100 transition-colors">
       <Header
@@ -41,14 +45,15 @@ export const AppShell: React.FC<AppShellProps> = ({
         sessionTitle={sessionTitle}
         sessionSubtitle={sessionSubtitle}
         onBack={onBack}
+        onOpenSettings={onOpenSettings}
         totalAnswered={totalAnswered}
       />
 
-      <main className={`flex-1 w-full max-w-2xl mx-auto px-4 pt-4 ${hideNav ? 'pb-8' : 'pb-20'}`}>
+      <main className={`flex-1 w-full max-w-2xl mx-auto px-4 pt-4 ${shouldHideNav ? 'pb-8' : 'pb-20'}`}>
         {children}
       </main>
 
-      {!hideNav && (
+      {!shouldHideNav && (
         <BottomNav
           currentTab={currentTab}
           onTabChange={onTabChange}
