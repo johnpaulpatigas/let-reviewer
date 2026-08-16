@@ -4,18 +4,27 @@ import {
   Zap,
   SlidersHorizontal,
   Scale,
+  Play,
 } from 'lucide-react';
 import { Button } from '../components/ui/Button';
 import { SUBJECTS } from '../data/subjects';
 import { OFFICIAL_LET_BLUEPRINTS, type ExamBlueprint } from '../data/exam-blueprint';
 import { ExamBriefingModal } from '../components/quiz/ExamBriefingModal';
-import type { QuizConfig, SubjectCategory, Difficulty } from '../types';
+import type { QuizConfig, SubjectCategory, Difficulty, ActiveSessionState } from '../types';
 
 interface QuizConfigPageProps {
   onStartExam: (config: QuizConfig) => void;
+  activeSession?: ActiveSessionState | null;
+  onResumeSession?: () => void;
+  onDiscardSession?: () => void;
 }
 
-export const QuizConfigPage: React.FC<QuizConfigPageProps> = ({ onStartExam }) => {
+export const QuizConfigPage: React.FC<QuizConfigPageProps> = ({
+  onStartExam,
+  activeSession,
+  onResumeSession,
+  onDiscardSession,
+}) => {
   const [selectedMode, setSelectedMode] = useState<'practice' | 'exam'>('practice');
   const [selectedCategory, setSelectedCategory] = useState<SubjectCategory | 'all'>('all');
   const [selectedDifficulty, setSelectedDifficulty] = useState<Difficulty | 'all'>('all');
@@ -87,6 +96,59 @@ export const QuizConfigPage: React.FC<QuizConfigPageProps> = ({ onStartExam }) =
           Full-length timed LET simulations and self-paced competency practice drills.
         </p>
       </div>
+
+      {/* Active In-Progress Session Resume Banner */}
+      {activeSession && (
+        <section className="bg-amber-50/70 dark:bg-amber-950/30 border border-amber-300 dark:border-amber-700/80 rounded-lg p-4 sm:p-5 space-y-3 animate-fade-in">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <span className="p-1 rounded bg-amber-600 text-white dark:bg-amber-500 dark:text-slate-900">
+                <Play className="w-3.5 h-3.5 fill-current" />
+              </span>
+              <span className="text-xs font-bold uppercase tracking-wider text-amber-900 dark:text-amber-300">
+                In-Progress Session
+              </span>
+            </div>
+            <span className="text-xs text-amber-800 dark:text-amber-400 font-mono font-semibold">
+              {Object.keys(activeSession.answers).length} of {activeSession.questions.length} completed
+            </span>
+          </div>
+
+          <div>
+            <h3 className="font-bold text-slate-900 dark:text-white text-sm sm:text-base">
+              {activeSession.config.title ||
+                (activeSession.config.mode === 'exam'
+                  ? 'LET Mock Board Examination'
+                  : activeSession.config.topic
+                  ? `Topic Drill: ${activeSession.config.topic}`
+                  : 'Practice Drill')}
+            </h3>
+            <p className="text-xs text-slate-600 dark:text-slate-400 mt-0.5 leading-relaxed">
+              Resume where you left off at question #{activeSession.currentIndex + 1}. All previously answered items are preserved.
+            </p>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-2 pt-1">
+            <Button
+              variant="primary"
+              size="md"
+              onClick={onResumeSession}
+              className="font-bold"
+            >
+              Resume Practice Session →
+            </Button>
+            {onDiscardSession && (
+              <Button
+                variant="secondary"
+                size="md"
+                onClick={onDiscardSession}
+              >
+                Discard & Start New
+              </Button>
+            )}
+          </div>
+        </section>
+      )}
 
       {/* 1. Full LET Simulations */}
       <section className="space-y-3">

@@ -9,6 +9,13 @@ interface PracticeReviewPageProps {
   config: QuizConfig;
   questions: Question[];
   bookmarkedIds: string[];
+  initialIndex?: number;
+  initialAnswers?: Record<string, UserAnswer>;
+  initialSubmittedQuestionIds?: string[];
+  startTime?: number;
+  onRecordAnswer?: (questionId: string, choiceIndex: number, isCorrect: boolean) => void;
+  onSubmitQuestion?: (questionId: string) => void;
+  onUpdateIndex?: (index: number) => void;
   onToggleBookmark: (questionId: string) => void;
   onFinishSession: (result: QuizResult) => void;
   onExit: () => void;
@@ -18,14 +25,21 @@ export const PracticeReviewPage: React.FC<PracticeReviewPageProps> = ({
   config,
   questions,
   bookmarkedIds,
+  initialIndex = 0,
+  initialAnswers = {},
+  initialSubmittedQuestionIds = [],
+  startTime,
+  onRecordAnswer,
+  onSubmitQuestion,
+  onUpdateIndex,
   onToggleBookmark,
   onFinishSession,
   onExit,
 }) => {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [answers, setAnswers] = useState<Record<string, UserAnswer>>({});
-  const [submittedQuestions, setSubmittedQuestions] = useState<Set<string>>(new Set());
-  const [startTime] = useState<number>(() => Date.now());
+  const [currentIndex, setCurrentIndex] = useState(() => Math.min(Math.max(0, initialIndex), Math.max(0, questions.length - 1)));
+  const [answers, setAnswers] = useState<Record<string, UserAnswer>>(() => initialAnswers);
+  const [submittedQuestions, setSubmittedQuestions] = useState<Set<string>>(() => new Set(initialSubmittedQuestionIds));
+  const [sessionStartTime] = useState<number>(() => startTime || Date.now());
 
   const currentQuestion = questions[currentIndex];
   const isLastQuestion = currentIndex === questions.length - 1;
@@ -49,24 +63,36 @@ export const PracticeReviewPage: React.FC<PracticeReviewPageProps> = ({
   const handleSelectChoice = (choiceIndex: number) => {
     if (isCurrentSubmitted) return;
 
+    const isCorrect = choiceIndex === currentQuestion.answer;
     setAnswers((prev) => ({
       ...prev,
       [currentQuestion.id]: {
         questionId: currentQuestion.id,
         selectedAnswer: choiceIndex,
-        isCorrect: choiceIndex === currentQuestion.answer,
+        isCorrect,
       },
     }));
+
+    if (onRecordAnswer) {
+      onRecordAnswer(currentQuestion.id, choiceIndex, isCorrect);
+    }
   };
 
   const handleCheckAnswer = () => {
     if (!hasSelectedAnswer) return;
     setSubmittedQuestions((prev) => new Set([...prev, currentQuestion.id]));
+    if (onSubmitQuestion) {
+      onSubmitQuestion(currentQuestion.id);
+    }
   };
 
   const handleNext = () => {
     if (!isLastQuestion) {
-      setCurrentIndex((prev) => prev + 1);
+      const nextIdx = currentIndex + 1;
+      setCurrentIndex(nextIdx);
+      if (onUpdateIndex) {
+        onUpdateIndex(nextIdx);
+      }
     } else {
       handleCompleteQuiz();
     }
@@ -74,7 +100,11 @@ export const PracticeReviewPage: React.FC<PracticeReviewPageProps> = ({
 
   const handlePrevious = () => {
     if (!isFirstQuestion) {
-      setCurrentIndex((prev) => prev - 1);
+      const prevIdx = currentIndex - 1;
+      setCurrentIndex(prevIdx);
+      if (onUpdateIndex) {
+        onUpdateIndex(prevIdx);
+      }
     }
   };
 
@@ -108,7 +138,7 @@ export const PracticeReviewPage: React.FC<PracticeReviewPageProps> = ({
     const scorePercentage =
       totalQuestions > 0 ? Math.round((correctCount / totalQuestions) * 100) : 0;
     const isPassed = scorePercentage >= 75; // PRC LET passing benchmark
-    const timeSpentSeconds = Math.round((Date.now() - startTime) / 1000);
+    const timeSpentSeconds = Math.round((Date.now() - sessionStartTime) / 1000);
 
     const subjectBreakdown = Object.entries(subjectStatsMap).map(
       ([subjectId, stat]) => ({

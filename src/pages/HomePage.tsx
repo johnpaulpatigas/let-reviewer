@@ -13,16 +13,22 @@ import { ProgressBar } from '../components/ui/ProgressBar';
 import { CategoryBadge } from '../components/ui/Badge';
 import { ALL_STUDY_MATERIALS } from '../data/study-materials';
 import { computeStudyStats } from '../utils/progressStats';
-import type { UserStudyStats, QuizConfig, NavigationTab } from '../types';
+import type { UserStudyStats, QuizConfig, NavigationTab, ActiveSessionState } from '../types';
 
 interface HomePageProps {
   stats: UserStudyStats;
+  activeSession?: ActiveSessionState | null;
+  onResumeSession?: () => void;
+  onDiscardSession?: () => void;
   onStartQuiz: (config: QuizConfig) => void;
   onNavigateTab: (tab: NavigationTab) => void;
 }
 
 export const HomePage: React.FC<HomePageProps> = ({
   stats,
+  activeSession,
+  onResumeSession,
+  onDiscardSession,
   onStartQuiz,
   onNavigateTab,
 }) => {
@@ -48,10 +54,24 @@ export const HomePage: React.FC<HomePageProps> = ({
     completedMaterialIds = [],
   } = stats;
 
-  const hasActivity = totalAnswered > 0;
+  const hasActivity = totalAnswered > 0 || Boolean(activeSession && Object.keys(activeSession.answers).length > 0);
 
   // Determine smart "Continue Studying" recommendation based on real user data
   const getContinueAction = () => {
+    if (activeSession && activeSession.questions.length > 0) {
+      const answeredCount = Object.keys(activeSession.answers).length;
+      return {
+        type: 'in_progress',
+        title: `Resume ${activeSession.config.mode === 'exam' ? 'Mock Exam' : 'Practice Drill'}`,
+        subtitle: `${answeredCount} of ${activeSession.questions.length} questions completed. Pick up where you left off at item #${activeSession.currentIndex + 1}.`,
+        actionLabel: 'Resume Session',
+        action: () => {
+          if (onResumeSession) onResumeSession();
+          else onNavigateTab('practice');
+        },
+      };
+    }
+
     if (missedQuestionIds.length > 0) {
       return {
         type: 'missed',
@@ -329,7 +349,7 @@ export const HomePage: React.FC<HomePageProps> = ({
               </p>
             </div>
 
-            <div className="pt-1">
+            <div className="pt-1 flex flex-wrap items-center gap-2">
               <Button
                 variant="primary"
                 size="md"
@@ -338,6 +358,15 @@ export const HomePage: React.FC<HomePageProps> = ({
               >
                 {nextAction.actionLabel} →
               </Button>
+              {nextAction.type === 'in_progress' && onDiscardSession && (
+                <Button
+                  variant="secondary"
+                  size="md"
+                  onClick={onDiscardSession}
+                >
+                  Discard Session
+                </Button>
+              )}
             </div>
           </section>
 

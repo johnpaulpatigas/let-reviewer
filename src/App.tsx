@@ -13,6 +13,7 @@ import { SettingsPage } from './pages/SettingsPage';
 import { ProgressPage } from './pages/ProgressPage';
 import { useStudyStats } from './hooks/useStudyStats';
 import { useUserSettings } from './hooks/useUserSettings';
+import { useActiveSession } from './hooks/useActiveSession';
 import { buildQuizQuestions, ALL_QUESTIONS } from './data/questions';
 import {
   findStudyMaterialForTopic,
@@ -37,11 +38,19 @@ export default function App() {
 
   const { settings, updateSetting, resetSettings } = useUserSettings();
 
-  // Active quiz session states
-  const [activeSession, setActiveSession] = useState<{
-    config: QuizConfig;
-    questions: Question[];
-  } | null>(null);
+  const {
+    activeSession,
+    isSessionRunning,
+    startSession,
+    resumeSession,
+    pauseSession,
+    updateCurrentIndex,
+    recordAnswer,
+    submitQuestion,
+    toggleFlag,
+    updateSecondsRemaining,
+    clearSession,
+  } = useActiveSession();
 
   const [activeResult, setActiveResult] = useState<QuizResult | null>(null);
   const [activeMaterial, setActiveMaterial] = useState<StudyMaterial | null>(null);
@@ -63,24 +72,21 @@ export default function App() {
 
     setActiveMaterial(null);
     setActiveResult(null);
-    setActiveSession({
-      config,
-      questions,
-    });
+    startSession(config, questions);
   };
 
   // Start a targeted remediation drill with explicit questions
   const handleStartCustomDrill = (customQuestions: Question[]) => {
     setActiveMaterial(null);
     setActiveResult(null);
-    setActiveSession({
-      config: {
+    startSession(
+      {
         mode: 'practice',
         subjectIds: [],
         questionCount: customQuestions.length,
       },
-      questions: customQuestions,
-    });
+      customQuestions
+    );
   };
 
   // When a study guide is opened
@@ -109,27 +115,27 @@ export default function App() {
 
     setActiveMaterial(null);
     setActiveResult(null);
-    setActiveSession({
-      config: {
+    startSession(
+      {
         mode: 'topic_drill',
         subjectIds: [material.subjectId],
         topic: material.topic,
         questionCount: matchingQuestions.length,
       },
-      questions: matchingQuestions,
-    });
+      matchingQuestions
+    );
   };
 
   // When a quiz/exam session completes
   const handleFinishSession = (result: QuizResult) => {
     recordQuizResult(result);
-    setActiveSession(null);
+    clearSession();
     setActiveResult(result);
   };
 
   // Exit from active session, results, or active material reader
   const handleExitSession = () => {
-    setActiveSession(null);
+    pauseSession();
     setActiveResult(null);
     setActiveMaterial(null);
   };
@@ -180,7 +186,7 @@ export default function App() {
     setCurrentTab(previousTab);
   };
 
-  const inSession = Boolean(activeSession || activeResult || activeMaterial);
+  const inSession = Boolean((isSessionRunning && activeSession) || activeResult || activeMaterial);
   const hideNav = inSession;
 
   return (
@@ -228,13 +234,22 @@ export default function App() {
             setCurrentTab('home');
           }}
         />
-      ) : activeSession ? (
+      ) : isSessionRunning && activeSession ? (
         /* Active Practice Review or Timed Exam Session */
         activeSession.config.mode === 'exam' ? (
           <QuizExamSessionPage
             config={activeSession.config}
             questions={activeSession.questions}
             bookmarkedIds={stats.bookmarkedQuestionIds}
+            initialIndex={activeSession.currentIndex}
+            initialAnswers={activeSession.answers}
+            initialFlaggedIds={activeSession.flaggedQuestionIds}
+            initialSecondsRemaining={activeSession.secondsRemaining}
+            startTime={activeSession.startTime}
+            onRecordAnswer={recordAnswer}
+            onToggleFlag={toggleFlag}
+            onUpdateIndex={updateCurrentIndex}
+            onUpdateSecondsRemaining={updateSecondsRemaining}
             onToggleBookmark={toggleBookmark}
             onFinishSession={handleFinishSession}
             onExit={handleExitSession}
@@ -244,6 +259,13 @@ export default function App() {
             config={activeSession.config}
             questions={activeSession.questions}
             bookmarkedIds={stats.bookmarkedQuestionIds}
+            initialIndex={activeSession.currentIndex}
+            initialAnswers={activeSession.answers}
+            initialSubmittedQuestionIds={activeSession.submittedQuestionIds}
+            startTime={activeSession.startTime}
+            onRecordAnswer={recordAnswer}
+            onSubmitQuestion={submitQuestion}
+            onUpdateIndex={updateCurrentIndex}
             onToggleBookmark={toggleBookmark}
             onFinishSession={handleFinishSession}
             onExit={handleExitSession}
@@ -255,6 +277,9 @@ export default function App() {
           {currentTab === 'home' && (
             <HomePage
               stats={stats}
+              activeSession={activeSession}
+              onResumeSession={resumeSession}
+              onDiscardSession={clearSession}
               onStartQuiz={handleStartQuiz}
               onNavigateTab={(tab) => setCurrentTab(tab)}
             />
@@ -280,7 +305,12 @@ export default function App() {
           )}
 
           {(currentTab === 'practice' || (currentTab as string) === 'quiz') && (
-            <QuizConfigPage onStartExam={handleStartQuiz} />
+            <QuizConfigPage
+              onStartExam={handleStartQuiz}
+              activeSession={activeSession}
+              onResumeSession={resumeSession}
+              onDiscardSession={clearSession}
+            />
           )}
 
           {currentTab === 'subjects' && (

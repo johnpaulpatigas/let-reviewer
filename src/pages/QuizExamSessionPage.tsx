@@ -18,8 +18,17 @@ import type { Question, QuizConfig, UserAnswer, QuizResult } from '../types';
 interface QuizExamSessionPageProps {
   config: QuizConfig;
   questions: Question[];
-  bookmarkedIds: string[];
-  onToggleBookmark: (questionId: string) => void;
+  bookmarkedIds?: string[];
+  initialIndex?: number;
+  initialAnswers?: Record<string, UserAnswer>;
+  initialFlaggedIds?: string[];
+  initialSecondsRemaining?: number | null;
+  startTime?: number;
+  onRecordAnswer?: (questionId: string, choiceIndex: number, isCorrect: boolean) => void;
+  onToggleFlag?: (questionId: string) => void;
+  onUpdateIndex?: (index: number) => void;
+  onUpdateSecondsRemaining?: (seconds: number | null) => void;
+  onToggleBookmark?: (questionId: string) => void;
   onFinishSession: (result: QuizResult) => void;
   onExit: () => void;
 }
@@ -29,6 +38,15 @@ const CHOICE_LETTERS = ['A', 'B', 'C', 'D'];
 export const QuizExamSessionPage: React.FC<QuizExamSessionPageProps> = ({
   config,
   questions,
+  initialIndex = 0,
+  initialAnswers = {},
+  initialFlaggedIds = [],
+  initialSecondsRemaining,
+  startTime: initialStartTime,
+  onRecordAnswer,
+  onToggleFlag: onExternalToggleFlag,
+  onUpdateIndex,
+  onUpdateSecondsRemaining,
   onFinishSession,
   onExit,
 }) => {
@@ -36,6 +54,7 @@ export const QuizExamSessionPage: React.FC<QuizExamSessionPageProps> = ({
 
   // Persistent state initializer
   const [currentIndex, setCurrentIndex] = useState<number>(() => {
+    if (initialIndex > 0) return Math.min(initialIndex, questions.length - 1);
     try {
       const saved = sessionStorage.getItem(`${sessionKey}_index`);
       return saved ? parseInt(saved, 10) : 0;
@@ -45,6 +64,7 @@ export const QuizExamSessionPage: React.FC<QuizExamSessionPageProps> = ({
   });
 
   const [answers, setAnswers] = useState<Record<string, UserAnswer>>(() => {
+    if (Object.keys(initialAnswers).length > 0) return initialAnswers;
     try {
       const saved = sessionStorage.getItem(`${sessionKey}_answers`);
       return saved ? JSON.parse(saved) : {};
@@ -54,6 +74,7 @@ export const QuizExamSessionPage: React.FC<QuizExamSessionPageProps> = ({
   });
 
   const [flaggedIds, setFlaggedIds] = useState<Set<string>>(() => {
+    if (initialFlaggedIds.length > 0) return new Set(initialFlaggedIds);
     try {
       const saved = sessionStorage.getItem(`${sessionKey}_flagged`);
       return saved ? new Set(JSON.parse(saved)) : new Set();
@@ -63,6 +84,7 @@ export const QuizExamSessionPage: React.FC<QuizExamSessionPageProps> = ({
   });
 
   const [startTime] = useState<number>(() => {
+    if (initialStartTime) return initialStartTime;
     try {
       const saved = sessionStorage.getItem(`${sessionKey}_start_time`);
       if (saved) return parseInt(saved, 10);
@@ -76,6 +98,9 @@ export const QuizExamSessionPage: React.FC<QuizExamSessionPageProps> = ({
 
   const totalSeconds = config.timeLimitMinutes ? config.timeLimitMinutes * 60 : null;
   const [secondsRemaining, setSecondsRemaining] = useState<number | null>(() => {
+    if (initialSecondsRemaining !== undefined && initialSecondsRemaining !== null) {
+      return initialSecondsRemaining;
+    }
     if (!totalSeconds) return null;
     try {
       const saved = sessionStorage.getItem(`${sessionKey}_remaining`);
@@ -194,14 +219,19 @@ export const QuizExamSessionPage: React.FC<QuizExamSessionPageProps> = ({
         if (prev === null || prev <= 1) {
           clearInterval(interval);
           calculateAndSubmitResults();
+          if (onUpdateSecondsRemaining) onUpdateSecondsRemaining(0);
           return 0;
         }
-        return prev - 1;
+        const next = prev - 1;
+        if (onUpdateSecondsRemaining && next % 5 === 0) {
+          onUpdateSecondsRemaining(next);
+        }
+        return next;
       });
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [secondsRemaining, calculateAndSubmitResults]);
+  }, [secondsRemaining, calculateAndSubmitResults, onUpdateSecondsRemaining]);
 
   const currentQuestion = questions[currentIndex];
   const isLastQuestion = currentIndex === questions.length - 1;
@@ -222,14 +252,18 @@ export const QuizExamSessionPage: React.FC<QuizExamSessionPageProps> = ({
   const isCurrentFlagged = flaggedIds.has(currentQuestion.id);
 
   const handleSelectChoice = (choiceIndex: number) => {
+    const isCorrect = choiceIndex === currentQuestion.answer;
     setAnswers((prev) => ({
       ...prev,
       [currentQuestion.id]: {
         questionId: currentQuestion.id,
         selectedAnswer: choiceIndex,
-        isCorrect: choiceIndex === currentQuestion.answer,
+        isCorrect,
       },
     }));
+    if (onRecordAnswer) {
+      onRecordAnswer(currentQuestion.id, choiceIndex, isCorrect);
+    }
   };
 
   const toggleFlag = (questionId: string) => {
@@ -242,6 +276,9 @@ export const QuizExamSessionPage: React.FC<QuizExamSessionPageProps> = ({
       }
       return next;
     });
+    if (onExternalToggleFlag) {
+      onExternalToggleFlag(questionId);
+    }
   };
 
   const formatTime = (secs: number) => {
@@ -417,7 +454,11 @@ export const QuizExamSessionPage: React.FC<QuizExamSessionPageProps> = ({
         <Button
           variant="outline"
           size="md"
-          onClick={() => setCurrentIndex((prev) => Math.max(0, prev - 1))}
+          onClick={() => {
+            const nextIdx = Math.max(0, currentIndex - 1);
+            setCurrentIndex(nextIdx);
+            if (onUpdateIndex) onUpdateIndex(nextIdx);
+          }}
           disabled={isFirstQuestion}
           leftIcon={<ChevronLeft className="w-4 h-4" />}
         >
@@ -429,7 +470,11 @@ export const QuizExamSessionPage: React.FC<QuizExamSessionPageProps> = ({
             <Button
               variant="primary"
               size="md"
-              onClick={() => setCurrentIndex((prev) => Math.min(questions.length - 1, prev + 1))}
+              onClick={() => {
+                const nextIdx = Math.min(questions.length - 1, currentIndex + 1);
+                setCurrentIndex(nextIdx);
+                if (onUpdateIndex) onUpdateIndex(nextIdx);
+              }}
               rightIcon={<ChevronRight className="w-4 h-4" />}
             >
               Next Item

@@ -54,6 +54,19 @@ export interface QuizConfig {
   title?: string;
 }
 
+export interface ActiveSessionState {
+  sessionId: string;
+  config: QuizConfig;
+  questions: Question[];
+  currentIndex: number;
+  answers: Record<string, UserAnswer>;
+  submittedQuestionIds: string[];
+  flaggedQuestionIds: string[];
+  secondsRemaining: number | null;
+  startTime: number;
+  lastUpdated: number;
+}
+
 export interface QuizSession {
   id: string;
   config: QuizConfig;
