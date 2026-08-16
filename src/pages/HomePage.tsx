@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   TrendingUp,
   ArrowRight,
@@ -6,6 +6,7 @@ import {
   GraduationCap,
   Play,
   AlertCircle,
+  ChevronDown,
 } from 'lucide-react';
 import { Button } from '../components/ui/Button';
 import { ProgressBar } from '../components/ui/ProgressBar';
@@ -26,6 +27,8 @@ export const HomePage: React.FC<HomePageProps> = ({
   onStartQuiz,
   onNavigateTab,
 }) => {
+  const [expandedSessionId, setExpandedSessionId] = useState<string | null>(null);
+
   const {
     totalAnswered = 0,
     totalCorrect = 0,
@@ -568,7 +571,9 @@ export const HomePage: React.FC<HomePageProps> = ({
           </div>
 
           <div className="space-y-2">
-            {quizHistory.slice(0, 4).map((session) => {
+            {quizHistory.slice(0, 5).map((session) => {
+              const isExpanded = expandedSessionId === session.sessionId;
+              const hasBreakdown = session.subjectBreakdown && session.subjectBreakdown.length > 0;
               const dateStr = new Date(session.timestamp).toLocaleDateString(undefined, {
                 month: 'short',
                 day: 'numeric',
@@ -579,40 +584,84 @@ export const HomePage: React.FC<HomePageProps> = ({
               return (
                 <div
                   key={session.sessionId}
-                  className="p-3 rounded-md border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900 flex items-center justify-between gap-3 text-xs"
+                  className="p-3 rounded-md border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900 space-y-2 text-xs"
                 >
-                  <div className="min-w-0 flex-1">
-                    <div className="flex items-center gap-2">
-                      <span className="font-bold text-slate-900 dark:text-white font-mono text-sm">
-                        {session.scorePercentage}%
-                      </span>
-                      <span
-                        className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${
-                          session.isPassed
-                            ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300'
-                            : 'bg-rose-100 text-rose-800 dark:bg-rose-950 dark:text-rose-300'
-                        }`}
-                      >
-                        {session.isPassed ? 'Passed' : 'Needs Review'}
-                      </span>
-                      <span className="text-[11px] text-slate-500 truncate">
-                        {session.config.title || (session.config.mode === 'exam' ? 'Mock Exam' : 'Practice Drill')}
-                      </span>
+                  <div className="flex items-center justify-between gap-3">
+                    <div
+                      className={`min-w-0 flex-1 ${hasBreakdown ? 'cursor-pointer select-none' : ''}`}
+                      onClick={() => {
+                        if (hasBreakdown) {
+                          setExpandedSessionId((prev) => (prev === session.sessionId ? null : session.sessionId));
+                        }
+                      }}
+                    >
+                      <div className="flex items-center gap-2">
+                        <span className="font-bold text-slate-900 dark:text-white font-mono text-sm">
+                          {session.scorePercentage}%
+                        </span>
+                        <span
+                          className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${
+                            session.isPassed
+                              ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300'
+                              : 'bg-rose-100 text-rose-800 dark:bg-rose-950 dark:text-rose-300'
+                          }`}
+                        >
+                          {session.isPassed ? 'Passed' : 'Needs Review'}
+                        </span>
+                        <span className="text-[11px] text-slate-500 truncate">
+                          {session.config.title || (session.config.mode === 'exam' ? 'Mock Exam' : 'Practice Drill')}
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-2 mt-0.5 text-[11px] text-slate-500">
+                        <span>{dateStr}</span>
+                        <span>•</span>
+                        <span>{session.correctCount} of {session.totalQuestions} items</span>
+                      </div>
                     </div>
-                    <div className="flex items-center gap-2 mt-0.5 text-[11px] text-slate-500">
-                      <span>{dateStr}</span>
-                      <span>•</span>
-                      <span>{session.correctCount} of {session.totalQuestions} items</span>
+
+                    <div className="flex items-center gap-1.5 shrink-0">
+                      <Button
+                        variant="secondary"
+                        size="sm"
+                        onClick={() => onStartQuiz(session.config)}
+                      >
+                        Retake
+                      </Button>
+                      {hasBreakdown && (
+                        <button
+                          type="button"
+                          onClick={() =>
+                            setExpandedSessionId((prev) => (prev === session.sessionId ? null : session.sessionId))
+                          }
+                          aria-label={isExpanded ? 'Collapse subject breakdown' : 'Expand subject breakdown'}
+                          className="w-7 h-7 flex items-center justify-center rounded text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 cursor-pointer"
+                        >
+                          <ChevronDown
+                            className={`w-4 h-4 transition-transform duration-150 ${isExpanded ? 'rotate-180' : ''}`}
+                          />
+                        </button>
+                      )}
                     </div>
                   </div>
 
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    onClick={() => onStartQuiz(session.config)}
-                  >
-                    Retake
-                  </Button>
+                  {isExpanded && hasBreakdown && (
+                    <div className="pt-2 border-t border-slate-200 dark:border-slate-800 space-y-1.5 animate-fade-in">
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 block">
+                        Subject Score Breakdown
+                      </span>
+                      {session.subjectBreakdown.map((sb) => (
+                        <div
+                          key={sb.subjectId}
+                          className="flex justify-between text-xs text-slate-600 dark:text-slate-400"
+                        >
+                          <span className="truncate pr-2">{sb.subjectName}</span>
+                          <span className="font-mono font-medium">
+                            {sb.correct}/{sb.total} ({sb.percentage}%)
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
               );
             })}
