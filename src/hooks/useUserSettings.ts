@@ -6,7 +6,7 @@ const SETTINGS_STORAGE_KEY = 'let_reviewer_user_settings_v1';
 export const DEFAULT_SETTINGS: UserSettings = {
   theme: 'system',
   fontSize: 'default',
-  reduceMotion: 'system',
+  reduceMotion: 'standard',
   defaultQuestionCount: 15,
   instantRationales: true,
 };
@@ -16,9 +16,14 @@ const getInitialSettings = (): UserSettings => {
     const saved = localStorage.getItem(SETTINGS_STORAGE_KEY);
     if (saved) {
       const parsed = JSON.parse(saved);
+      const reduceMotion: MotionPreference =
+        parsed.reduceMotion === 'reduced' || parsed.reduceMotion === 'on'
+          ? 'reduced'
+          : 'standard';
       return {
         ...DEFAULT_SETTINGS,
         ...parsed,
+        reduceMotion,
       };
     }
   } catch {
@@ -75,10 +80,11 @@ export function useUserSettings() {
     root.setAttribute('data-font-size', settings.fontSize);
   }, [settings.fontSize]);
 
-  // Apply Reduce Motion
+  // Apply Motion Preference
   useEffect(() => {
     const root = document.documentElement;
-    root.setAttribute('data-reduce-motion', settings.reduceMotion);
+    const isReduced = settings.reduceMotion === 'reduced';
+    root.setAttribute('data-reduce-motion', isReduced ? 'reduced' : 'standard');
   }, [settings.reduceMotion]);
 
   const updateSetting = useCallback(

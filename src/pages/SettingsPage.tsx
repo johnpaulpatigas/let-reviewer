@@ -158,25 +158,32 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
             </div>
           </div>
 
-          {/* Reduce Motion */}
+          {/* Motion Setting */}
           <div className="p-3.5 sm:p-4 space-y-2.5">
             <div className="flex items-center justify-between">
               <div>
                 <span className="text-xs sm:text-sm font-semibold text-slate-900 dark:text-white flex items-center gap-1.5">
                   <Eye className="w-4 h-4 text-slate-500" />
-                  <span>Reduce Motion</span>
+                  <span>Motion</span>
                 </span>
                 <span className="text-[11px] text-slate-500">
-                  Minimize animations and transition effects.
+                  Control interface transitions and interactive animation effects.
                 </span>
               </div>
             </div>
 
-            <div className="flex gap-1.5">
+            <div className="grid grid-cols-2 gap-2">
               {[
-                { id: 'system', label: 'System' },
-                { id: 'off', label: 'Standard Motion' },
-                { id: 'on', label: 'Reduced Motion' },
+                {
+                  id: 'standard',
+                  label: 'Standard',
+                  desc: 'Subtle, consistent interaction feedback',
+                },
+                {
+                  id: 'reduced',
+                  label: 'Reduced',
+                  desc: 'Minimal motion for accessibility and speed',
+                },
               ].map((motion) => {
                 const isSelected = settings.reduceMotion === motion.id;
                 return (
@@ -184,13 +191,27 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
                     key={motion.id}
                     type="button"
                     onClick={() => onUpdateSetting('reduceMotion', motion.id as MotionPreference)}
-                    className={`flex-1 py-1.5 rounded-md text-xs font-semibold border transition-colors cursor-pointer ${
+                    className={`p-2.5 rounded-lg border text-left transition-colors cursor-pointer flex flex-col justify-between ${
                       isSelected
-                        ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 border-slate-900 dark:border-white'
-                        : 'bg-slate-50 dark:bg-slate-800/60 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:bg-slate-100'
+                        ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 border-slate-900 dark:border-white font-bold shadow-xs'
+                        : 'bg-slate-50 dark:bg-slate-800/60 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800'
                     }`}
                   >
-                    {motion.label}
+                    <div className="flex items-center justify-between w-full">
+                      <span className="text-xs font-semibold">{motion.label}</span>
+                      <span className={`w-3.5 h-3.5 rounded-full border flex items-center justify-center ${
+                        isSelected
+                          ? 'border-white dark:border-slate-900 bg-white dark:bg-slate-900'
+                          : 'border-slate-300 dark:border-slate-600'
+                      }`}>
+                        {isSelected && (
+                          <span className="w-1.5 h-1.5 rounded-full bg-slate-900 dark:bg-white" />
+                        )}
+                      </span>
+                    </div>
+                    <span className={`text-[10px] mt-1 leading-tight ${isSelected ? 'text-slate-300 dark:text-slate-600' : 'text-slate-500 dark:text-slate-400'}`}>
+                      {motion.desc}
+                    </span>
                   </button>
                 );
               })}

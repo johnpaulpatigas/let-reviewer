@@ -160,7 +160,7 @@ export interface UserStudyStats {
 
 export type ThemeMode = 'system' | 'light' | 'dark';
 export type FontSizePreference = 'small' | 'default' | 'large' | 'extra-large';
-export type MotionPreference = 'system' | 'on' | 'off';
+export type MotionPreference = 'standard' | 'reduced';
 
 export interface UserSettings {
   theme: ThemeMode;
