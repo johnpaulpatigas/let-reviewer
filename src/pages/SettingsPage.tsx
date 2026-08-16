@@ -79,7 +79,11 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
                   Interface Theme
                 </span>
                 <span className="text-[11px] text-slate-500">
-                  Select light, dark, or sync with your operating system.
+                  {settings.theme === 'system'
+                    ? 'Sync with operating system preference'
+                    : settings.theme === 'dark'
+                    ? 'Always use dark theme'
+                    : 'Always use light theme'}
                 </span>
               </div>
             </div>
