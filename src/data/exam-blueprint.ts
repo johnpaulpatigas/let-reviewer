@@ -22,7 +22,6 @@ export interface ExamBlueprint {
   totalQuestions: number;
   totalTimeMinutes: number;
   instructions: string[];
-  disclaimer: string;
 }
 
 export const OFFICIAL_LET_BLUEPRINTS: Record<string, ExamBlueprint> = {
@@ -66,15 +65,12 @@ export const OFFICIAL_LET_BLUEPRINTS: Record<string, ExamBlueprint> = {
       },
     ],
     instructions: [
-      'This simulation is designed to approximate the conditions and competency standards of the Licensure Examination for Teachers (LET).',
       'Manage your time carefully: aim for approximately 1 minute per test item.',
       'You can flag questions for later review and navigate back to any item within the examination.',
       'No correct or incorrect feedback will be shown during the exam session.',
       'Your examination will automatically submit when the timer expires.',
       'A General Weighted Average (GWA) of at least 75.00% with no rating below 50.00% is required to pass.',
     ],
-    disclaimer:
-      'This is an educational practice simulation and is not an official PRC examination. Examination structure and content are aligned with PRC Board for Professional Teachers standards. Refer to official PRC announcements for current schedule and licensing requirements.',
   },
 
   'full-let-secondary': {
@@ -117,13 +113,10 @@ export const OFFICIAL_LET_BLUEPRINTS: Record<string, ExamBlueprint> = {
       },
     ],
     instructions: [
-      'This simulation covers the General and Professional Education core components required for Secondary Education examinees.',
       'Read all scenario stems and analyze all options before making your selection.',
       'Use the Question Navigator to verify that all questions are answered before submitting.',
       'Answers are locked upon submission and detailed diagnostic analytics will be generated.',
     ],
-    disclaimer:
-      'This is an educational practice simulation and is not an official PRC examination. Examination structure and content are aligned with PRC Board for Professional Teachers standards.',
   },
 
   'gen-ed-battery': {
@@ -152,8 +145,6 @@ export const OFFICIAL_LET_BLUEPRINTS: Record<string, ExamBlueprint> = {
       'Continuous countdown timer with automatic submission upon expiry.',
       'No midway answer explanations.',
     ],
-    disclaimer:
-      'Practice simulation aligned with PRC Board for Professional Teachers competencies.',
   },
 
   'prof-ed-battery': {
@@ -190,7 +181,5 @@ export const OFFICIAL_LET_BLUEPRINTS: Record<string, ExamBlueprint> = {
       'Continuous countdown timer with automatic submission upon expiry.',
       'No midway answer explanations.',
     ],
-    disclaimer:
-      'Practice simulation aligned with PRC Board for Professional Teachers competencies.',
   },
 };

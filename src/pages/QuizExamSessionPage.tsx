@@ -644,7 +644,7 @@ export const QuizExamSessionPage: React.FC<QuizExamSessionPageProps> = ({
             )}
 
             <p className="text-[11px] text-slate-500 leading-snug">
-              Once submitted, your examination answers will be locked and graded against the 75.00% PRC LET passing standard.
+              Once submitted, your examination answers will be locked and graded against the 75.00% passing mark.
             </p>
 
             <div className="flex gap-2 pt-1">

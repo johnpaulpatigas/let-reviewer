@@ -101,7 +101,7 @@ export const ProgressPage: React.FC<ProgressPageProps> = ({
               {overallAccuracy}%
             </span>
             <span className="text-xs text-slate-500">
-              PRC LET Benchmark: 75.00%
+              Passing Benchmark: 75.00%
             </span>
           </div>
           <ProgressBar

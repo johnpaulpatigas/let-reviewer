@@ -3,7 +3,6 @@ import { createPortal } from 'react-dom';
 import {
   Clock,
   CheckCircle2,
-  AlertTriangle,
   X,
   FileText,
   Scale,
@@ -115,12 +114,6 @@ export const ExamBriefingModal: React.FC<ExamBriefingModalProps> = ({
               <li key={i}>{inst}</li>
             ))}
           </ul>
-        </div>
-
-        {/* Disclaimer */}
-        <div className="p-2.5 rounded-md bg-amber-50/60 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-900/50 flex items-start gap-2 text-xs text-amber-900 dark:text-amber-300 leading-snug">
-          <AlertTriangle className="w-4 h-4 text-amber-700 dark:text-amber-400 shrink-0 mt-0.5" />
-          <p className="text-[11px]">{blueprint.disclaimer}</p>
         </div>
 
         {/* Action Buttons */}

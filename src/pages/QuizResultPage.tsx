@@ -119,7 +119,7 @@ export const QuizResultPage: React.FC<QuizResultPageProps> = ({
             {scorePercentage}%
           </h1>
           <p className="text-xs text-slate-600 dark:text-slate-400 mt-0.5">
-            PRC LET Passing Threshold: 75.00%
+            Passing Benchmark: 75.00%
           </p>
         </div>
 

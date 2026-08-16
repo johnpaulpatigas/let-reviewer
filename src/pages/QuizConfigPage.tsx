@@ -84,11 +84,11 @@ export const QuizConfigPage: React.FC<QuizConfigPageProps> = ({ onStartExam }) =
           Examination & Practice Center
         </h1>
         <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-1 leading-relaxed">
-          High-fidelity LET simulation batteries aligned with PRC Board for Professional Teachers specifications, or self-paced competency drills.
+          Full-length timed LET simulations and self-paced competency practice drills.
         </p>
       </div>
 
-      {/* 1. Full LET Simulations (Verified PRC Blueprint) */}
+      {/* 1. Full LET Simulations */}
       <section className="space-y-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-1.5">
