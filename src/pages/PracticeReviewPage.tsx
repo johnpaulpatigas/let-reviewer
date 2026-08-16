@@ -10,7 +10,6 @@ interface PracticeReviewPageProps {
   questions: Question[];
   bookmarkedIds: string[];
   onToggleBookmark: (questionId: string) => void;
-  onStudyTopic?: (topic: string, subjectId: string) => void;
   onFinishSession: (result: QuizResult) => void;
   onExit: () => void;
 }
@@ -20,7 +19,6 @@ export const PracticeReviewPage: React.FC<PracticeReviewPageProps> = ({
   questions,
   bookmarkedIds,
   onToggleBookmark,
-  onStudyTopic,
   onFinishSession,
   onExit,
 }) => {
@@ -161,7 +159,6 @@ export const PracticeReviewPage: React.FC<PracticeReviewPageProps> = ({
         isBookmarked={bookmarkedIds.includes(currentQuestion.id)}
         onSelectChoice={handleSelectChoice}
         onToggleBookmark={onToggleBookmark}
-        onStudyTopic={onStudyTopic}
         mode={config.mode}
       />
 

@@ -245,7 +245,6 @@ export default function App() {
             questions={activeSession.questions}
             bookmarkedIds={stats.bookmarkedQuestionIds}
             onToggleBookmark={toggleBookmark}
-            onStudyTopic={handleStudyTopic}
             onFinishSession={handleFinishSession}
             onExit={handleExitSession}
           />

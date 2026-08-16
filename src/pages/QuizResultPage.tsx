@@ -7,6 +7,7 @@ import {
   X,
   ChevronDown,
   Bookmark,
+  BookOpen,
 } from 'lucide-react';
 import { Button } from '../components/ui/Button';
 import { ProgressBar } from '../components/ui/ProgressBar';
@@ -397,24 +398,30 @@ export const QuizResultPage: React.FC<QuizResultPageProps> = ({
                     )}
 
                     {/* Explanation */}
-                    <div className="p-3 rounded bg-slate-100 dark:bg-slate-850 border border-slate-200 dark:border-slate-750 space-y-1">
+                    <div className="p-3.5 rounded-lg bg-slate-100 dark:bg-slate-850 border border-slate-200 dark:border-slate-750 space-y-1.5">
                       <div className="flex items-center justify-between">
                         <span className="font-bold text-slate-900 dark:text-white uppercase tracking-wider text-[10px]">
                           Explanation & Rationale
                         </span>
-                        {onStudyTopic && (
+                        <span className="text-[11px] font-semibold text-emerald-700 dark:text-emerald-400 font-mono">
+                          Correct: {CHOICE_LETTERS[q.answer]}
+                        </span>
+                      </div>
+                      <p className="text-slate-700 dark:text-slate-300 leading-relaxed text-xs sm:text-sm">
+                        {q.explanation}
+                      </p>
+                      {onStudyTopic && (
+                        <div className="pt-2 border-t border-slate-200/60 dark:border-slate-700 flex justify-end">
                           <button
                             type="button"
                             onClick={() => onStudyTopic(q.topic, q.subjectId)}
-                            className="text-xs font-semibold text-slate-800 dark:text-slate-200 hover:underline inline-flex items-center gap-1 cursor-pointer"
+                            className="text-xs font-semibold text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:underline inline-flex items-center gap-1.5 cursor-pointer"
                           >
-                            <span>Study Guide →</span>
+                            <BookOpen className="w-3.5 h-3.5" />
+                            <span>Related Study Guide: {q.topic} →</span>
                           </button>
-                        )}
-                      </div>
-                      <p className="text-slate-700 dark:text-slate-300 leading-relaxed text-xs">
-                        {q.explanation}
-                      </p>
+                        </div>
+                      )}
                     </div>
                   </div>
                 )}
