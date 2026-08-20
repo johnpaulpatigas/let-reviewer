@@ -27,7 +27,7 @@ export const BottomNav: React.FC<BottomNavProps> = ({
   return (
     <nav
       aria-label="Bottom Navigation"
-      className="fixed bottom-0 left-0 right-0 z-40 bg-white dark:bg-neutral-900 border-t border-slate-200 dark:border-neutral-800 safe-bottom transition-colors"
+      className="fixed bottom-0 left-0 right-0 z-40 bg-white dark:bg-neutral-900 border-t border-slate-200 dark:border-neutral-800 safe-bottom"
     >
       <div className="max-w-2xl mx-auto px-2 h-14 flex items-center justify-around">
         {tabs.map((tab) => {

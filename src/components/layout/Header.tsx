@@ -24,7 +24,7 @@ export const Header: React.FC<HeaderProps> = ({
   const isSettingsTab = currentTab === 'settings';
 
   return (
-    <header className="sticky top-0 z-30 w-full bg-white dark:bg-neutral-900 border-b border-slate-200 dark:border-neutral-800 transition-colors">
+    <header className="sticky top-0 z-30 w-full bg-white dark:bg-neutral-900 border-b border-slate-200 dark:border-neutral-800">
       <div className="max-w-2xl mx-auto px-4 h-14 flex items-center justify-between">
         {inSession || isSettingsTab ? (
           <div className="flex items-center gap-2.5 w-full">
