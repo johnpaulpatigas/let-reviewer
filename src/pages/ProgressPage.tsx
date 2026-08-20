@@ -7,6 +7,7 @@ import {
 import { Button } from '../components/ui/Button';
 import { ProgressBar } from '../components/ui/ProgressBar';
 import { computeStudyStats } from '../utils/progressStats';
+import { useBackHandler } from '../hooks/useBackButton';
 import type { UserStudyStats, QuizResult, SubjectScoreBreakdown } from '../types';
 
 interface ProgressPageProps {
@@ -22,6 +23,16 @@ export const ProgressPage: React.FC<ProgressPageProps> = ({
 }) => {
   const [expandedExamId, setExpandedExamId] = useState<string | null>(null);
   const [isResetConfirmOpen, setIsResetConfirmOpen] = useState(false);
+
+  // Priority 100: Cancel reset confirmation dialog on back button
+  useBackHandler(
+    () => {
+      setIsResetConfirmOpen(false);
+      return true;
+    },
+    100,
+    isResetConfirmOpen
+  );
 
   const {
     totalAnswered,

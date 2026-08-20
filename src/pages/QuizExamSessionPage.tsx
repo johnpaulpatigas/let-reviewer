@@ -14,6 +14,7 @@ import {
   Scale,
   RotateCcw,
 } from 'lucide-react';
+import { useBackHandler } from '../hooks/useBackButton';
 import type { Question, QuizConfig, UserAnswer, QuizResult } from '../types';
 
 interface QuizExamSessionPageProps {
@@ -118,6 +119,46 @@ export const QuizExamSessionPage: React.FC<QuizExamSessionPageProps> = ({
   const [isExitConfirmOpen, setIsExitConfirmOpen] = useState(false);
 
   const hasFinishedRef = useRef(false);
+
+  // Priority 100: Close question navigator drawer if open
+  useBackHandler(
+    () => {
+      setIsGridOpen(false);
+      return true;
+    },
+    100,
+    isGridOpen
+  );
+
+  // Priority 100: Close submit confirmation dialog if open
+  useBackHandler(
+    () => {
+      setIsSubmitConfirmOpen(false);
+      return true;
+    },
+    100,
+    isSubmitConfirmOpen
+  );
+
+  // Priority 100: Close exit confirmation dialog if open
+  useBackHandler(
+    () => {
+      setIsExitConfirmOpen(false);
+      return true;
+    },
+    100,
+    isExitConfirmOpen
+  );
+
+  // Priority 60: Intercept back button during active exam session to confirm exit
+  useBackHandler(
+    () => {
+      setIsExitConfirmOpen(true);
+      return true;
+    },
+    60,
+    !isGridOpen && !isSubmitConfirmOpen && !isExitConfirmOpen
+  );
 
   // Sync state to sessionStorage
   useEffect(() => {

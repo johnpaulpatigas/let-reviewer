@@ -12,6 +12,7 @@ import {
   Trash2,
 } from 'lucide-react';
 import { Button } from '../components/ui/Button';
+import { useBackHandler } from '../hooks/useBackButton';
 import type {
   UserSettings,
   ThemeMode,
@@ -37,6 +38,16 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
 }) => {
   const [isResetDataConfirmOpen, setIsResetDataConfirmOpen] = useState(false);
   const [dataResetSuccess, setDataResetSuccess] = useState(false);
+
+  // Priority 100: Cancel data reset confirmation dialog on back button
+  useBackHandler(
+    () => {
+      setIsResetDataConfirmOpen(false);
+      return true;
+    },
+    100,
+    isResetDataConfirmOpen
+  );
 
   const handleConfirmClearData = () => {
     onClearStats();

@@ -2,9 +2,13 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.tsx'
+import { BackButtonProvider } from './contexts/BackButtonProvider'
+
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <App />
+    <BackButtonProvider>
+      <App />
+    </BackButtonProvider>
   </StrictMode>,
 )

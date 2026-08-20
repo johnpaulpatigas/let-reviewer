@@ -8,6 +8,7 @@ import {
   Scale,
 } from 'lucide-react';
 import { Button } from '../ui/Button';
+import { useBackHandler } from '../../hooks/useBackButton';
 import type { ExamBlueprint } from '../../data/exam-blueprint';
 
 interface ExamBriefingModalProps {
@@ -23,6 +24,16 @@ export const ExamBriefingModal: React.FC<ExamBriefingModalProps> = ({
   onClose,
   onConfirmStart,
 }) => {
+  // Priority 100: Close modal on back press
+  useBackHandler(
+    () => {
+      onClose();
+      return true;
+    },
+    100,
+    isOpen
+  );
+
   if (!isOpen) return null;
 
   return createPortal(

@@ -14,6 +14,7 @@ import { ProgressPage } from './pages/ProgressPage';
 import { useStudyStats } from './hooks/useStudyStats';
 import { useUserSettings } from './hooks/useUserSettings';
 import { useActiveSession } from './hooks/useActiveSession';
+import { useBackHandler } from './hooks/useBackButton';
 import { buildQuizQuestions, ALL_QUESTIONS } from './data/questions';
 import {
   findStudyMaterialForTopic,
@@ -188,6 +189,47 @@ export default function App() {
 
   const inSession = Boolean((isSessionRunning && activeSession) || activeResult || activeMaterial);
   const hideNav = inSession;
+
+  // Priority 40: Handle exiting active study reader, exam results, or practice session
+  useBackHandler(
+    () => {
+      if (activeMaterial) {
+        handleExitSession();
+        return true;
+      }
+      if (activeResult) {
+        setActiveResult(null);
+        return true;
+      }
+      if (isSessionRunning && activeSession && activeSession.config.mode !== 'exam') {
+        handleExitSession();
+        return true;
+      }
+      return false;
+    },
+    40,
+    Boolean(activeMaterial || activeResult || (isSessionRunning && activeSession && activeSession.config.mode !== 'exam'))
+  );
+
+  // Priority 30: Handle navigating back from Settings page
+  useBackHandler(
+    () => {
+      handleBackFromSettings();
+      return true;
+    },
+    30,
+    currentTab === 'settings'
+  );
+
+  // Priority 20: Handle navigating from secondary tabs back to Home tab
+  useBackHandler(
+    () => {
+      setCurrentTab('home');
+      return true;
+    },
+    20,
+    currentTab !== 'home' && currentTab !== 'settings' && !inSession
+  );
 
   return (
     <AppShell
